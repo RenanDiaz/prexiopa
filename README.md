@@ -1,73 +1,317 @@
-# React + TypeScript + Vite
+# 🛒 Prexiopá
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> **Compara precios, ahorra dinero** - La app definitiva para comparar precios de productos en supermercados y tiendas de Panamá.
 
-Currently, two official plugins are available:
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19.1-61dafb)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-7.1-646cff)](https://vitejs.dev/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 📖 Descripción
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**Prexiopá** es una aplicación web progresiva que permite a los usuarios en Panamá buscar, comparar y seguir precios de productos en diferentes supermercados y tiendas. Con una interfaz intuitiva y moderna, ayudamos a las familias panameñas a tomar decisiones informadas de compra y ahorrar dinero.
 
-## Expanding the ESLint configuration
+### ✨ Características Principales
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 🔍 **Búsqueda inteligente** de productos por nombre o código de barras
+- 📊 **Comparación de precios** entre múltiples tiendas en tiempo real
+- 📱 **Escaneo QR y códigos de barra** para búsqueda rápida
+- 📈 **Historial de precios** con gráficos visuales
+- ⭐ **Lista de favoritos** sincronizada en la nube
+- 🔔 **Alertas de precio** personalizadas
+- 🗺️ **Búsqueda de tiendas cercanas** con geolocalización
+- 🌓 **Modo oscuro** para mejor experiencia
+- 📲 **Diseño responsive** mobile-first
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🚀 Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Frontend
+- **React 19** - UI library
+- **TypeScript 5.9** - Type safety
+- **Vite 7** - Build tool y dev server
+- **Styled Components** - CSS-in-JS styling
+- **React Router** - Client-side routing
+- **Zustand** - State management
+- **Axios** - HTTP client
+
+### Backend & Services
+- **Supabase** - Authentication, database, real-time
+- **PostgreSQL** - Database (via Supabase)
+
+### Tools & Libraries
+- **React Icons** - Icon library
+- **@zxing/browser** - QR/Barcode scanning
+- **ESLint** - Code linting
+- **TypeScript ESLint** - TS-specific linting
+
+---
+
+## 📦 Instalación
+
+### Prerequisitos
+
+- Node.js 18+
+- npm o yarn
+- Cuenta de Supabase (para backend)
+
+### Pasos
+
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/RenanDiaz/prexiopa.git
+   cd prexiopa
+   ```
+
+2. **Instalar dependencias**
+   ```bash
+   npm install
+   ```
+
+3. **Configurar variables de entorno**
+   ```bash
+   cp .env.example .env
+   ```
+
+   Edita `.env` y agrega tus credenciales de Supabase:
+   ```env
+   VITE_SUPABASE_URL=tu-proyecto.supabase.co
+   VITE_SUPABASE_ANON_KEY=tu-anon-key
+   VITE_API_BASE_URL=http://localhost:3000/api
+   ```
+
+4. **Iniciar servidor de desarrollo**
+   ```bash
+   npm run dev
+   ```
+
+5. **Abrir en el navegador**
+
+   Visita [http://localhost:5173](http://localhost:5173)
+
+---
+
+## 🎯 Comandos Disponibles
+
+```bash
+# Desarrollo
+npm run dev          # Iniciar dev server con HMR
+
+# Build
+npm run build        # Compilar para producción
+npm run preview      # Preview del build de producción
+
+# Linting
+npm run lint         # Ejecutar ESLint
+
+# Type checking
+npx tsc --noEmit     # Verificar tipos sin compilar
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📁 Estructura del Proyecto
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+prexiopa/
+├── src/
+│   ├── assets/           # Imágenes, iconos, assets estáticos
+│   │   ├── images/
+│   │   └── icons/
+│   ├── components/       # Componentes React reutilizables
+│   │   ├── common/       # Botones, Inputs, Cards
+│   │   ├── layout/       # Layout, Navbar, Footer
+│   │   ├── products/     # Componentes de productos
+│   │   ├── stores/       # Componentes de tiendas
+│   │   ├── favorites/    # Componentes de favoritos
+│   │   ├── alerts/       # Componentes de alertas
+│   │   └── search/       # Búsqueda y filtros
+│   ├── pages/            # Páginas principales
+│   │   ├── Dashboard.tsx
+│   │   ├── ProductDetail.tsx
+│   │   ├── StorePage.tsx
+│   │   ├── Login.tsx
+│   │   ├── Register.tsx
+│   │   ├── Profile.tsx
+│   │   ├── Favorites.tsx
+│   │   ├── SearchResults.tsx
+│   │   └── NotFound.tsx
+│   ├── routes/           # Configuración de React Router
+│   ├── services/         # API services con axios
+│   │   ├── api.ts
+│   │   ├── authService.ts
+│   │   ├── productService.ts
+│   │   ├── priceService.ts
+│   │   ├── storeService.ts
+│   │   ├── alertService.ts
+│   │   └── favoriteService.ts
+│   ├── store/            # Zustand stores (estado global)
+│   │   ├── authStore.ts
+│   │   ├── favoritesStore.ts
+│   │   ├── searchStore.ts
+│   │   ├── alertsStore.ts
+│   │   └── uiStore.ts
+│   ├── styles/           # Sistema de diseño
+│   │   ├── theme.ts          # Colores, tipografía, tokens
+│   │   ├── GlobalStyles.ts   # Estilos globales
+│   │   ├── animations.ts     # Animaciones y transiciones
+│   │   ├── breakpoints.ts    # Media queries
+│   │   └── accessibility.ts  # Helpers de accesibilidad
+│   ├── types/            # TypeScript types e interfaces
+│   │   ├── product.types.ts
+│   │   ├── store.types.ts
+│   │   ├── price.types.ts
+│   │   ├── user.types.ts
+│   │   ├── alert.types.ts
+│   │   ├── search.types.ts
+│   │   ├── notification.types.ts
+│   │   └── api.types.ts
+│   ├── utils/            # Funciones auxiliares
+│   ├── hooks/            # Custom React hooks
+│   ├── App.tsx           # Componente raíz
+│   └── main.tsx          # Entry point
+├── public/               # Assets públicos
+├── DEVELOPMENT_PLAN.md   # Plan de desarrollo detallado
+├── ROUTES.md            # Documentación de rutas
+├── CLAUDE.md            # Especificaciones del proyecto
+└── README.md            # Este archivo
+```
+
+---
+
+## 🎨 Sistema de Diseño
+
+Prexiopá cuenta con un sistema de diseño completo y profesional:
+
+### Paleta de Colores
+- **Primario**: Verde (#00C853) - Confianza y ahorro
+- **Secundario**: Azul turquesa (#00BCD4) - Claridad y modernidad
+- **Funcionales**: bestPrice, highPrice, discount, favorite
+- **100+ tokens** de color con variantes
+
+### Tipografía
+- **UI**: Poppins (sans-serif)
+- **Precios**: Roboto Mono (monospace)
+- **Escala modular**: 12 estilos predefinidos
+
+### Accesibilidad
+- ✅ WCAG 2.1 AA compliant
+- ✅ Touch targets 44x44px mínimo
+- ✅ Contraste de color validado
+- ✅ Navegación por teclado
+- ✅ Screen reader friendly
+
+Ver [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md) para detalles completos del sistema de diseño.
+
+---
+
+## 🗺️ Roadmap
+
+### ✅ Fase 0: Configuración Inicial (Completada)
+- [x] Setup de React + Vite + TypeScript
+- [x] Configuración de Supabase
+
+### ✅ Fase 1: Fundación y Arquitectura (Completada)
+- [x] Sistema de diseño completo
+- [x] TypeScript types
+- [x] Estado global (Zustand)
+- [x] Servicios API (Axios)
+- [x] Routing (React Router)
+- [x] Páginas base
+
+### 🚧 Fase 2: Esqueleto y Navegación (En Progreso)
+- [ ] Componentes comunes (Button, Input, Card, Modal)
+- [ ] Layout completo (Navbar, Footer, Sidebar)
+- [ ] Sistema de notificaciones
+- [ ] Loading states
+- [ ] Error boundaries
+
+### 📋 Fase 3: Features Core (Planeado)
+- [ ] Dashboard con productos
+- [ ] Búsqueda y filtros avanzados
+- [ ] Escaneo de códigos QR/barras
+- [ ] Comparación de precios
+- [ ] Lista de favoritos
+- [ ] Sistema de autenticación completo
+
+### 📋 Fase 4: Features Avanzados (Planeado)
+- [ ] Gráficos de historial de precios
+- [ ] Sistema de alertas de precio
+- [ ] Autocompletado en búsqueda
+- [ ] Geolocalización de tiendas
+- [ ] Compartir productos
+
+### 📋 Fase 5: Pulido y Optimización (Planeado)
+- [ ] Dark mode completo
+- [ ] Performance optimization
+- [ ] SEO optimization
+- [ ] PWA implementation
+- [ ] Testing (unit + integration)
+
+Ver [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md) para el roadmap completo.
+
+---
+
+## 🤝 Contribución
+
+¡Las contribuciones son bienvenidas! Si quieres contribuir:
+
+1. Fork el proyecto
+2. Crea tu feature branch (`git checkout -b feat/amazing-feature`)
+3. Commit tus cambios usando conventional commits (`git commit -m 'feat: add amazing feature'`)
+4. Push al branch (`git push origin feat/amazing-feature`)
+5. Abre un Pull Request
+
+### Conventional Commits
+
+Usamos conventional commits para mantener un historial limpio:
+
+- `feat:` - Nueva funcionalidad
+- `fix:` - Corrección de bugs
+- `docs:` - Cambios en documentación
+- `style:` - Cambios de formato (no afectan código)
+- `refactor:` - Refactorización de código
+- `test:` - Agregar o modificar tests
+- `chore:` - Cambios en build o herramientas
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
+
+---
+
+## 👨‍💻 Autor
+
+**Renan Diaz**
+- GitHub: [@RenanDiaz](https://github.com/RenanDiaz)
+
+---
+
+## 🙏 Agradecimientos
+
+- Comunidad de React y TypeScript
+- Equipo de Vite
+- Supabase team
+- Todos los contribuidores
+
+---
+
+## 📞 Soporte
+
+¿Encontraste un bug o tienes una sugerencia?
+
+- Abre un [issue](https://github.com/RenanDiaz/prexiopa/issues)
+- Contacta al equipo de desarrollo
+
+---
+
+<div align="center">
+  <strong>Hecho con ❤️ en Panamá 🇵🇦</strong>
+  <br>
+  <sub>Ayudando a las familias panameñas a ahorrar dinero</sub>
+</div>
