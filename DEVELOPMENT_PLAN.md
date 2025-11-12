@@ -1,6 +1,6 @@
 # Plan de Desarrollo - Prexiopá
 
-> Web app para buscar, comparar y seguir precios de productos en tiendas de Panamá
+> Web app para buscar, comparar y seguir precios de productos en tiendas de Panamá. Incluye escaneo de códigos QR y de barra para búsqueda rápida.
 
 ---
 
@@ -67,6 +67,8 @@ npm install react-toastify
 npm install @tanstack/react-query
 npm install recharts
 npm install -D @types/recharts
+npm install @zxing/browser
+npm install react-webcam
 ```
 
 **Fase 4 - Features Avanzados:**
@@ -89,6 +91,8 @@ npm install react-responsive
 | recharts | ^2.x | Gráficos de precios |
 | date-fns | ^3.x | Manipulación de fechas |
 | react-responsive | ^10.x | Media queries en componentes |
+| @zxing/browser | ^0.1.x | Escaneo de QR y códigos de barra |
+| react-webcam | ^7.x | Acceso a cámara del dispositivo |
 
 ---
 
@@ -175,6 +179,10 @@ prexiopa/
 │   │   │   └── SearchAutocomplete/
 │   │   │       ├── SearchAutocomplete.tsx
 │   │   │       └── SearchAutocomplete.styles.ts
+│   │   │   │
+│   │   │   └── BarcodeScanner/
+│   │   │       ├── BarcodeScanner.tsx
+│   │   │       └── BarcodeScanner.styles.ts
 │   │   │
 │   │   ├── favorites/
 │   │   │   ├── FavoriteButton/
@@ -1779,7 +1787,7 @@ Crear el layout principal, navegación y páginas esqueleto sin funcionalidad co
 **Dependencias:** Fase 2
 
 ### Objetivos
-Implementar las funcionalidades principales: búsqueda de productos, comparación de precios, favoritos y sistema de datos.
+Implementar las funcionalidades principales: búsqueda de productos (incluyendo escaneo de códigos QR y de barra), comparación de precios, favoritos y sistema de datos.
 
 ### Tareas
 
@@ -1858,6 +1866,27 @@ Implementar las funcionalidades principales: búsqueda de productos, comparació
 - [ ] Implementar lógica de búsqueda en Dashboard
   - Conectar SearchBar con useProducts
   - Mostrar resultados filtrados
+- [ ] Crear `BarcodeScanner` component
+  - Acceso a cámara del dispositivo
+  - Escaneo de códigos QR y de barra (EAN-13, UPC-A, Code-128, etc.)
+  - UI de feedback durante escaneo (overlay, guías visuales)
+  - Manejo de permisos de cámara
+  - Toggle para cambiar entre cámara frontal/trasera
+  - Botón para cerrar scanner
+  - Validación de códigos escaneados
+  - Integración con búsqueda de productos
+  - Estados de error (código no encontrado, sin permisos, cámara no disponible)
+  - Animación de éxito cuando detecta un código
+- [ ] Integrar BarcodeScanner en SearchBar
+  - Botón/icono de scanner junto al input de búsqueda
+  - Modal o fullscreen overlay para el scanner
+  - Cerrar automáticamente al escanear código válido
+  - Buscar producto por código escaneado
+- [ ] Crear servicio para búsqueda por código de barra
+  - Función en products.ts: getProductByBarcode(code)
+  - Manejo de múltiples formatos de códigos
+  - Fallback si código no existe en BD
+
   - Loading states
 
 #### 3.5 Sistema de Favoritos
@@ -1913,6 +1942,8 @@ Implementar gráficos de historial de precios, alertas, autocompletado y mejoras
   ```bash
   npm install recharts
   npm install -D @types/recharts
+npm install @zxing/browser
+npm install react-webcam
   ```
 - [ ] Crear `PriceHistoryChart` component
   - LineChart con precio por fecha
