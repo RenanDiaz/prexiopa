@@ -1,11 +1,14 @@
 /**
  * Layout - Componente de layout principal
- * Envuelve todas las páginas con Navbar y estructura común
+ * Envuelve todas las páginas con Navbar, Footer y estructura común
  */
 
 import styled from 'styled-components';
 import { Outlet } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './Navbar';
+import Footer from './layout/Footer';
 
 const LayoutContainer = styled.div`
   min-height: 100vh;
@@ -22,7 +25,7 @@ const MainContent = styled.main`
 
 /**
  * Layout principal de la aplicación
- * Incluye la navegación y el área de contenido
+ * Incluye la navegación, contenido y footer
  */
 const Layout = () => {
   return (
@@ -31,6 +34,19 @@ const Layout = () => {
       <MainContent>
         <Outlet />
       </MainContent>
+      <Footer />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </LayoutContainer>
   );
 };
