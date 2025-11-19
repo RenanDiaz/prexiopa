@@ -7,7 +7,6 @@
 
 import styled, { css, keyframes } from 'styled-components';
 import type { SkeletonVariant } from './Skeleton';
-import { keyframes as themeKeyframes } from '../../styles/animations';
 
 /**
  * Default heights for each variant
@@ -53,8 +52,6 @@ const getAnimation = (animationType: 'shimmer' | 'pulse') => {
   }
 
   return css`
-    ${themeKeyframes.shimmer}
-
     background: linear-gradient(
       90deg,
       ${({ theme }) => theme.colors.neutral[200]} 0%,
