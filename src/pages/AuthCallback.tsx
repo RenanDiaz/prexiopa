@@ -42,9 +42,12 @@ export const AuthCallback: React.FC = () => {
   useEffect(() => {
     const handleCallback = async () => {
       try {
+        // Supabase usa hash fragments (#access_token=...) en el implicit flow
+        // Necesitamos obtener la sesión después de que Supabase procese el hash
         const { user, error } = await authService.handleOAuthCallback();
 
         if (error || !user) {
+          console.error('[AuthCallback] Error en callback:', error);
           setError(error?.message || 'Error al procesar la autenticación');
           setTimeout(() => {
             navigate('/login');
@@ -52,10 +55,13 @@ export const AuthCallback: React.FC = () => {
           return;
         }
 
+        console.log('[AuthCallback] Usuario autenticado:', user);
+
         // Guardar usuario en el store (type assertion porque los tipos de Supabase son diferentes)
         setUser(user as any);
 
-        // Redirigir al dashboard
+        // Limpiar el hash de la URL y redirigir al dashboard
+        window.history.replaceState({}, document.title, '/dashboard');
         navigate('/dashboard', { replace: true });
       } catch (err) {
         console.error('[AuthCallback] Error inesperado:', err);
@@ -66,7 +72,9 @@ export const AuthCallback: React.FC = () => {
       }
     };
 
-    handleCallback();
+    // Pequeño delay para asegurar que Supabase procese el hash
+    const timer = setTimeout(handleCallback, 100);
+    return () => clearTimeout(timer);
   }, [navigate, setUser]);
 
   if (error) {
