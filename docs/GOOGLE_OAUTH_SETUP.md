@@ -69,28 +69,55 @@ VITE_SUPABASE_ANON_KEY=tu-anon-key-aqui
    - **Authorized redirect URIs**:
      ```
      https://tu-proyecto.supabase.co/auth/v1/callback
-     http://localhost:5173/auth/callback
      ```
+
+     **Nota**: Solo necesitas la URL de Supabase aquí. Supabase se encargará de redirigir a tu app.
 5. Haz clic en **Create**
 6. Copia el **Client ID** y **Client Secret**
 
-## Paso 3: Configurar Google Provider en Supabase
+## Paso 3: Configurar Site URL en Supabase
+
+**IMPORTANTE**: Antes de configurar el provider, debes configurar la Site URL.
 
 1. Ve a tu [Supabase Dashboard](https://supabase.com/dashboard)
 2. Selecciona tu proyecto
-3. Ve a **Authentication > Providers**
-4. Busca **Google** en la lista de providers
-5. Haz clic en **Enable**
-6. Pega los valores copiados de Google Cloud Console:
+3. Ve a **Authentication > URL Configuration**
+4. Configura las siguientes URLs:
+
+   **Para desarrollo local:**
+   - **Site URL**: `http://localhost:5173`
+   - **Redirect URLs**:
+     ```
+     http://localhost:5173/auth/callback
+     http://localhost:5173/**
+     ```
+
+   **Para producción:**
+   - **Site URL**: `https://prexiopa.vercel.app`
+   - **Redirect URLs**:
+     ```
+     https://prexiopa.vercel.app/auth/callback
+     https://prexiopa.vercel.app/**
+     ```
+
+5. Haz clic en **Save**
+
+## Paso 4: Configurar Google Provider en Supabase
+
+1. En el mismo dashboard de Supabase
+2. Ve a **Authentication > Providers**
+3. Busca **Google** en la lista de providers
+4. Haz clic en **Enable**
+5. Pega los valores copiados de Google Cloud Console:
    - **Client ID**: El Client ID de Google
    - **Client Secret**: El Client Secret de Google
-7. En **Redirect URL**, verifica que sea:
+6. En **Redirect URL**, verifica que sea:
    ```
    https://tu-proyecto.supabase.co/auth/v1/callback
    ```
-8. Haz clic en **Save**
+7. Haz clic en **Save**
 
-## Paso 4: Configurar Redirect URL en el Código
+## Paso 6: Configurar Redirect URL en el Código
 
 El redirect está configurado en `src/services/authService.ts`:
 
@@ -107,7 +134,7 @@ const { data, error } = await supabase.auth.signInWithOAuth({
 });
 ```
 
-## Paso 5: Usar el Componente GoogleButton
+## Paso 7: Usar el Componente GoogleButton
 
 En tu página de login (`src/pages/Login.tsx`), importa y usa el componente:
 
