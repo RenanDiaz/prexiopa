@@ -60,9 +60,9 @@ export const AuthCallback: React.FC = () => {
         // Guardar usuario en el store (type assertion porque los tipos de Supabase son diferentes)
         setUser(user as any);
 
-        // Limpiar el hash de la URL y redirigir al dashboard
-        window.history.replaceState({}, document.title, '/dashboard');
-        navigate('/dashboard', { replace: true });
+        // Limpiar el hash de la URL y redirigir al home/dashboard
+        window.history.replaceState({}, document.title, '/');
+        navigate('/', { replace: true });
       } catch (err) {
         console.error('[AuthCallback] Error inesperado:', err);
         setError('Error inesperado al procesar la autenticación');
