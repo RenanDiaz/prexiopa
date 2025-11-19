@@ -4,7 +4,7 @@
  */
 
 import styled, { css, keyframes } from 'styled-components';
-import type { ModalProps } from './Modal';
+import { type ModalProps } from './Modal';
 
 // Animations
 const fadeIn = keyframes`

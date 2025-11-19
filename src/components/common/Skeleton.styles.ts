@@ -6,7 +6,7 @@
  */
 
 import styled, { css, keyframes } from 'styled-components';
-import type { SkeletonVariant } from './Skeleton';
+import { type SkeletonVariant } from './Skeleton';
 
 /**
  * Default heights for each variant

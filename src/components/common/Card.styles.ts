@@ -4,7 +4,7 @@
  */
 
 import styled, { css } from 'styled-components';
-import type { CardProps } from './Card';
+import { type CardProps } from './Card';
 
 const variantStyles = {
   default: css`
