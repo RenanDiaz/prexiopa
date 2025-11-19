@@ -20,6 +20,7 @@ const ProductDetail = lazy(() => import('../pages/ProductDetail'));
 const StorePage = lazy(() => import('../pages/StorePage'));
 const Favorites = lazy(() => import('../pages/Favorites'));
 const SearchResults = lazy(() => import('../pages/SearchResults'));
+const ScannerDemo = lazy(() => import('../pages/ScannerDemo'));
 // const ProductsDemo = lazy(() => import('../pages/ProductsDemo'));
 const AuthCallback = lazy(() => import('../pages/AuthCallback'));
 const NotFound = lazy(() => import('../pages/NotFound'));
@@ -133,6 +134,16 @@ export const router = createBrowserRouter([
         element: (
           <SuspenseWrapper>
             <Profile />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        // Demo del escáner de códigos de barras
+        // Ruta de desarrollo para probar el componente BarcodeScanner
+        path: 'scanner-demo',
+        element: (
+          <SuspenseWrapper>
+            <ScannerDemo />
           </SuspenseWrapper>
         ),
       },
