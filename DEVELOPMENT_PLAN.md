@@ -2014,7 +2014,86 @@ npm install react-webcam
   - Navegación por teclado
   - Contraste de colores
 
-#### 4.6 Página de Tienda Completa
+#### 4.6 Registro de Compras y Precios 🛒 **[FEATURE CORE]**
+**Motivación:** Permitir a los usuarios contribuir precios mientras compran, creando una base de datos colaborativa.
+
+- [ ] Crear tabla `shopping_sessions` en Supabase
+  - id, user_id, store_id, date, total, status (in_progress, completed), created_at
+- [ ] Crear tabla `shopping_items` en Supabase
+  - id, session_id, product_id, price, quantity, unit, created_at
+- [ ] Crear `ShoppingSession` component
+  - Header con tienda seleccionada y total acumulado
+  - Botón para cambiar tienda
+  - Estado: "En progreso" / "Completada"
+- [ ] Crear `AddProductToCart` component
+  - Búsqueda/escaneo de producto
+  - Input de precio
+  - Input de cantidad y unidad
+  - Botón "Agregar al carrito"
+- [ ] Crear `ShoppingCartItem` component
+  - Producto con precio ingresado
+  - Botón para editar/eliminar
+  - Indicador de diferencia de precio vs último registrado
+- [ ] Crear `ReceiptScanner` component (opcional)
+  - Upload de foto de factura
+  - OCR para extraer productos y precios automáticamente
+  - Revisión manual antes de guardar
+- [ ] Crear `ShoppingHistory` component
+  - Lista de compras pasadas
+  - Ver detalle de cada compra
+  - Comparar precios entre compras
+- [ ] Implementar flujos:
+  - **Mientras compro**: Agregar productos uno por uno en tiempo real
+  - **Después de comprar**: Subir factura o ingresar productos manualmente
+- [ ] Integrar en página `/shopping` o `/my-shopping`
+- [ ] Actualizar tabla `prices` con datos de shopping_items al completar sesión
+
+**Beneficios:**
+- Crowdsourcing de precios en tiempo real
+- Usuarios ven cuánto les va a costar la compra
+- Gamificación: puntos por contribuir precios
+
+#### 4.7 Calculadora de Precio por Unidad 📊 **[FEATURE CORE]**
+**Motivación:** Comparar presentaciones diferentes del mismo producto (ej: cereal 490g vs 370g).
+
+- [ ] Crear `UnitPriceCalculator` component
+  - Grid responsive para múltiples entradas
+  - Cada fila tiene: Nombre/Label, Precio, Cantidad, Unidad
+  - Campos calculados: Precio por unidad, Unidades por dólar
+  - Botón "Agregar otro" para comparar más
+  - Botón "Limpiar todo"
+- [ ] Crear `UnitPriceRow` component
+  - 3 inputs: precio, cantidad, precio por unidad
+  - Lógica: completar 2 de 3 campos, calcular el tercero
+  - Dropdown para unidad: g, kg, ml, L, lb, oz
+  - Indicador visual del mejor precio (verde)
+  - Indicador del peor precio (rojo/amarillo)
+- [ ] Crear `UnitComparison` component
+  - Tabla comparativa visual
+  - Barra de progreso para precio por unidad
+  - Porcentaje de diferencia vs el más barato
+  - Ordenar por mejor precio
+- [ ] Implementar lógica de conversión de unidades
+  - g ↔ kg, ml ↔ L, lb ↔ oz
+  - Normalización a unidad estándar
+- [ ] Crear página `/calculator` o integrar en ProductDetail
+- [ ] Guardar comparaciones en localStorage
+  - Historial de comparaciones recientes
+  - Botón "Guardar comparación"
+- [ ] (Opcional) Integrar con productos reales
+  - Autocompletar con presentaciones existentes del producto
+  - Mostrar datos históricos
+
+**Ejemplos de uso:**
+```
+Cereal Brand X:
+  1. $5.20 / 490g = $10.61/kg → $0.094 por gramo
+  2. $4.50 / 370g = $12.16/kg → $0.082 por gramo ✅ Mejor
+
+Resultado: La presentación de $4.50 es 12% más económica por gramo
+```
+
+#### 4.8 Página de Tienda Completa
 - [ ] Crear `StoreCard` component
   - Logo de tienda
   - Nombre
