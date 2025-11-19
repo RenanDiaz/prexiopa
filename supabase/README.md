@@ -41,6 +41,28 @@ Este script insertará:
 - ✅ 25 productos (alimentos, bebidas, limpieza, snacks, etc.)
 - ✅ ~100 precios (cada producto en 3-5 tiendas diferentes)
 
+### 4. (Opcional) Agregar Datos Históricos para Gráficas
+
+Para probar el componente **PriceHistoryChart** con datos reales:
+
+1. Abre el archivo `supabase/seed-historical-prices.sql`
+2. Copia todo el contenido
+3. Pégalo en una **nueva query** en el editor SQL
+4. Haz clic en **Run** para ejecutar
+
+Este script agrega:
+- ✅ Precios históricos de los últimos 90 días
+- ✅ Datos semanales para 5 productos populares
+- ✅ Variaciones realistas de precios por tienda
+- ✅ ~200 registros adicionales de precios
+
+**Productos con historial:**
+- Arroz Gallo 5 lb
+- Coca-Cola 2L
+- Leche Parmalat 1L
+- Detergente Ace 1kg
+- Doritos Nacho 150g
+
 ## 📊 Estructura de la Base de Datos
 
 ### Tabla: `stores`
