@@ -1,294 +1,236 @@
 /**
  * ProductCard Component
  *
- * Professional product card for displaying product information with pricing.
- * Optimized for Prexiopá's price comparison platform.
- *
- * Features:
- * - Product image with fallback
- * - Discount badge (top-right)
- * - Favorite toggle button (animated heart)
- * - Best price highlighting with store info
- * - Brand, category, and product name
- * - Responsive hover effects
- * - Navigation to product detail page
- * - Mobile-optimized touch targets
+ * Displays a product card with image, category, name, brand, and lowest price.
+ * Includes favorite functionality with heart button in top-right corner.
  *
  * @example
  * ```tsx
- * // Basic usage
- * <ProductCard
- *   product={product}
- *   bestPrice={lowestPriceData}
- *   onFavoriteToggle={handleToggle}
- *   isFavorite={false}
- * />
- *
- * // Compact variant
- * <ProductCard
- *   product={product}
- *   variant="compact"
- * />
+ * <ProductCard product={product} />
+ * <ProductCardSkeleton />
  * ```
  */
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FiHeart, FiMapPin, FiTrendingDown } from 'react-icons/fi';
-import type { Product } from '@/types/product.types';
-import type { StorePriceComparison } from '@/types/price.types';
-import { Card } from '@/components/common/Card';
-import { Badge } from '@/components/common/Badge';
-import { Button } from '@/components/common/Button';
-import * as S from './ProductCard.styles';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { FiHeart } from 'react-icons/fi';
+import { FaHeart } from 'react-icons/fa';
+import type { ProductWithLowestPrice } from '@/types/product';
+import { useIsFavorite, useToggleFavoriteMutation } from '@/hooks/useFavorites';
+import { useAuthStore } from '@/store/authStore';
+import {
+  CardContainer,
+  CardImageWrapper,
+  CardImage,
+  CategoryBadge,
+  FavoriteButton,
+  CardContent,
+  ProductName,
+  BrandName,
+  PriceSection,
+  PriceLabel,
+  PriceAmount,
+  StoreName,
+  SkeletonCard,
+  SkeletonImage,
+  SkeletonContent,
+  SkeletonText,
+} from './ProductCard.phase3.styles';
 
 export interface ProductCardProps {
-  /**
-   * Product data to display
-   */
-  product: Product;
-
-  /**
-   * Best price data (lowest price from all stores)
-   */
-  bestPrice?: StorePriceComparison;
-
-  /**
-   * Callback when favorite button is toggled
-   */
-  onFavoriteToggle?: (productId: string) => void;
-
-  /**
-   * Whether product is favorited by user
-   */
-  isFavorite?: boolean;
-
-  /**
-   * Card display variant
-   * - default: Full card with all information
-   * - compact: Condensed version for dense layouts
-   */
-  variant?: 'default' | 'compact';
-
-  /**
-   * Additional CSS class
-   */
+  /** Product data including prices and store information */
+  product: ProductWithLowestPrice;
+  /** Additional CSS class name */
   className?: string;
-
-  /**
-   * Test ID for testing
-   */
+  /** Callback when card is clicked (optional) */
+  onClick?: (product: ProductWithLowestPrice) => void;
+  /** Test ID for testing */
   testId?: string;
 }
 
 /**
- * ProductCard - Display product with pricing and interactions
+ * ProductCard component for displaying product information in a card format
+ *
+ * Features:
+ * - 1:1 aspect ratio image
+ * - Category badge with uppercase styling
+ * - Product name with 2-line clamp
+ * - Brand name in secondary text
+ * - Lowest price section with store name
+ * - Favorite heart button (outline/filled)
+ * - Links to product detail page
+ * - Responsive design
+ * - Theme-integrated styling
+ *
+ * @component
  */
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
-  bestPrice,
-  onFavoriteToggle,
-  isFavorite = false,
-  variant = 'default',
   className,
+  onClick,
   testId = 'product-card',
 }) => {
-  const navigate = useNavigate();
-  const [isHeartAnimating, setIsHeartAnimating] = useState(false);
-  const [imageError, setImageError] = useState(false);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isFavorite = useIsFavorite(product.id);
+  const { toggleFavorite, isLoading: isTogglingFavorite } = useToggleFavoriteMutation();
 
-  // Get primary image or first available image
-  const primaryImage = product.images.find(img => img.isPrimary) || product.images[0];
-  const imageUrl = imageError ? '/images/product-placeholder.png' : primaryImage?.url;
+  /**
+   * Handle favorite button click
+   * Prevents event propagation to avoid triggering card navigation
+   */
+  const handleFavoriteClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-  // Calculate discount percentage if available
-  const discountPercentage = bestPrice?.discountPercentage || 0;
-  const hasDiscount = discountPercentage > 0;
+    if (!isAuthenticated) {
+      // TODO: Show login modal or redirect to login
+      console.warn('User must be authenticated to add favorites');
+      return;
+    }
 
-  // Format price with currency
-  const formatPrice = (price: number): string => {
-    return `$${price.toFixed(2)}`;
-  };
-
-  // Handle favorite toggle with animation
-  const handleFavoriteClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent card click
-
-    if (onFavoriteToggle) {
-      setIsHeartAnimating(true);
-      onFavoriteToggle(product.id);
-
-      // Reset animation after completion
-      setTimeout(() => setIsHeartAnimating(false), 600);
+    try {
+      await toggleFavorite(product.id);
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      // TODO: Show error toast notification
     }
   };
 
-  // Navigate to product detail page
+  /**
+   * Handle card click
+   */
   const handleCardClick = () => {
-    navigate(`/product/${product.id}`);
+    if (onClick) {
+      onClick(product);
+    }
   };
 
-  // Handle image error
-  const handleImageError = () => {
-    setImageError(true);
-  };
-
-  // Handle View Details button
-  const handleViewDetails = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    navigate(`/product/${product.id}`);
+  /**
+   * Format price for display
+   */
+  const formatPrice = (price?: number): string => {
+    if (price === undefined || price === null) return 'N/A';
+    return price.toFixed(2);
   };
 
   return (
-    <S.ProductCardWrapper
+    <CardContainer
       className={className}
-      variant={variant}
       data-testid={testId}
+      onClick={handleCardClick}
     >
-      <Card variant="default" padding="md">
-        {/* Image Section with Badges */}
-        <S.ImageSection onClick={handleCardClick} role="button" tabIndex={0}>
-          <S.ProductImage
-            src={imageUrl}
-            alt={primaryImage?.alt || product.name}
-            onError={handleImageError}
+      <Link to={`/product/${product.id}`} aria-label={`Ver detalles de ${product.name}`}>
+        {/* Image Section */}
+        <CardImageWrapper>
+          <CardImage
+            src={product.image}
+            alt={product.name}
             loading="lazy"
           />
 
-          {/* Discount Badge - Top Right */}
-          {hasDiscount && (
-            <S.DiscountBadge>
-              <Badge variant="warning" size="md">
-                <FiTrendingDown size={12} />
-                <span>-{Math.round(discountPercentage)}%</span>
-              </Badge>
-            </S.DiscountBadge>
+          {/* Category Badge */}
+          {product.category && (
+            <CategoryBadge>
+              {product.category}
+            </CategoryBadge>
           )}
 
-          {/* Favorite Button - Top Right */}
-          <S.FavoriteButton
-            onClick={handleFavoriteClick}
-            isFavorite={isFavorite}
-            isAnimating={isHeartAnimating}
-            aria-label={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
-            title={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
-          >
-            <FiHeart size={20} fill={isFavorite ? 'currentColor' : 'none'} />
-          </S.FavoriteButton>
-        </S.ImageSection>
+          {/* Favorite Button */}
+          {isAuthenticated && (
+            <FavoriteButton
+              onClick={handleFavoriteClick}
+              disabled={isTogglingFavorite}
+              aria-label={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+              $isFavorite={isFavorite}
+              type="button"
+            >
+              {isFavorite ? (
+                <FaHeart aria-hidden="true" />
+              ) : (
+                <FiHeart aria-hidden="true" />
+              )}
+            </FavoriteButton>
+          )}
+        </CardImageWrapper>
 
         {/* Content Section */}
-        <S.ContentSection onClick={handleCardClick}>
-          {/* Category */}
-          <S.CategoryText>{product.category}</S.CategoryText>
-
+        <CardContent>
           {/* Product Name */}
-          <S.ProductName title={product.name}>
+          <ProductName title={product.name}>
             {product.name}
-          </S.ProductName>
+          </ProductName>
 
-          {/* Brand */}
+          {/* Brand Name */}
           {product.brand && (
-            <S.BrandText>
-              <span>por</span> <strong>{product.brand}</strong>
-            </S.BrandText>
+            <BrandName>
+              {product.brand}
+            </BrandName>
           )}
 
           {/* Price Section */}
-          {bestPrice && (
-            <S.PriceSection>
-              {/* Best Price Label */}
-              <S.BestPriceLabel>
-                <Badge variant="success" size="sm">
-                  Mejor Precio
-                </Badge>
-              </S.BestPriceLabel>
-
-              {/* Price Display */}
-              <S.PriceDisplay>
-                {bestPrice.discountPrice ? (
-                  <>
-                    <S.OriginalPrice>
-                      {formatPrice(bestPrice.price)}
-                    </S.OriginalPrice>
-                    <S.DiscountPrice>
-                      {formatPrice(bestPrice.discountPrice)}
-                    </S.DiscountPrice>
-                  </>
-                ) : (
-                  <S.CurrentPrice>
-                    {formatPrice(bestPrice.price)}
-                  </S.CurrentPrice>
-                )}
-              </S.PriceDisplay>
-
-              {/* Store Info */}
-              <S.StoreInfo>
-                <FiMapPin size={14} />
-                <span>en {bestPrice.storeName}</span>
-              </S.StoreInfo>
-            </S.PriceSection>
-          )}
-
-          {/* No Price Available */}
-          {!bestPrice && (
-            <S.NoPriceAvailable>
-              <span>Precio no disponible</span>
-            </S.NoPriceAvailable>
-          )}
-        </S.ContentSection>
-
-        {/* Action Button */}
-        <S.ActionSection>
-          <Button
-            variant="outline"
-            size="md"
-            fullWidth
-            onClick={handleViewDetails}
-            aria-label={`Ver detalles de ${product.name}`}
-          >
-            Ver Detalles
-          </Button>
-        </S.ActionSection>
-      </Card>
-    </S.ProductCardWrapper>
-  );
-};
-
-/**
- * ProductCardSkeleton - Loading state for ProductCard
- */
-export const ProductCardSkeleton: React.FC<{ variant?: 'default' | 'compact' }> = ({
-  variant = 'default',
-}) => {
-  return (
-    <S.ProductCardWrapper variant={variant} data-testid="product-card-skeleton">
-      <Card variant="default" padding="md">
-        {/* Image Skeleton */}
-        <S.SkeletonImage />
-
-        {/* Content Skeleton */}
-        <S.SkeletonContent>
-          <S.SkeletonText width="40%" height="12px" />
-          <S.SkeletonText width="90%" height="16px" marginTop="8px" />
-          <S.SkeletonText width="60%" height="12px" marginTop="8px" />
-
-          {/* Price Skeleton */}
-          <S.SkeletonPriceSection>
-            <S.SkeletonText width="80px" height="20px" />
-            <S.SkeletonText width="120px" height="24px" marginTop="4px" />
-            <S.SkeletonText width="100px" height="12px" marginTop="4px" />
-          </S.SkeletonPriceSection>
-        </S.SkeletonContent>
-
-        {/* Button Skeleton */}
-        <S.SkeletonButton />
-      </Card>
-    </S.ProductCardWrapper>
+          <PriceSection>
+            <PriceLabel>Desde</PriceLabel>
+            <PriceAmount>
+              ${formatPrice(product.lowest_price)}
+            </PriceAmount>
+            {product.store_with_lowest_price && (
+              <StoreName>
+                en {product.store_with_lowest_price.name}
+              </StoreName>
+            )}
+          </PriceSection>
+        </CardContent>
+      </Link>
+    </CardContainer>
   );
 };
 
 ProductCard.displayName = 'ProductCard';
+
+/**
+ * ProductCardSkeleton - Loading skeleton for ProductCard
+ *
+ * @example
+ * ```tsx
+ * <ProductCardSkeleton />
+ * ```
+ */
+export interface ProductCardSkeletonProps {
+  /** Additional CSS class name */
+  className?: string;
+  /** Test ID for testing */
+  testId?: string;
+}
+
+export const ProductCardSkeleton: React.FC<ProductCardSkeletonProps> = ({
+  className,
+  testId = 'product-card-skeleton',
+}) => {
+  return (
+    <SkeletonCard className={className} data-testid={testId} aria-label="Cargando producto">
+      {/* Skeleton Image */}
+      <SkeletonImage />
+
+      {/* Skeleton Content */}
+      <SkeletonContent>
+        {/* Skeleton Product Name */}
+        <SkeletonText width="100%" height="20px" />
+        <SkeletonText width="80%" height="20px" />
+
+        {/* Skeleton Brand */}
+        <SkeletonText width="60%" height="14px" />
+
+        {/* Skeleton Price Section */}
+        <div style={{ marginTop: '16px', paddingTop: '12px' }}>
+          <SkeletonText width="40%" height="12px" />
+          <SkeletonText width="50%" height="24px" style={{ marginTop: '8px' }} />
+          <SkeletonText width="70%" height="14px" style={{ marginTop: '4px' }} />
+        </div>
+      </SkeletonContent>
+    </SkeletonCard>
+  );
+};
+
 ProductCardSkeleton.displayName = 'ProductCardSkeleton';
 
 export default ProductCard;

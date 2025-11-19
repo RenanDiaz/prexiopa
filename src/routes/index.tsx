@@ -20,7 +20,7 @@ const ProductDetail = lazy(() => import('../pages/ProductDetail'));
 const StorePage = lazy(() => import('../pages/StorePage'));
 const Favorites = lazy(() => import('../pages/Favorites'));
 const SearchResults = lazy(() => import('../pages/SearchResults'));
-const ProductsDemo = lazy(() => import('../pages/ProductsDemo'));
+// const ProductsDemo = lazy(() => import('../pages/ProductsDemo'));
 const AuthCallback = lazy(() => import('../pages/AuthCallback'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
@@ -136,16 +136,16 @@ export const router = createBrowserRouter([
           </SuspenseWrapper>
         ),
       },
-      {
-        // Demo de componentes de productos
-        // Ruta de desarrollo para ver los componentes en acción
-        path: 'products-demo',
-        element: (
-          <SuspenseWrapper>
-            <ProductsDemo />
-          </SuspenseWrapper>
-        ),
-      },
+      // {
+      //   // Demo de componentes de productos
+      //   // Ruta de desarrollo para ver los componentes en acción
+      //   path: 'products-demo',
+      //   element: (
+      //     <SuspenseWrapper>
+      //       <ProductsDemo />
+      //     </SuspenseWrapper>
+      //   ),
+      // },
     ],
   },
   {

@@ -5,14 +5,17 @@
  * Import components using: import { ProductCard, ProductGrid } from '@/components/products'
  */
 
-// Product Card
+// Product Card (Phase 3 - with favorites integration)
 export { ProductCard, ProductCardSkeleton } from './ProductCard';
-export type { ProductCardProps } from './ProductCard';
+export type { ProductCardProps, ProductCardSkeletonProps } from './ProductCard';
 
-// Product Grid
-export { ProductGrid } from './ProductGrid';
-export type { ProductGridProps } from './ProductGrid';
+// Product List (Phase 3 - responsive grid with states)
+export { ProductList } from './ProductList';
+export type { ProductListProps } from './ProductList';
+
+// Price Comparison (Phase 3)
+export { PriceComparison } from './PriceComparison';
+export type { PriceComparisonProps } from './PriceComparison';
 
 // Re-export common types for convenience
-export type { Product, ProductWithPrice, ProductSummary } from '@/types/product.types';
-export type { StorePriceComparison } from '@/types/price.types';
+export type { Product, ProductWithLowestPrice, Price, Store } from '@/types/product';
