@@ -4,6 +4,7 @@
  */
 
 import apiClient, { api } from './api';
+import { supabase } from '../supabaseClient';
 import type { ApiResponse, MutationResponse } from '../types/api.types';
 import type {
   User,
@@ -408,24 +409,162 @@ export const revokeAllOtherSessions = async (): Promise<
 };
 
 /**
+ * Inicia sesión con Google OAuth
+ * @returns Promise con resultado de la operación
+ */
+export const loginWithGoogle = async (): Promise<{
+  error: Error | null;
+  url?: string;
+}> => {
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+      },
+    });
+
+    if (error) {
+      console.error('[authService] Error al iniciar sesión con Google:', error);
+      return { error };
+    }
+
+    return { error: null, url: data.url };
+  } catch (error) {
+    console.error('[authService] Error inesperado al iniciar sesión con Google:', error);
+    return { error: error as Error };
+  }
+};
+
+/**
+ * Maneja el callback de OAuth después de la autenticación
+ * @returns Promise con datos del usuario autenticado
+ */
+export const handleOAuthCallback = async (): Promise<{
+  user: User | null;
+  error: Error | null;
+}> => {
+  try {
+    const { data, error } = await supabase.auth.getSession();
+
+    if (error) {
+      console.error('[authService] Error al obtener sesión de OAuth:', error);
+      return { user: null, error };
+    }
+
+    if (!data.session) {
+      return { user: null, error: new Error('No session found') };
+    }
+
+    // Convertir los datos de Supabase a nuestro formato de User
+    const user: User = {
+      id: data.session.user.id,
+      email: data.session.user.email || '',
+      name: data.session.user.user_metadata.full_name || data.session.user.user_metadata.name,
+      avatar: data.session.user.user_metadata.avatar_url || data.session.user.user_metadata.picture,
+      createdAt: new Date(data.session.user.created_at),
+      updatedAt: new Date(data.session.user.updated_at || data.session.user.created_at),
+      emailVerified: !!data.session.user.email_confirmed_at,
+      role: 'user' as any,
+      preferences: {
+        favoriteStores: [],
+        notificationsEnabled: true,
+        notifications: {
+          email: true,
+          push: true,
+          priceAlerts: true,
+          newProducts: true,
+          specialOffers: true,
+          weeklyDigest: false,
+        },
+        priceAlertThreshold: 10,
+        language: 'es',
+        preferredCurrency: 'USD',
+        darkMode: false,
+      },
+    };
+
+    // Guardar tokens
+    if (data.session.access_token) {
+      api.setAuthToken(data.session.access_token);
+    }
+    if (data.session.refresh_token) {
+      api.setRefreshToken(data.session.refresh_token);
+    }
+
+    return { user, error: null };
+  } catch (error) {
+    console.error('[authService] Error inesperado al procesar callback de OAuth:', error);
+    return { user: null, error: error as Error };
+  }
+};
+
+/**
+ * Cierra sesión de Supabase
+ * @returns Promise con resultado de la operación
+ */
+export const logoutFromSupabase = async (): Promise<{ error: Error | null }> => {
+  try {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error('[authService] Error al cerrar sesión de Supabase:', error);
+      return { error };
+    }
+
+    // Limpiar tokens del localStorage
+    api.removeAuthToken();
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user');
+
+    return { error: null };
+  } catch (error) {
+    console.error('[authService] Error inesperado al cerrar sesión de Supabase:', error);
+    return { error: error as Error };
+  }
+};
+
+/**
  * Servicio de autenticación exportado
  */
 export const authService = {
+  // Autenticación tradicional
   login,
   register,
   logout,
   refreshToken,
   getCurrentUser,
+
+  // OAuth con Google
+  loginWithGoogle,
+  handleOAuthCallback,
+  logoutFromSupabase,
+
+  // Perfil y preferencias
   updateProfile,
   updatePreferences,
+
+  // Contraseñas
   changePassword,
   forgotPassword,
   resetPassword,
+
+  // Verificación
   verifyEmail,
   resendVerificationEmail,
+
+  // Validación
   checkEmailAvailability,
   checkUsernameAvailability,
+
+  // Cuenta
   deleteAccount,
+
+  // Sesiones
   getActiveSessions,
   revokeSession,
   revokeAllOtherSessions,
