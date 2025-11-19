@@ -5,6 +5,7 @@
 
 import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuthStore } from '@/store/authStore';
 
 const Nav = styled.nav`
   position: sticky;
@@ -180,8 +181,42 @@ const MobileMenu = styled.div`
   }
 `;
 
+const UserMenu = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing[2]};
+  padding: ${({ theme }) => theme.spacing[1]} ${({ theme }) => theme.spacing[2]};
+  border-radius: ${({ theme }) => theme.borderRadius.full};
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.neutral[100]};
+  }
+`;
+
+const UserAvatar = styled.img`
+  width: 32px;
+  height: 32px;
+  border-radius: ${({ theme }) => theme.borderRadius.full};
+  object-fit: cover;
+  border: 2px solid ${({ theme }) => theme.colors.primary[500]};
+`;
+
+const UserName = styled.span`
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.colors.text.primary};
+  display: none;
+
+  @media (min-width: 640px) {
+    display: block;
+  }
+`;
+
 const Navbar = () => {
   const location = useLocation();
+  const user = useAuthStore((state) => state.user);
 
   const isActive = (path: string) => {
     if (path === '/') {
@@ -222,7 +257,21 @@ const Navbar = () => {
               ❤️
             </IconButton>
           </MobileMenu>
-          <LoginButton to="/login">Iniciar Sesión</LoginButton>
+          {user ? (
+            <UserMenu to="/profile" title={`Perfil de ${user.user_metadata?.full_name || user.email}`}>
+              <UserAvatar
+                src={
+                  user.user_metadata?.avatar_url ||
+                  user.user_metadata?.picture ||
+                  'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.user_metadata?.full_name || user.email || 'User')
+                }
+                alt={user.user_metadata?.full_name || user.email || 'User'}
+              />
+              <UserName>{user.user_metadata?.full_name || user.email}</UserName>
+            </UserMenu>
+          ) : (
+            <LoginButton to="/login">Iniciar Sesión</LoginButton>
+          )}
         </NavActions>
       </NavContainer>
     </Nav>
