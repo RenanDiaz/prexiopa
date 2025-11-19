@@ -1,245 +1,143 @@
 /**
  * Favorites - Página de productos favoritos del usuario
  * Muestra la lista de productos guardados como favoritos
+ * Integra el componente FavoritesList que maneja todo el estado y la UI
  * TODO: Agregar autenticación - Esta ruta debe ser protegida
  */
 
 import styled from 'styled-components';
+import { FiHeart } from 'react-icons/fi';
+
+// Components
+import { FavoritesList } from '@/components/favorites';
 
 const FavoritesContainer = styled.div`
   min-height: 100vh;
-  padding: ${({ theme }) => theme.spacing[8]};
   background: ${({ theme }) => theme.colors.background.default};
+  padding: ${({ theme }) => theme.spacing[6]};
+
+  @media (min-width: 768px) {
+    padding: ${({ theme }) => theme.spacing[8]};
+  }
 `;
 
 const ContentWrapper = styled.div`
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 `;
 
 const Header = styled.header`
   margin-bottom: ${({ theme }) => theme.spacing[8]};
+  text-align: center;
+
+  @media (min-width: 768px) {
+    text-align: left;
+  }
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing[3]};
+  margin-bottom: ${({ theme }) => theme.spacing[3]};
+
+  @media (min-width: 768px) {
+    justify-content: flex-start;
+  }
+`;
+
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: ${({ theme }) => theme.colors.functional.favorite.light};
+  color: ${({ theme }) => theme.colors.functional.favorite.main};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+
+  @media (min-width: 768px) {
+    width: 56px;
+    height: 56px;
+  }
 `;
 
 const Title = styled.h1`
-  font-size: ${({ theme }) => theme.typography.fontSize['4xl']};
+  font-size: ${({ theme }) => theme.typography.fontSize['3xl']};
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: ${({ theme }) => theme.spacing[2]};
+
+  @media (min-width: 768px) {
+    font-size: ${({ theme }) => theme.typography.fontSize['4xl']};
+  }
 `;
 
 const Subtitle = styled.p`
-  font-size: ${({ theme }) => theme.typography.fontSize.lg};
-  color: ${({ theme }) => theme.colors.text.secondary};
-`;
-
-const ProductGrid = styled.div`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing[4]};
-  grid-template-columns: 1fr;
-
-  @media (min-width: 640px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-`;
-
-const ProductCard = styled.div`
-  background: ${({ theme }) => theme.colors.background.paper};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  padding: ${({ theme }) => theme.spacing[5]};
-  box-shadow: ${({ theme }) => theme.shadows.card};
-  transition: all 0.3s ease;
-  position: relative;
-
-  &:hover {
-    box-shadow: ${({ theme }) => theme.shadows.cardHover};
-    transform: translateY(-4px);
-  }
-`;
-
-const FavoriteButton = styled.button`
-  position: absolute;
-  top: ${({ theme }) => theme.spacing[3]};
-  right: ${({ theme }) => theme.spacing[3]};
-  width: 40px;
-  height: 40px;
-  border-radius: ${({ theme }) => theme.borderRadius.full};
-  background: ${({ theme }) => theme.colors.functional.favorite.main};
-  color: white;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: ${({ theme }) => theme.typography.fontSize.lg};
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: ${({ theme }) => theme.shadows.md};
-
-  &:hover {
-    transform: scale(1.1);
-    background: ${({ theme }) => theme.colors.functional.favorite.dark};
-  }
-`;
-
-const ProductImage = styled.div`
-  width: 100%;
-  aspect-ratio: 1;
-  background: ${({ theme }) => theme.colors.neutral[100]};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: ${({ theme }) => theme.typography.fontSize['4xl']};
-  margin-bottom: ${({ theme }) => theme.spacing[4]};
-`;
-
-const ProductInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing[2]};
-`;
-
-const ProductName = styled.h3`
-  font-size: ${({ theme }) => theme.typography.fontSize.lg};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  color: ${({ theme }) => theme.colors.text.primary};
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-`;
-
-const ProductBrand = styled.p`
-  font-size: ${({ theme }) => theme.typography.fontSize.sm};
-  color: ${({ theme }) => theme.colors.text.secondary};
-`;
-
-const PriceSection = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: ${({ theme }) => theme.spacing[3]};
-  padding-top: ${({ theme }) => theme.spacing[3]};
-  border-top: 1px solid ${({ theme }) => theme.colors.border.light};
-`;
-
-const PriceInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing[1]};
-`;
-
-const PriceLabel = styled.span`
-  font-size: ${({ theme }) => theme.typography.fontSize.xs};
-  color: ${({ theme }) => theme.colors.text.secondary};
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-`;
-
-const Price = styled.span`
-  font-size: ${({ theme }) => theme.typography.fontSize.xl};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-  color: ${({ theme }) => theme.colors.primary[500]};
-`;
-
-const ViewButton = styled.button`
-  height: 36px;
-  padding: 0 ${({ theme }) => theme.spacing[4]};
-  background: ${({ theme }) => theme.colors.secondary[500]};
-  color: ${({ theme }) => theme.colors.secondary.contrast};
-  border: none;
-  border-radius: ${({ theme }) => theme.borderRadius.button};
-  font-size: ${({ theme }) => theme.typography.fontSize.sm};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: ${({ theme }) => theme.colors.secondary[600]};
-    transform: translateY(-2px);
-    box-shadow: ${({ theme }) => theme.shadows.secondary};
-  }
-`;
-
-const EmptyState = styled.div`
-  grid-column: 1 / -1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: ${({ theme }) => theme.spacing[20]} ${({ theme }) => theme.spacing[8]};
-  text-align: center;
-`;
-
-const EmptyIcon = styled.div`
-  font-size: 120px;
-  margin-bottom: ${({ theme }) => theme.spacing[6]};
-  opacity: 0.3;
-`;
-
-const EmptyTitle = styled.h2`
-  font-size: ${({ theme }) => theme.typography.fontSize['2xl']};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: ${({ theme }) => theme.spacing[2]};
-`;
-
-const EmptyDescription = styled.p`
   font-size: ${({ theme }) => theme.typography.fontSize.base};
   color: ${({ theme }) => theme.colors.text.secondary};
-  max-width: 400px;
+  line-height: ${({ theme }) => theme.typography.lineHeight.relaxed};
+  max-width: 600px;
+
+  @media (min-width: 768px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.lg};
+    margin-left: 68px; // Align with title text
+  }
+`;
+
+const Divider = styled.hr`
+  border: none;
+  border-top: 2px solid ${({ theme }) => theme.colors.border.light};
+  margin: ${({ theme }) => theme.spacing[6]} 0 ${({ theme }) => theme.spacing[8]};
+`;
+
+const InfoCard = styled.div`
+  background: ${({ theme }) => theme.colors.semantic.info.light};
+  border-left: 4px solid ${({ theme }) => theme.colors.semantic.info.main};
+  padding: ${({ theme }) => theme.spacing[4]};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  margin-bottom: ${({ theme }) => theme.spacing[6]};
+`;
+
+const InfoText = styled.p`
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  color: ${({ theme }) => theme.colors.semantic.info.dark};
+  line-height: ${({ theme }) => theme.typography.lineHeight.relaxed};
+  margin: 0;
+
+  strong {
+    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  }
 `;
 
 const Favorites = () => {
-  // Simulando productos favoritos
-  const hasFavorites = true;
-
   return (
     <FavoritesContainer>
       <ContentWrapper>
         <Header>
-          <Title>Mis Favoritos</Title>
-          <Subtitle>Productos que has guardado para seguir de cerca</Subtitle>
+          <TitleWrapper>
+            <IconWrapper>
+              <FiHeart size={28} />
+            </IconWrapper>
+            <Title>Mis Favoritos</Title>
+          </TitleWrapper>
+          <Subtitle>
+            Productos que has guardado para seguir de cerca. Recibe notificaciones cuando bajen de
+            precio.
+          </Subtitle>
         </Header>
 
-        <ProductGrid>
-          {hasFavorites ? (
-            <>
-              {[1, 2, 3, 4, 5, 6].map((item) => (
-                <ProductCard key={item}>
-                  <FavoriteButton title="Quitar de favoritos">
-                    ❤️
-                  </FavoriteButton>
-                  <ProductImage>📦</ProductImage>
-                  <ProductInfo>
-                    <ProductName>Producto Favorito {item}</ProductName>
-                    <ProductBrand>Marca Ejemplo</ProductBrand>
-                  </ProductInfo>
-                  <PriceSection>
-                    <PriceInfo>
-                      <PriceLabel>Mejor precio</PriceLabel>
-                      <Price>$24.99</Price>
-                    </PriceInfo>
-                    <ViewButton>Ver Detalles</ViewButton>
-                  </PriceSection>
-                </ProductCard>
-              ))}
-            </>
-          ) : (
-            <EmptyState>
-              <EmptyIcon>💔</EmptyIcon>
-              <EmptyTitle>No tienes favoritos aún</EmptyTitle>
-              <EmptyDescription>
-                Empieza a guardar productos para poder seguir sus precios y recibir alertas cuando bajen.
-              </EmptyDescription>
-            </EmptyState>
-          )}
-        </ProductGrid>
+        <Divider />
+
+        <InfoCard>
+          <InfoText>
+            <strong>Tip:</strong> Agrega productos a favoritos para compararlos fácilmente y recibir
+            alertas de precio. Tus favoritos se guardan localmente en tu navegador.
+          </InfoText>
+        </InfoCard>
+
+        {/* FavoritesList component handles everything: loading, empty, error states, and product grid */}
+        <FavoritesList />
       </ContentWrapper>
     </FavoritesContainer>
   );
