@@ -9,6 +9,7 @@ import { lazy, Suspense } from 'react';
 import styled from 'styled-components';
 
 import ProtectedRoute from './ProtectedRoute';
+import PublicRoute from './PublicRoute';
 
 // Layout
 import Layout from '../components/Layout';
@@ -166,22 +167,28 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    // Login - Sin layout (página independiente)
-    path: '/login',
-    element: (
-      <SuspenseWrapper>
-        <Login />
-      </SuspenseWrapper>
-    ),
-  },
-  {
-    // Registro - Sin layout (página independiente)
-    path: '/register',
-    element: (
-      <SuspenseWrapper>
-        <Register />
-      </SuspenseWrapper>
-    ),
+    // Rutas Públicas (para usuarios no autenticados)
+    element: <PublicRoute />,
+    children: [
+      {
+        // Login - Sin layout (página independiente)
+        path: '/login',
+        element: (
+          <SuspenseWrapper>
+            <Login />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        // Registro - Sin layout (página independiente)
+        path: '/register',
+        element: (
+          <SuspenseWrapper>
+            <Register />
+          </SuspenseWrapper>
+        ),
+      },
+    ],
   },
   {
     // Callback de OAuth - Sin layout (página de procesamiento)
