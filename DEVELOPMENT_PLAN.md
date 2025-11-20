@@ -1936,21 +1936,21 @@ Implementar gráficos de historial de precios, alertas, autocompletado y mejoras
 ### Tareas
 
 #### 4.1 Gráficos de Precios
-- [ ] Instalar recharts
+- ✅ Instalar recharts
   ```bash
   npm install recharts
   npm install -D @types/recharts
 npm install @zxing/browser
 npm install react-webcam
   ```
-- [ ] Crear `PriceHistoryChart` component
+- ✅ Crear `PriceHistoryChart` component
   - LineChart con precio por fecha
   - Múltiples líneas para diferentes tiendas
   - Tooltip con info detallada
   - Responsive
   - Colores según tema
 - [ ] Añadir datos de historial a tabla `prices` (registros con diferentes fechas)
-- [ ] Integrar gráfico en ProductPage
+- ✅ Integrar gráfico en ProductPage
 
 #### 4.2 Sistema de Alertas
 - [ ] Crear tabla `alerts` en Supabase
