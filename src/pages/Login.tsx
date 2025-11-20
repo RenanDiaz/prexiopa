@@ -7,6 +7,8 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { supabase } from '../supabaseClient';
+import { Button } from '../components/common/Button';
+import { Input } from '../components/common/Input';
 
 const LoginContainer = styled.div`
   min-height: 100vh;
@@ -61,62 +63,6 @@ const Form = styled.form`
   gap: ${({ theme }) => theme.spacing[4]};
 `;
 
-const InputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing[2]};
-`;
-
-const Label = styled.label`
-  font-size: ${({ theme }) => theme.typography.fontSize.sm};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  color: ${({ theme }) => theme.colors.text.primary};
-`;
-
-const Input = styled.input`
-  height: ${({ theme }) => theme.components.input.height.medium};
-  padding: ${({ theme }) => theme.components.input.padding};
-  border: 2px solid ${({ theme }) => theme.colors.border.main};
-  border-radius: ${({ theme }) => theme.borderRadius.input};
-  font-size: ${({ theme }) => theme.components.input.fontSize};
-  color: ${({ theme }) => theme.colors.text.primary};
-  transition: all 0.2s ease;
-
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary[500]};
-    box-shadow: 0 0 0 3px ${({ theme }) => theme.colors.primary[500]}1A;
-  }
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.text.hint};
-  }
-`;
-
-const Button = styled.button`
-  height: ${({ theme }) => theme.components.button.size.large.height};
-  padding: ${({ theme }) => theme.components.button.size.large.padding};
-  background: ${({ theme }) => theme.colors.primary[500]};
-  color: ${({ theme }) => theme.colors.primary.contrast};
-  border: none;
-  border-radius: ${({ theme }) => theme.borderRadius.button};
-  font-size: ${({ theme }) => theme.components.button.size.large.fontSize};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  cursor: pointer;
-  transition: all 0.2s ease;
-  margin-top: ${({ theme }) => theme.spacing[2]};
-
-  &:hover {
-    background: ${({ theme }) => theme.colors.primary[600]};
-    transform: translateY(-2px);
-    box-shadow: ${({ theme }) => theme.shadows.primary};
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-`;
-
 const Divider = styled.div`
   display: flex;
   align-items: center;
@@ -135,35 +81,6 @@ const Divider = styled.div`
 const DividerText = styled.span`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   color: ${({ theme }) => theme.colors.text.secondary};
-`;
-
-const GoogleButton = styled.button`
-  width: 100%;
-  height: ${({ theme }) => theme.components.button.size.large.height};
-  padding: ${({ theme }) => theme.components.button.size.large.padding};
-  background: white;
-  color: ${({ theme }) => theme.colors.text.primary};
-  border: 2px solid ${({ theme }) => theme.colors.border.main};
-  border-radius: ${({ theme }) => theme.borderRadius.button};
-  font-size: ${({ theme }) => theme.components.button.size.large.fontSize};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing[3]};
-
-  &:hover {
-    background: ${({ theme }) => theme.colors.background.default};
-    border-color: ${({ theme }) => theme.colors.text.secondary};
-    transform: translateY(-2px);
-    box-shadow: ${({ theme }) => theme.shadows.md};
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
 `;
 
 const FooterText = styled.p`
@@ -209,39 +126,42 @@ const Login = () => {
           <Subtitle>Compara precios, ahorra dinero</Subtitle>
         </Logo>
 
-        <GoogleButton type="button" onClick={handleGoogleLogin}>
-          <FcGoogle size={24} />
+        <Button
+          variant="outline"
+          size="lg"
+          fullWidth
+          iconLeft={<FcGoogle size={24} />}
+          onClick={handleGoogleLogin}
+        >
           Continuar con Google
-        </GoogleButton>
+        </Button>
 
         <Divider>
           <DividerText>o</DividerText>
         </Divider>
 
         <Form>
-          <InputGroup>
-            <Label htmlFor="email">Correo electrónico</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="tu@email.com"
-              autoComplete="email"
-              required
-            />
-          </InputGroup>
+          <Input
+            id="email"
+            type="email"
+            label="Correo electrónico"
+            placeholder="tu@email.com"
+            autoComplete="email"
+            required
+            fullWidth
+          />
 
-          <InputGroup>
-            <Label htmlFor="password">Contraseña</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              autoComplete="current-password"
-              required
-            />
-          </InputGroup>
+          <Input
+            id="password"
+            type="password"
+            label="Contraseña"
+            placeholder="••••••••"
+            autoComplete="current-password"
+            required
+            fullWidth
+          />
 
-          <Button type="submit">
+          <Button type="submit" variant="primary" size="lg" fullWidth style={{ marginTop: '8px' }}>
             Iniciar Sesión
           </Button>
         </Form>

@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { GlobalStyles } from './styles/GlobalStyles'
 import { theme } from './styles/theme'
 import App from './App.tsx'
+import { useAuthStore } from './store/authStore'
 
 // Configurar React Query Client
 const queryClient = new QueryClient({
@@ -20,6 +21,9 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+// Verificar sesión al iniciar la aplicación
+useAuthStore.getState().checkAuth();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
