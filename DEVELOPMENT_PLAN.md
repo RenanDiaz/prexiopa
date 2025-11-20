@@ -1953,22 +1953,22 @@ npm install react-webcam
 - ✅ Integrar gráfico en ProductPage
 
 #### 4.2 Sistema de Alertas
-- [ ] Crear tabla `alerts` en Supabase
+- ✅ Crear tabla `alerts` en Supabase
   - id, user_id, product_id, target_price, active, created_at
-- [ ] Crear servicio `src/services/supabase/alerts.ts`
+- ✅ Crear servicio `src/services/supabase/alerts.ts`
   - getAlerts(userId)
   - createAlert(userId, productId, targetPrice)
   - deleteAlert(id)
   - updateAlert(id, data)
-- [ ] Crear `PriceAlert` component (modal/form)
+- ✅ Crear `PriceAlert` component (modal/form)
   - Input para precio objetivo
   - Dropdown para seleccionar tienda (o todas)
   - Botón "Crear Alerta"
-- [ ] Crear `AlertsList` component
+- ✅ Crear `AlertsList` component
   - Lista de alertas activas
   - Botón para editar/eliminar
   - Estado: activa, pausada, cumplida
-- [ ] Integrar en Profile page
+- ✅ Integrar en Profile page
 
 #### 4.3 Autocompletado de Búsqueda
 - ✅ Crear `SearchAutocomplete` component
