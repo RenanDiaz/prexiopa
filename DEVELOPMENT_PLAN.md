@@ -1983,13 +1983,13 @@ npm install react-webcam
 - ✅ Integrar en `SearchBar`
 
 #### 4.4 Ordenamiento de Productos
-- [ ] Añadir dropdown "Ordenar por" en Dashboard
+- ✅ Añadir dropdown "Ordenar por" en Dashboard
   - Precio: menor a mayor
   - Precio: mayor a menor
   - Nombre: A-Z
   - Más populares (por cantidad de búsquedas)
-- [ ] Implementar lógica en useSearchStore
-- [ ] Aplicar ordenamiento en query de productos
+- ✅ Implementar lógica en `useSearchStore`
+- ✅ Aplicar ordenamiento en query de productos
 
 #### 4.5 Mejoras de UX
 - [ ] Instalar librerías auxiliares

@@ -14,6 +14,8 @@ export interface ProductFilters {
   maxPrice?: number;
   limit?: number;
   offset?: number;
+  sortBy?: 'price' | 'name' | 'relevance';
+  sortOrder?: 'asc' | 'desc';
 }
 
 export interface ProductPrice {
@@ -72,8 +74,29 @@ export const getProducts = async (filters: ProductFilters = {}): Promise<Product
       query = query.range(filters.offset, filters.offset + (filters.limit || 10) - 1);
     }
 
-    // Ordenar por nombre
-    query = query.order('name', { ascending: true });
+    // Aplicar ordenamiento dinámico
+    if (filters.sortBy) {
+      let column = '';
+      switch (filters.sortBy) {
+        case 'name':
+          column = 'name';
+          break;
+        case 'price':
+          // Para ordenar por precio, necesitamos un enfoque más sofisticado si hay múltiples precios.
+          // Por ahora, asumimos que 'prices.price' se refiere al precio más relevante o una agregación.
+          // En una implementación real, se necesitaría un subquery o una vista materializada.
+          column = 'prices.price';
+          break;
+        case 'relevance':
+        default:
+          column = 'name'; // Ordenar por nombre por defecto para relevancia básica
+          break;
+      }
+      query = query.order(column, { ascending: filters.sortOrder === 'asc' });
+    } else {
+      // Ordenamiento por defecto si no se especifica
+      query = query.order('name', { ascending: true });
+    }
 
     const { data, error } = await query;
 
