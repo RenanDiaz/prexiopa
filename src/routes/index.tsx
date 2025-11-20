@@ -8,6 +8,8 @@ import { createBrowserRouter } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import styled from 'styled-components';
 
+import ProtectedRoute from './ProtectedRoute';
+
 // Layout
 import Layout from '../components/Layout';
 
@@ -118,24 +120,28 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        // Favoritos del usuario
-        // TODO: Agregar autenticación - Esta ruta debe ser protegida
-        path: 'favorites',
-        element: (
-          <SuspenseWrapper>
-            <Favorites />
-          </SuspenseWrapper>
-        ),
-      },
-      {
-        // Perfil de usuario
-        // TODO: Agregar autenticación - Esta ruta debe ser protegida
-        path: 'profile',
-        element: (
-          <SuspenseWrapper>
-            <Profile />
-          </SuspenseWrapper>
-        ),
+        // Rutas Protegidas
+        element: <ProtectedRoute />,
+        children: [
+          {
+            // Favoritos del usuario
+            path: 'favorites',
+            element: (
+              <SuspenseWrapper>
+                <Favorites />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            // Perfil de usuario
+            path: 'profile',
+            element: (
+              <SuspenseWrapper>
+                <Profile />
+              </SuspenseWrapper>
+            ),
+          },
+        ],
       },
       {
         // Demo del escáner de códigos de barras
