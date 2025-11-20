@@ -1971,7 +1971,7 @@ npm install react-webcam
 - [ ] Integrar en Profile page
 
 #### 4.3 Autocompletado de Búsqueda
-- [ ] Crear `SearchAutocomplete` component
+- ✅ Crear `SearchAutocomplete` component
   - Dropdown con sugerencias
   - Highlight del texto buscado
   - Navegación con teclado (flechas, enter)
@@ -1980,7 +1980,7 @@ npm install react-webcam
   - Query a Supabase con ILIKE
   - Debounce de 300ms
   - Máximo 10 resultados
-- [ ] Integrar en SearchBar
+- ✅ Integrar en `SearchBar`
 
 #### 4.4 Ordenamiento de Productos
 - [ ] Añadir dropdown "Ordenar por" en Dashboard
