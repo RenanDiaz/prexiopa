@@ -1925,9 +1925,7 @@ Implementar las funcionalidades principales: búsqueda de productos (incluyendo 
 
 ---
 
-## Fase 4: Features Avanzados
-
-**Estado:** Pendiente
+**Estado:** En progreso (10%)
 **Duración Estimada:** 8-10 horas
 **Prioridad:** Media
 **Dependencias:** Fase 3
@@ -1978,7 +1976,7 @@ npm install react-webcam
   - Highlight del texto buscado
   - Navegación con teclado (flechas, enter)
   - Click en sugerencia redirige a producto
-- [ ] Implementar lógica de autocompletado
+- ✅ Implementar lógica de autocompletado
   - Query a Supabase con ILIKE
   - Debounce de 300ms
   - Máximo 10 resultados
