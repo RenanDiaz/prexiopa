@@ -7,13 +7,13 @@
 ## Checklist de Progreso General
 
 ```
-Progreso Total: 30% ███████░░░░░░░░░░░░░░░░░░░░░░░░░
+Progreso Total: 60% ███████████████████░░░░░░░░░░░░
 
 ✅ Fase 0: Configuración Inicial (100%)
 ✅ Fase 1: Fundación y Arquitectura (100%)
-⏳ Fase 2: Esqueleto y Navegación (0%)
-⏳ Fase 3: Features Core (0%)
-⏳ Fase 4: Features Avanzados (0%)
+✅ Fase 2: Esqueleto y Navegación (90%)
+⏳ Fase 3: Features Core (60%)
+⏳ Fase 4: Features Avanzados (10%)
 ⏳ Fase 5: Pulido y Optimización (0%)
 ```
 
@@ -1668,7 +1668,7 @@ Establecer la arquitectura base del proyecto: sistema de estilos, estado global,
 
 ## Fase 2: Esqueleto y Navegación
 
-**Estado:** En progreso
+**Estado:** Casi Completado (90%)
 **Duración Estimada:** 6-8 horas
 **Prioridad:** Alta
 **Dependencias:** Fase 1
@@ -1718,7 +1718,7 @@ Crear el layout principal, navegación y páginas esqueleto sin funcionalidad co
   - Usar componentes Button e Input
   - Aplicar estilos del tema
   - Integrar con useAuthStore
-- [ ] Crear `Dashboard.tsx`
+- ✅ Crear `Dashboard.tsx`
   - Hero section
   - Sección "Top Ofertas" (placeholder cards)
   - Sección "Productos Populares" (placeholder cards)
@@ -1781,7 +1781,7 @@ Crear el layout principal, navegación y páginas esqueleto sin funcionalidad co
 
 ## Fase 3: Features Core
 
-**Estado:** Pendiente
+**Estado:** En progreso (60%)
 **Duración Estimada:** 10-12 horas
 **Prioridad:** Alta
 **Dependencias:** Fase 2
@@ -1792,15 +1792,15 @@ Implementar las funcionalidades principales: búsqueda de productos (incluyendo 
 ### Tareas
 
 #### 3.1 Configuración de Servicios
-- [ ] Instalar axios
+- ✅ Instalar axios
   ```bash
   npm install axios
   ```
-- [ ] Crear `src/services/api/client.ts`
+- ✅ Crear `src/services/api/client.ts`
   - Instancia de axios con baseURL
   - Interceptores para auth token
   - Manejo de errores global
-- [ ] Crear servicios Supabase:
+- ✅ Crear servicios Supabase:
   - `src/services/supabase/products.ts`
     - getProducts(query, filters)
     - getProductById(id)
@@ -1814,12 +1814,12 @@ Implementar las funcionalidades principales: búsqueda de productos (incluyendo 
     - removeFavorite(userId, productId)
 
 #### 3.2 React Query Setup
-- [ ] Instalar @tanstack/react-query
+- ✅ Instalar @tanstack/react-query
   ```bash
   npm install @tanstack/react-query
   ```
-- [ ] Configurar QueryClient en `main.tsx`
-- [ ] Crear hooks personalizados:
+- ✅ Configurar QueryClient en `main.tsx`
+- ✅ Crear hooks personalizados:
   - `src/hooks/useProducts.ts`
     - useProductsQuery(filters)
     - useProductQuery(id)
@@ -1853,20 +1853,20 @@ Implementar las funcionalidades principales: búsqueda de productos (incluyendo 
   - Estado de disponibilidad
 
 #### 3.4 Búsqueda y Filtros
-- [ ] Crear `SearchBar` component
+- ✅ Crear `SearchBar` component
   - Input con icono de búsqueda
   - Debounce en el input
   - Integrar con useSearchStore
-- [ ] Crear `SearchFilters` component
+- ✅ Crear `SearchFilters` component
   - Filtro por categoría (dropdown/chips)
   - Filtro por tienda (checkboxes)
   - Filtro por rango de precio (slider)
   - Botón "Limpiar filtros"
   - Integrar con useSearchStore
-- [ ] Implementar lógica de búsqueda en Dashboard
+- ✅ Implementar lógica de búsqueda en Dashboard
   - Conectar SearchBar con useProducts
   - Mostrar resultados filtrados
-- [ ] Crear `BarcodeScanner` component
+- ✅ Crear `BarcodeScanner` component
   - Acceso a cámara del dispositivo
   - Escaneo de códigos QR y de barra (EAN-13, UPC-A, Code-128, etc.)
   - UI de feedback durante escaneo (overlay, guías visuales)
@@ -1877,12 +1877,12 @@ Implementar las funcionalidades principales: búsqueda de productos (incluyendo 
   - Integración con búsqueda de productos
   - Estados de error (código no encontrado, sin permisos, cámara no disponible)
   - Animación de éxito cuando detecta un código
-- [ ] Integrar BarcodeScanner en SearchBar
+- ✅ Integrar BarcodeScanner en SearchBar
   - Botón/icono de scanner junto al input de búsqueda
   - Modal o fullscreen overlay para el scanner
   - Cerrar automáticamente al escanear código válido
   - Buscar producto por código escaneado
-- [ ] Crear servicio para búsqueda por código de barra
+- ✅ Crear servicio para búsqueda por código de barra
   - Función en products.ts: getProductByBarcode(code)
   - Manejo de múltiples formatos de códigos
   - Fallback si código no existe en BD
