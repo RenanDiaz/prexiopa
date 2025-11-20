@@ -1668,7 +1668,7 @@ Establecer la arquitectura base del proyecto: sistema de estilos, estado global,
 
 ## Fase 2: Esqueleto y Navegación
 
-**Estado:** Pendiente
+**Estado:** En progreso
 **Duración Estimada:** 6-8 horas
 **Prioridad:** Alta
 **Dependencias:** Fase 1
@@ -1679,42 +1679,42 @@ Crear el layout principal, navegación y páginas esqueleto sin funcionalidad co
 ### Tareas
 
 #### 2.1 Layout Components
-- [ ] Crear `Navbar` component
+- ✅ Crear `Navbar` component
   - Logo
   - Barra de búsqueda (placeholder)
   - Links: Dashboard, Tiendas, Favoritos
   - Avatar/menú de usuario
   - Responsive (hamburger menu en mobile)
-- [ ] Crear `Footer` component
+- ✅ Crear `Footer` component
   - Links útiles
   - Copyright
   - Redes sociales (icons)
-- [ ] Crear `Sidebar` component (opcional, para filtros)
+- ✅ Crear `Sidebar` component (opcional, para filtros)
   - Categorías
   - Rangos de precio
   - Tiendas
   - Botón "Aplicar Filtros"
 
 #### 2.2 Common Components
-- [ ] Crear `Button` component
+- ✅ Crear `Button` component
   - Variantes: primary, secondary, outlined, text
   - Tamaños: small, medium, large
   - Estados: default, hover, active, disabled
-- [ ] Crear `Input` component
+- ✅ Crear `Input` component
   - Variantes: text, email, password, number
   - Con/sin icon
   - Estados de validación
-- [ ] Crear `Modal` component
+- ✅ Crear `Modal` component
   - Backdrop
   - Animación de entrada/salida
   - Botón de cerrar
-- [ ] Crear `Loader` component
+- ✅ Crear `Loader` component
   - Spinner animado con colores del tema
-- [ ] Crear `Badge` component
+- ✅ Crear `Badge` component
   - Para mostrar descuentos, ofertas, etc.
 
 #### 2.3 Páginas Esqueleto
-- [ ] Refactorizar `Login.tsx` y `Register.tsx`
+- ✅ Refactorizar `Login.tsx` y `Register.tsx`
   - Usar componentes Button e Input
   - Aplicar estilos del tema
   - Integrar con useAuthStore
@@ -1740,7 +1740,7 @@ Crear el layout principal, navegación y páginas esqueleto sin funcionalidad co
   - Página 404 con diseño bonito
 
 #### 2.4 Navegación
-- [ ] Configurar todas las rutas en `AppRoutes.tsx`
+- ✅ Configurar todas las rutas en `AppRoutes.tsx`
   ```typescript
   - / -> Dashboard (protected)
   - /login -> Login (public)
@@ -1751,20 +1751,20 @@ Crear el layout principal, navegación y páginas esqueleto sin funcionalidad co
   - /favorites -> Favorites (protected)
   - /* -> NotFound
   ```
-- [ ] Implementar lógica de ProtectedRoute
+- ✅ Implementar lógica de ProtectedRoute
   - Redirigir a /login si no autenticado
-- [ ] Implementar lógica de PublicRoute
+- ✅ Implementar lógica de PublicRoute
   - Redirigir a / si ya autenticado
-- [ ] Añadir loading state durante verificación de auth
+- ✅ Añadir loading state durante verificación de auth
 
 #### 2.5 Notificaciones Toast
-- [ ] Instalar react-toastify
+- ✅ Instalar react-toastify
   ```bash
   npm install react-toastify
   ```
-- [ ] Configurar ToastContainer en `App.tsx`
-- [ ] Personalizar estilos según tema
-- [ ] Crear helper `src/utils/toast.ts` para notificaciones comunes
+- ✅ Configurar ToastContainer en `App.tsx`
+- ✅ Personalizar estilos según tema
+- ✅ Crear helper `src/utils/toast.ts` para notificaciones comunes
 
 ### Criterios de Completado
 - [ ] Navegación completa funciona correctamente
