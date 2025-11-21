@@ -52,13 +52,15 @@ export interface Product {
   /** Descripción detallada del producto */
   description?: string;
   /** Marca del producto */
-  brand: string;
+  brand?: string;
   /** Categoría del producto */
-  category: ProductCategory;
+  category?: ProductCategory | string;
   /** Código de barras (UPC/EAN) */
   barcode?: string;
   /** Imágenes del producto */
-  images: ProductImage[];
+  images?: ProductImage[];
+  /** Imagen principal (backward compatibility) */
+  image?: string;
   /** Unidad de medida (ej: 'kg', 'lb', 'oz', 'ml', 'unidad') */
   unit?: string;
   /** Cantidad por unidad (ej: 500 para '500ml') */
@@ -66,9 +68,23 @@ export interface Product {
   /** Tags para búsqueda y filtrado */
   tags?: string[];
   /** Fecha de creación del registro */
-  createdAt: Date;
+  createdAt?: Date | string;
   /** Fecha de última actualización */
-  updatedAt: Date;
+  updatedAt?: Date | string;
+  /** Precios asociados (backward compatibility) */
+  prices?: any[];
+  /** Campos adicionales de la base de datos */
+  created_at?: string;
+  updated_at?: string;
+  /** Lowest price (backward compatibility) */
+  lowest_price?: number;
+  /** Store with lowest price (backward compatibility) */
+  store_with_lowest_price?: {
+    id: string;
+    name: string;
+    logo: string;
+    website?: string;
+  };
 }
 
 /**

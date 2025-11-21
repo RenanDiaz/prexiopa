@@ -4,7 +4,7 @@
  */
 
 import styled, { css } from 'styled-components';
-import type { BadgeProps } from './Badge';
+import { type BadgeProps } from './Badge';
 
 const sizeStyles = {
   sm: css`

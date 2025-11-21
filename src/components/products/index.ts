@@ -17,5 +17,9 @@ export type { ProductListProps } from './ProductList';
 export { PriceComparison } from './PriceComparison';
 export type { PriceComparisonProps } from './PriceComparison';
 
+// Price History Chart (Phase 3 - Recharts integration)
+export { PriceHistoryChart } from './PriceHistoryChart';
+export type { PriceHistoryChartProps } from './PriceHistoryChart';
+
 // Re-export common types for convenience
 export type { Product, ProductWithLowestPrice, Price, Store } from '@/types/product';

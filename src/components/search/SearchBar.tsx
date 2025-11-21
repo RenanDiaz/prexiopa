@@ -20,9 +20,10 @@
  * ```
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FiSearch, FiCamera, FiX } from 'react-icons/fi';
 import { useDebounce } from '@/hooks/useDebounce';
+import { SearchAutocomplete } from './SearchAutocomplete';
 import {
   SearchBarContainer,
   SearchInputWrapper,
@@ -49,6 +50,10 @@ export interface SearchBarProps {
   className?: string;
   /** Test ID for testing */
   testId?: string;
+  /** Enable autocomplete suggestions */
+  enableAutocomplete?: boolean;
+  /** Popular searches for autocomplete */
+  popularSearches?: string[];
 }
 
 /**
@@ -74,9 +79,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   debounceDelay = 300,
   className,
   testId = 'search-bar',
+  enableAutocomplete = true,
+  popularSearches,
 }) => {
   // Local state for immediate UI updates
   const [localValue, setLocalValue] = useState(value);
+  const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Debounced value that triggers the onChange callback
   const debouncedValue = useDebounce(localValue, debounceDelay);
@@ -98,6 +107,18 @@ export const SearchBar: React.FC<SearchBarProps> = ({
    */
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalValue(e.target.value);
+    if (enableAutocomplete) {
+      setIsAutocompleteOpen(true);
+    }
+  };
+
+  /**
+   * Handle input focus
+   */
+  const handleFocus = () => {
+    if (enableAutocomplete) {
+      setIsAutocompleteOpen(true);
+    }
   };
 
   /**
@@ -106,6 +127,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const handleClear = () => {
     setLocalValue('');
     onChange('');
+    setIsAutocompleteOpen(false);
+    inputRef.current?.focus();
   };
 
   /**
@@ -136,14 +159,18 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
         {/* Search Input */}
         <SearchInput
+          ref={inputRef}
           type="text"
           value={localValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
+          onFocus={handleFocus}
           placeholder={placeholder}
           disabled={disabled}
           aria-label="Buscar productos"
           aria-describedby="search-hint"
+          aria-expanded={isAutocompleteOpen}
+          aria-autocomplete="list"
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
@@ -181,6 +208,26 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       <span id="search-hint" className="sr-only">
         Escribe para buscar productos. Presiona Escape para limpiar.
       </span>
+
+      {/* Autocomplete Dropdown */}
+      {enableAutocomplete && (
+        <SearchAutocomplete
+          query={localValue}
+          isOpen={isAutocompleteOpen}
+          onClose={() => setIsAutocompleteOpen(false)}
+          onSelect={(product) => {
+            setLocalValue(product.name);
+            onChange(product.name);
+            setIsAutocompleteOpen(false);
+          }}
+          onHistorySelect={(query) => {
+            setLocalValue(query);
+            onChange(query);
+            setIsAutocompleteOpen(false);
+          }}
+          popularSearches={popularSearches}
+        />
+      )}
     </SearchBarContainer>
   );
 };

@@ -4,14 +4,9 @@
  */
 
 import { supabase } from '../../supabaseClient';
+import type { Store as StoreType } from '@/types/store.types';
 
-export interface Store {
-  id: string;
-  name: string;
-  logo: string;
-  website: string;
-  created_at?: string;
-}
+export type Store = StoreType;
 
 /**
  * Obtener todas las tiendas

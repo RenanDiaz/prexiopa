@@ -6,7 +6,7 @@
  */
 
 import styled, { css, keyframes } from 'styled-components';
-import type { SpinnerSize } from './LoadingSpinner';
+import { type SpinnerSize } from './LoadingSpinner';
 
 /**
  * Fade in animation for loading state

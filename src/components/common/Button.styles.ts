@@ -4,7 +4,7 @@
  */
 
 import styled, { css, keyframes } from 'styled-components';
-import type { ButtonProps } from './Button';
+import { type ButtonProps } from './Button';
 
 const spin = keyframes`
   from { transform: rotate(0deg); }

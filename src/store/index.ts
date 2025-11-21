@@ -25,6 +25,10 @@ export type {
 export { useAlertsStore } from './alertsStore';
 export type { PriceAlert } from './alertsStore';
 
+// Shopping Store
+export { useShoppingStore } from './shoppingStore';
+export type { ShoppingItem, ShoppingSession } from './shoppingStore';
+
 // UI Store
 export {
   useUIStore,

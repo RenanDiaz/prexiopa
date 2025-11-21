@@ -18,8 +18,7 @@ import {
   LoadingStateContent,
   LoadingStateText,
 } from './LoadingState.styles';
-import { LoadingSpinner } from './LoadingSpinner';
-import type { SpinnerSize, SpinnerColor } from './LoadingSpinner';
+import { LoadingSpinner, type SpinnerSize, type SpinnerColor } from './LoadingSpinner';
 
 export interface LoadingStateProps {
   /**

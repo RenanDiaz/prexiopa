@@ -50,7 +50,7 @@ export function searchProducts(query: string): Product[] {
 
   return mockProducts.filter((product) => {
     const matchName = product.name.toLowerCase().includes(searchTerm);
-    const matchBrand = product.brand.toLowerCase().includes(searchTerm);
+    const matchBrand = product.brand?.toLowerCase().includes(searchTerm) || false;
     const matchDescription = product.description?.toLowerCase().includes(searchTerm);
     const matchTags = product.tags?.some((tag) => tag.toLowerCase().includes(searchTerm));
 
@@ -398,12 +398,14 @@ export function getPopularProducts(limit: number = 10): Product[] {
 /**
  * Obtener categorías con número de productos
  */
-export function getCategoriesWithCount(): Array<{ category: ProductCategory; count: number }> {
-  const categoryCounts = new Map<ProductCategory, number>();
+export function getCategoriesWithCount(): Array<{ category: ProductCategory | string; count: number }> {
+  const categoryCounts = new Map<ProductCategory | string, number>();
 
   mockProducts.forEach((product) => {
-    const count = categoryCounts.get(product.category) || 0;
-    categoryCounts.set(product.category, count + 1);
+    if (product.category) {
+      const count = categoryCounts.get(product.category) || 0;
+      categoryCounts.set(product.category, count + 1);
+    }
   });
 
   return Array.from(categoryCounts.entries())

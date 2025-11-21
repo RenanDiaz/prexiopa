@@ -44,7 +44,7 @@
  */
 
 import React from 'react';
-import type { IconType } from 'react-icons';
+import { type IconType } from 'react-icons';
 import {
   EmptyContainer,
   IconWrapper,

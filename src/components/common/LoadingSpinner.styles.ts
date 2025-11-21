@@ -6,7 +6,7 @@
  */
 
 import styled, { css } from 'styled-components';
-import type { SpinnerSize, SpinnerColor } from './LoadingSpinner';
+import { type SpinnerSize, type SpinnerColor } from './LoadingSpinner';
 import { keyframes } from '../../styles/animations';
 
 /**

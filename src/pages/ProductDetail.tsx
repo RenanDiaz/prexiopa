@@ -6,14 +6,18 @@
 
 import styled from 'styled-components';
 import { useParams, Link } from 'react-router-dom';
-import { FiChevronRight, FiPackage, FiTag, FiHash } from 'react-icons/fi';
+import { FiChevronRight, FiPackage, FiTag, FiHash, FiBell } from 'react-icons/fi';
+import { useState } from 'react';
 
 // Components
 import { PriceComparison } from '@/components/products';
 import { FavoriteButton } from '@/components/favorites';
+import { PriceAlert } from '@/components/alerts';
+import { Button } from '@/components/common/Button';
 
 // Hooks
 import { useProductQuery, useProductPricesQuery } from '@/hooks/useProducts';
+import { useHasAlertQuery } from '@/hooks/useAlerts';
 
 const ProductContainer = styled.div`
   min-height: 100vh;
@@ -249,6 +253,7 @@ const BackButton = styled(Link)`
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
   // Fetch product and prices
   const {
@@ -261,6 +266,14 @@ const ProductDetail = () => {
     data: prices = [],
     isLoading: isLoadingPrices,
   } = useProductPricesQuery(id);
+
+  // Check if user has alert for this product
+  const { data: hasAlert } = useHasAlertQuery(id || '', null);
+
+  // Get lowest price for alert
+  const lowestPrice = prices.length > 0
+    ? Math.min(...prices.map(p => p.price))
+    : undefined;
 
   // Loading state
   if (isLoadingProduct) {
@@ -315,8 +328,8 @@ const ProductDetail = () => {
           {/* Left Column - Product Image & Details */}
           <ImageSection>
             <ProductImageWrapper>
-              {product.image ? (
-                <ProductImage src={product.image} alt={product.name} />
+              {product.images?.[0]?.url ? (
+                <ProductImage src={product.images[0].url} alt={product.images[0].alt || product.name} />
               ) : (
                 <ProductImagePlaceholder>📦</ProductImagePlaceholder>
               )}
@@ -361,6 +374,18 @@ const ProductDetail = () => {
                 <ProductDescription>{product.description}</ProductDescription>
               </>
             )}
+
+            <Divider />
+
+            {/* Alert Button */}
+            <Button
+              variant={hasAlert ? 'outline' : 'secondary'}
+              fullWidth
+              iconLeft={<FiBell />}
+              onClick={() => setIsAlertModalOpen(true)}
+            >
+              {hasAlert ? 'Editar Alerta de Precio' : 'Crear Alerta de Precio'}
+            </Button>
           </ImageSection>
 
           {/* Right Column - Price Comparison */}
@@ -375,6 +400,17 @@ const ProductDetail = () => {
           </MainContent>
         </Grid>
       </ContentWrapper>
+
+      {/* Price Alert Modal */}
+      {product && (
+        <PriceAlert
+          open={isAlertModalOpen}
+          onClose={() => setIsAlertModalOpen(false)}
+          productId={product.id}
+          productName={product.name}
+          currentPrice={lowestPrice}
+        />
+      )}
     </ProductContainer>
   );
 };

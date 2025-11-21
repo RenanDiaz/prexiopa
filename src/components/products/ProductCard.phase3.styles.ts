@@ -255,6 +255,56 @@ export const StoreName = styled.span`
 `;
 
 /**
+ * Add to cart button
+ */
+export const AddToCartButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing[2]};
+
+  width: 100%;
+  margin-top: ${({ theme }) => theme.spacing[2]};
+  padding: ${({ theme }) => `${theme.spacing[2]} ${theme.spacing[3]}`};
+
+  background: ${({ theme }) => theme.colors.primary[500]};
+  color: ${({ theme }) => theme.colors.primary.contrast};
+  border: none;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover:not(:disabled) {
+    background: ${({ theme }) => theme.colors.primary[600]};
+    transform: translateY(-1px);
+    box-shadow: ${({ theme }) => theme.shadows.sm};
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.border.focus};
+    outline-offset: 2px;
+  }
+`;
+
+/**
  * Skeleton shimmer animation
  */
 const shimmer = keyframes`

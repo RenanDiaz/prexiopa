@@ -14,7 +14,7 @@ import {
   type ProductFilters,
   type ProductPrice,
 } from '@/services/supabase/products';
-import type { Product } from '@/types/product';
+import type { Product } from '@/types/product.types';
 
 /**
  * Hook para obtener lista de productos con filtros

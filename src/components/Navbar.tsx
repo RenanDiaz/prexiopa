@@ -240,6 +240,12 @@ const Navbar = () => {
           <NavLink to="/search" $isActive={isActive('/search')}>
             Buscar
           </NavLink>
+          <NavLink to="/stores" $isActive={isActive('/stores')}>
+            Tiendas
+          </NavLink>
+          <NavLink to="/shopping" $isActive={isActive('/shopping')}>
+            Mi Lista
+          </NavLink>
           <NavLink to="/favorites" $isActive={isActive('/favorites')}>
             Favoritos
           </NavLink>
@@ -252,6 +258,9 @@ const Navbar = () => {
           <MobileMenu>
             <IconButton to="/search" title="Buscar">
               🔍
+            </IconButton>
+            <IconButton to="/shopping" title="Mi Lista">
+              🛒
             </IconButton>
             <IconButton to="/favorites" title="Favoritos">
               ❤️
