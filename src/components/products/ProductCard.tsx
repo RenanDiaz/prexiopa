@@ -15,7 +15,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FiHeart, FiShoppingCart } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
-import type { ProductWithLowestPrice } from '@/types/product';
+import type { Product } from '@/types/product.types';
 import { useIsFavorite, useToggleFavoriteMutation } from '@/hooks/useFavorites';
 import { useAuthStore } from '@/store/authStore';
 import { useActiveSessionQuery, useAddItemMutation } from '@/hooks/useShoppingLists';
@@ -42,11 +42,11 @@ import {
 
 export interface ProductCardProps {
   /** Product data including prices and store information */
-  product: ProductWithLowestPrice;
+  product: Product;
   /** Additional CSS class name */
   className?: string;
   /** Callback when card is clicked (optional) */
-  onClick?: (product: ProductWithLowestPrice) => void;
+  onClick?: (product: Product) => void;
   /** Test ID for testing */
   testId?: string;
 }

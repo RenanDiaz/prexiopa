@@ -25,7 +25,7 @@
 
 import React, { useState } from 'react';
 import { FiFilter, FiX, FiChevronDown, FiChevronUp } from 'react-icons/fi';
-import type { Store } from '@/types/product';
+import type { Store } from '@/types/store.types';
 import {
   FiltersContainer,
   FiltersHeader,

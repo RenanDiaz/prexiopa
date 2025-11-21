@@ -27,7 +27,7 @@
 
 import React from 'react';
 import { FiPackage } from 'react-icons/fi';
-import type { ProductWithLowestPrice } from '@/types/product';
+import type { Product } from '@/types/product.types';
 import { LoadingState } from '@/components/common/LoadingState';
 import { EmptyState } from '@/components/common/EmptyState';
 import { ProductCard } from './ProductCard';
@@ -38,7 +38,7 @@ import {
 
 export interface ProductListProps {
   /** Array of products to display */
-  products: ProductWithLowestPrice[];
+  products: Product[];
   /** Loading state flag */
   isLoading?: boolean;
   /** Custom loading message */
@@ -52,7 +52,7 @@ export interface ProductListProps {
   /** Empty state action callback */
   onEmptyAction?: () => void;
   /** Callback when a product card is clicked */
-  onProductClick?: (product: ProductWithLowestPrice) => void;
+  onProductClick?: (product: Product) => void;
   /** Additional CSS class name */
   className?: string;
   /** Test ID for testing */

@@ -97,11 +97,11 @@ export const StoreCard: React.FC<StoreCardProps> = ({
         )}
 
         {/* Products Count (if available) */}
-        {store.totalProducts !== undefined && store.totalProducts > 0 && (
+        {variant === 'default' && locationCount > 0 && (
           <S.Stats>
             <S.StatItem>
-              <S.StatValue>{store.totalProducts}</S.StatValue>
-              <S.StatLabel>productos</S.StatLabel>
+              <S.StatValue>{locationCount}</S.StatValue>
+              <S.StatLabel>{locationCount === 1 ? 'ubicación' : 'ubicaciones'}</S.StatLabel>
             </S.StatItem>
           </S.Stats>
         )}

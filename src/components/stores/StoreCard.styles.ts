@@ -11,8 +11,8 @@ interface CardProps {
 export const Card = styled.div<CardProps>`
   display: flex;
   align-items: flex-start;
-  gap: ${({ theme }) => theme.spacing.md};
-  padding: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing[4]};
+  padding: ${({ theme }) => theme.spacing[4]};
   background: ${({ theme }) => theme.colors.background.paper};
   border: 1px solid ${({ theme }) => theme.colors.border.light};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
@@ -49,7 +49,7 @@ export const Logo = styled.img`
   width: 100%;
   height: 100%;
   object-fit: contain;
-  padding: ${({ theme }) => theme.spacing.xs};
+  padding: ${({ theme }) => theme.spacing[2]};
 `;
 
 export const LogoPlaceholder = styled.div`
@@ -67,14 +67,14 @@ export const Content = styled.div`
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.sm};
+  gap: ${({ theme }) => theme.spacing[3]};
 `;
 
 export const Header = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: ${({ theme }) => theme.spacing.sm};
+  gap: ${({ theme }) => theme.spacing[3]};
   flex-wrap: wrap;
 `;
 
@@ -89,8 +89,8 @@ export const Name = styled.h3`
 export const LocationBadge = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-  padding: ${({ theme }) => `${theme.spacing.xxs} ${theme.spacing.sm}`};
+  gap: ${({ theme }) => theme.spacing[2]};
+  padding: ${({ theme }) => `${theme.spacing[1]} ${theme.spacing[3]}`};
   background: ${({ theme }) => theme.colors.secondary[50]};
   color: ${({ theme }) => theme.colors.secondary[700]};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
@@ -117,13 +117,13 @@ export const Description = styled.p`
 export const ContactInfo = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: ${({ theme }) => theme.spacing.sm};
+  gap: ${({ theme }) => theme.spacing[3]};
 `;
 
 export const ContactItem = styled.a`
   display: inline-flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.xs};
+  gap: ${({ theme }) => theme.spacing[2]};
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   color: ${({ theme }) => theme.colors.secondary[600]};
   text-decoration: none;
@@ -141,15 +141,15 @@ export const ContactItem = styled.a`
 
 export const Stats = styled.div`
   display: flex;
-  gap: ${({ theme }) => theme.spacing.lg};
-  padding-top: ${({ theme }) => theme.spacing.xs};
+  gap: ${({ theme }) => theme.spacing[6]};
+  padding-top: ${({ theme }) => theme.spacing[2]};
   border-top: 1px solid ${({ theme }) => theme.colors.border.light};
 `;
 
 export const StatItem = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.xxs};
+  gap: ${({ theme }) => theme.spacing[1]};
 `;
 
 export const StatValue = styled.div`

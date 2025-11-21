@@ -13,12 +13,12 @@ export const LoadingWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: ${({ theme }) => theme.spacing.xl} 0;
-  gap: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing[8]} 0;
+  gap: ${({ theme }) => theme.spacing[4]};
 `;
 
 export const LoadingText = styled.p`
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   color: ${({ theme }) => theme.colors.text.secondary};
 `;
 
@@ -28,7 +28,7 @@ interface GridProps {
 
 export const Grid = styled.div<GridProps>`
   display: grid;
-  gap: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing[4]};
 
   ${({ $layout }) => {
     if ($layout === 'grid') {

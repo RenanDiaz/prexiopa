@@ -4,7 +4,7 @@
  */
 
 import { supabase } from '../../supabaseClient';
-import type { Product } from '../../types/product';
+import type { Product } from '../../types/product.types';
 
 export interface ProductFilters {
   query?: string;

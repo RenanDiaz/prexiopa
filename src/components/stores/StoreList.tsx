@@ -60,7 +60,10 @@ export const StoreList: React.FC<StoreListProps> = ({
   // Filter and limit stores
   let filteredStores = stores;
   if (featuredOnly) {
-    filteredStores = stores.filter((store) => store.isFeatured);
+    // Filter by stores with most locations (featured)
+    filteredStores = stores
+      .filter((store) => store.locations && store.locations.length > 3)
+      .sort((a, b) => (b.locations?.length || 0) - (a.locations?.length || 0));
   }
   if (limit) {
     filteredStores = filteredStores.slice(0, limit);

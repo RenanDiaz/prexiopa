@@ -22,7 +22,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 // Types
 import type { PriceRange, FilterChangePayload } from '@/components/search/SearchFilters';
 import type { ProductFilters } from '@/services/supabase/products';
-import type { ProductWithLowestPrice } from '@/types/product';
+import type { Product } from '@/types/product.types';
 
 const DashboardContainer = styled.div`
   min-height: 100vh;
@@ -301,7 +301,7 @@ const Dashboard = () => {
   }, []);
 
   const handleProductClick = useCallback(
-    (product: ProductWithLowestPrice) => {
+    (product: Product) => {
       navigate(`/product/${product.id}`);
     },
     [navigate]

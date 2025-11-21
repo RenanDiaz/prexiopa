@@ -7,7 +7,7 @@ import styled from 'styled-components';
 export const HeaderContent = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing[4]};
 `;
 
 export const IconWrapper = styled.div`
@@ -27,11 +27,11 @@ export const Title = styled.h2`
   font-size: ${({ theme }) => theme.typography.fontSize.xl};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.colors.text.primary};
-  margin: 0 0 ${({ theme }) => theme.spacing.xs} 0;
+  margin: 0 0 ${({ theme }) => theme.spacing[2]} 0;
 `;
 
 export const Subtitle = styled.p`
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   color: ${({ theme }) => theme.colors.text.secondary};
   margin: 0;
@@ -39,8 +39,8 @@ export const Subtitle = styled.p`
 
 export const StoreTag = styled.span`
   display: inline-block;
-  margin-top: ${({ theme }) => theme.spacing.xs};
-  padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.sm}`};
+  margin-top: ${({ theme }) => theme.spacing[2]};
+  padding: ${({ theme }) => `${theme.spacing[2]} ${theme.spacing[3]}`};
   background: ${({ theme }) => theme.colors.neutral[100]};
   color: ${({ theme }) => theme.colors.text.secondary};
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
@@ -51,14 +51,14 @@ export const StoreTag = styled.span`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.lg};
+  gap: ${({ theme }) => theme.spacing[6]};
 `;
 
 export const PriceInfo = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing[4]};
   background: ${({ theme }) => theme.colors.neutral[50]};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   border: 1px solid ${({ theme }) => theme.colors.border.light};
@@ -79,7 +79,7 @@ export const CurrentPrice = styled.span`
 export const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.xs};
+  gap: ${({ theme }) => theme.spacing[2]};
 `;
 
 export const Label = styled.label`
@@ -105,7 +105,7 @@ export const InputWrapper = styled.div`
 export const CurrencySymbol = styled.span`
   position: absolute;
   left: 12px;
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.colors.text.secondary};
   pointer-events: none;
@@ -126,8 +126,8 @@ export const HelpText = styled.span`
 export const SavingsCard = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.md};
-  padding: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing[4]};
+  padding: ${({ theme }) => theme.spacing[4]};
   background: ${({ theme }) => theme.colors.primary[50]};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   border: 1px solid ${({ theme }) => theme.colors.primary[200]};
@@ -150,7 +150,7 @@ export const SavingsLabel = styled.div`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   color: ${({ theme }) => theme.colors.text.secondary};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  margin-bottom: ${({ theme }) => theme.spacing.xxs};
+  margin-bottom: ${({ theme }) => theme.spacing[1]};
 `;
 
 export const SavingsAmount = styled.div`
@@ -159,11 +159,11 @@ export const SavingsAmount = styled.div`
   color: ${({ theme }) => theme.colors.primary[700]};
   display: flex;
   align-items: baseline;
-  gap: ${({ theme }) => theme.spacing.xs};
+  gap: ${({ theme }) => theme.spacing[2]};
 `;
 
 export const SavingsPercentage = styled.span`
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.colors.primary[600]};
 `;
@@ -171,8 +171,8 @@ export const SavingsPercentage = styled.span`
 export const ToggleGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.xs};
-  padding: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing[2]};
+  padding: ${({ theme }) => theme.spacing[4]};
   background: ${({ theme }) => theme.colors.neutral[50]};
   border-radius: ${({ theme }) => theme.borderRadius.md};
 `;
@@ -180,8 +180,8 @@ export const ToggleGroup = styled.div`
 export const ToggleLabel = styled.label`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  gap: ${({ theme }) => theme.spacing[3]};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   color: ${({ theme }) => theme.colors.text.primary};
   cursor: pointer;
@@ -212,10 +212,10 @@ export const ToggleHelpText = styled.span`
 
 export const Actions = styled.div`
   display: flex;
-  gap: ${({ theme }) => theme.spacing.sm};
+  gap: ${({ theme }) => theme.spacing[3]};
   justify-content: flex-end;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  @media (max-width: 640px) {
     flex-direction: column-reverse;
 
     button {

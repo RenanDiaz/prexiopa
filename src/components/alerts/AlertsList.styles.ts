@@ -13,12 +13,12 @@ export const LoadingWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: ${({ theme }) => theme.spacing.xl} 0;
-  gap: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing[8]} 0;
+  gap: ${({ theme }) => theme.spacing[4]};
 `;
 
 export const LoadingText = styled.p`
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   color: ${({ theme }) => theme.colors.text.secondary};
 `;
 
@@ -26,10 +26,10 @@ export const LoadingText = styled.p`
 export const StatsBar = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  gap: ${({ theme }) => theme.spacing[4]};
+  margin-bottom: ${({ theme }) => theme.spacing[8]};
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  @media (max-width: 640px) {
     grid-template-columns: 1fr;
   }
 `;
@@ -37,8 +37,8 @@ export const StatsBar = styled.div`
 export const StatCard = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.md};
-  padding: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing[4]};
+  padding: ${({ theme }) => theme.spacing[4]};
   background: ${({ theme }) => theme.colors.background.paper};
   border: 1px solid ${({ theme }) => theme.colors.border.light};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
@@ -91,7 +91,7 @@ export const StatIcon = styled.div<StatIconProps>`
 export const StatContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.xxs};
+  gap: ${({ theme }) => theme.spacing[1]};
 `;
 
 export const StatValue = styled.div`
@@ -110,15 +110,15 @@ export const StatLabel = styled.div`
 // Alerts Grid
 export const AlertsGrid = styled.div`
   display: grid;
-  gap: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing[4]};
 `;
 
 export const AlertCard = styled.div`
   display: grid;
   grid-template-columns: auto 1fr auto;
   grid-template-rows: auto auto auto;
-  gap: ${({ theme }) => theme.spacing.md};
-  padding: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing[4]};
+  padding: ${({ theme }) => theme.spacing[4]};
   background: ${({ theme }) => theme.colors.background.paper};
   border: 1px solid ${({ theme }) => theme.colors.border.light};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
@@ -131,7 +131,7 @@ export const AlertCard = styled.div`
     box-shadow: ${({ theme }) => theme.shadows.md};
   }
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
   }
@@ -141,11 +141,11 @@ export const AlertCard = styled.div`
 export const ProductSection = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing[4]};
   grid-column: 1 / 2;
   grid-row: 1 / 4;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  @media (max-width: 768px) {
     grid-column: 1 / -1;
     grid-row: auto;
   }
@@ -163,12 +163,12 @@ export const ProductImage = styled.img`
 export const ProductInfo = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.xs};
+  gap: ${({ theme }) => theme.spacing[2]};
   min-width: 0;
 `;
 
 export const ProductName = styled.a`
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.colors.text.primary};
   text-decoration: none;
@@ -186,8 +186,8 @@ export const ProductName = styled.a`
 export const StoreBadge = styled.div`
   display: inline-flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-  padding: ${({ theme }) => `${theme.spacing.xxs} ${theme.spacing.sm}`};
+  gap: ${({ theme }) => theme.spacing[2]};
+  padding: ${({ theme }) => `${theme.spacing[1]} ${theme.spacing[3]}`};
   background: ${({ theme }) => theme.colors.neutral[100]};
   color: ${({ theme }) => theme.colors.text.secondary};
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
@@ -204,11 +204,11 @@ export const StoreBadge = styled.div`
 export const PriceSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.sm};
+  gap: ${({ theme }) => theme.spacing[3]};
   grid-column: 2 / 3;
   grid-row: 1 / 2;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  @media (max-width: 768px) {
     grid-column: 1 / -1;
     grid-row: auto;
   }
@@ -218,7 +218,7 @@ export const PriceRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing[4]};
 `;
 
 export const PriceLabel = styled.span`
@@ -246,7 +246,7 @@ export const StatusSection = styled.div`
   grid-column: 2 / 3;
   grid-row: 2 / 3;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  @media (max-width: 768px) {
     grid-column: 1 / -1;
     grid-row: auto;
   }
@@ -255,7 +255,7 @@ export const StatusSection = styled.div`
 export const SavingsInfo = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.xxs};
+  gap: ${({ theme }) => theme.spacing[1]};
 `;
 
 export const SavingsLabel = styled.span`
@@ -272,7 +272,7 @@ export const SavingsAmount = styled.div`
   color: ${({ theme }) => theme.colors.semantic.warning.main};
   display: flex;
   align-items: baseline;
-  gap: ${({ theme }) => theme.spacing.xs};
+  gap: ${({ theme }) => theme.spacing[2]};
 `;
 
 export const SavingsPercent = styled.span`
@@ -284,12 +284,12 @@ export const SavingsPercent = styled.span`
 // Actions
 export const Actions = styled.div`
   display: flex;
-  gap: ${({ theme }) => theme.spacing.xs};
+  gap: ${({ theme }) => theme.spacing[2]};
   align-items: flex-start;
   grid-column: 3 / 4;
   grid-row: 1 / 2;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  @media (max-width: 768px) {
     grid-column: 1 / -1;
     grid-row: auto;
     justify-content: flex-end;
@@ -348,7 +348,7 @@ export const AlertDate = styled.div`
   grid-row: 3 / 4;
   align-self: end;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  @media (max-width: 768px) {
     grid-column: 1 / -1;
     grid-row: auto;
   }

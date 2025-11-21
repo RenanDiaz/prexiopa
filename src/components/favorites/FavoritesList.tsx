@@ -18,7 +18,7 @@ import React from 'react';
 import { FiHeart, FiTrash2 } from 'react-icons/fi';
 import { useFavoritesQuery, useClearAllFavoritesMutation } from '@/hooks/useFavorites';
 import { ProductCard, ProductCardSkeleton } from '@/components/products/ProductCard';
-import type { ProductWithLowestPrice } from '@/types/product';
+import type { Product } from '@/types/product.types';
 import {
   FavoritesContainer,
   FavoritesHeader,
@@ -40,7 +40,7 @@ export interface FavoritesListProps {
   /** Test ID for testing */
   testId?: string;
   /** Callback when a product card is clicked */
-  onProductClick?: (product: ProductWithLowestPrice) => void;
+  onProductClick?: (product: Product) => void;
 }
 
 /**
@@ -176,12 +176,12 @@ export const FavoritesList: React.FC<FavoritesListProps> = ({
 
       <FavoritesGrid>
         {favorites.map((favorite) => {
-          // Convert Favorite to ProductWithLowestPrice format
+          // Convert Favorite to Product format
           // Cast the product as any to access the lowest_price and store_with_lowest_price
           // that come from the Supabase query join
           const productData = favorite.product as any;
 
-          const product: ProductWithLowestPrice = {
+          const product: Product = {
             id: productData?.id || '',
             name: productData?.name || 'Producto sin nombre',
             description: productData?.description,

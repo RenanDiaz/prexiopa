@@ -10,7 +10,7 @@ export const Container = styled.div`
   left: 0;
   right: 0;
   z-index: 1000;
-  margin-top: ${({ theme }) => theme.spacing.xs};
+  margin-top: ${({ theme }) => theme.spacing[2]};
 `;
 
 export const Dropdown = styled.div`
@@ -54,7 +54,7 @@ export const Dropdown = styled.div`
 `;
 
 export const Section = styled.div`
-  padding: ${({ theme }) => theme.spacing.sm} 0;
+  padding: ${({ theme }) => theme.spacing[3]} 0;
 
   &:not(:last-child) {
     border-bottom: 1px solid ${({ theme }) => theme.colors.border.light};
@@ -64,8 +64,8 @@ export const Section = styled.div`
 export const SectionTitle = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-  padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.md}`};
+  gap: ${({ theme }) => theme.spacing[2]};
+  padding: ${({ theme }) => `${theme.spacing[3]} ${theme.spacing[4]}`};
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.colors.text.secondary};
@@ -85,7 +85,7 @@ export const ItemsList = styled.ul`
 `;
 
 export const LoadingText = styled.div`
-  padding: ${({ theme }) => `${theme.spacing.md} ${theme.spacing.md}`};
+  padding: ${({ theme }) => `${theme.spacing[4]} ${theme.spacing[4]}`};
   text-align: center;
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   color: ${({ theme }) => theme.colors.text.secondary};
@@ -99,8 +99,8 @@ interface ItemProps {
 export const SuggestionItem = styled.li<ItemProps>`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.md}`};
+  gap: ${({ theme }) => theme.spacing[3]};
+  padding: ${({ theme }) => `${theme.spacing[3]} ${theme.spacing[4]}`};
   cursor: pointer;
   transition: background-color 0.15s ease;
   background: ${({ theme, $isSelected }) =>
@@ -129,7 +129,7 @@ export const ProductInfo = styled.div`
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.xxs};
+  gap: ${({ theme }) => theme.spacing[1]};
 `;
 
 export const ProductName = styled.div`
@@ -153,7 +153,7 @@ export const ProductCategory = styled.div`
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
   color: ${({ theme }) => theme.colors.primary[600]};
   background: ${({ theme }) => theme.colors.primary[50]};
-  padding: ${({ theme }) => `${theme.spacing.xxs} ${theme.spacing.sm}`};
+  padding: ${({ theme }) => `${theme.spacing[1]} ${theme.spacing[3]}`};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   white-space: nowrap;
@@ -163,8 +163,8 @@ export const ProductCategory = styled.div`
 export const HistoryItem = styled.li<ItemProps>`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.md}`};
+  gap: ${({ theme }) => theme.spacing[3]};
+  padding: ${({ theme }) => `${theme.spacing[3]} ${theme.spacing[4]}`};
   cursor: pointer;
   transition: background-color 0.15s ease;
   background: ${({ theme, $isSelected }) =>
@@ -205,8 +205,8 @@ export const HistoryText = styled.div`
 export const PopularItem = styled.li<ItemProps>`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.md}`};
+  gap: ${({ theme }) => theme.spacing[3]};
+  padding: ${({ theme }) => `${theme.spacing[3]} ${theme.spacing[4]}`};
   cursor: pointer;
   transition: background-color 0.15s ease;
   background: ${({ theme, $isSelected }) =>
@@ -249,7 +249,7 @@ export const NoResults = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: ${({ theme }) => `${theme.spacing.xl} ${theme.spacing.md}`};
+  padding: ${({ theme }) => `${theme.spacing[8]} ${theme.spacing[4]}`};
   text-align: center;
 `;
 
@@ -262,7 +262,7 @@ export const NoResultsIcon = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius.full};
   background: ${({ theme }) => theme.colors.neutral[100]};
   color: ${({ theme }) => theme.colors.text.hint};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing[4]};
 
   svg {
     font-size: 24px;
@@ -270,10 +270,10 @@ export const NoResultsIcon = styled.div`
 `;
 
 export const NoResultsText = styled.div`
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: ${({ theme }) => theme.spacing[2]};
 `;
 
 export const NoResultsHint = styled.div`

@@ -74,7 +74,7 @@ export const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({
   );
 
   // Close on click outside
-  useOnClickOutside(containerRef, () => {
+  useOnClickOutside(containerRef as React.RefObject<HTMLElement>, () => {
     if (onClose) {
       onClose();
     }
@@ -178,8 +178,8 @@ export const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({
                   $isSelected={index === selectedIndex}
                 >
                   <S.ProductImage
-                    src={product.image || '/placeholder-product.png'}
-                    alt={product.name}
+                    src={product.images?.[0]?.url || '/placeholder-product.png'}
+                    alt={product.images?.[0]?.alt || product.name}
                     loading="lazy"
                   />
                   <S.ProductInfo>

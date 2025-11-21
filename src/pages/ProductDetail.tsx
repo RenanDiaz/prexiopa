@@ -328,8 +328,8 @@ const ProductDetail = () => {
           {/* Left Column - Product Image & Details */}
           <ImageSection>
             <ProductImageWrapper>
-              {product.image ? (
-                <ProductImage src={product.image} alt={product.name} />
+              {product.images?.[0]?.url ? (
+                <ProductImage src={product.images[0].url} alt={product.images[0].alt || product.name} />
               ) : (
                 <ProductImagePlaceholder>📦</ProductImagePlaceholder>
               )}
