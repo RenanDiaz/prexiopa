@@ -12,3 +12,6 @@ export type {
   PriceRange,
   FilterChangePayload,
 } from './SearchFilters';
+
+export { SearchAutocomplete } from './SearchAutocomplete';
+export type { SearchAutocompleteProps } from './SearchAutocomplete';

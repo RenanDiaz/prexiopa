@@ -4,6 +4,8 @@
  * TODO: Agregar autenticación - Esta ruta debe ser protegida
  */
 
+import { AlertsList } from '../components/alerts';
+import { useActiveAlertsCountQuery } from '../hooks/useAlerts';
 import styled from 'styled-components';
 
 const ProfileContainer = styled.div`
@@ -177,6 +179,8 @@ const Button = styled.button`
 `;
 
 const Profile = () => {
+  const { data: alertsCount = 0 } = useActiveAlertsCountQuery();
+
   return (
     <ProfileContainer>
       <ContentWrapper>
@@ -198,7 +202,7 @@ const Profile = () => {
               </StatItem>
               <StatItem>
                 <StatLabel>Alertas activas</StatLabel>
-                <StatValue>5</StatValue>
+                <StatValue>{alertsCount}</StatValue>
               </StatItem>
               <StatItem>
                 <StatLabel>Ahorro estimado</StatLabel>
@@ -252,6 +256,11 @@ const Profile = () => {
                 </InfoItem>
               </InfoGrid>
               <Button>Actualizar Preferencias</Button>
+            </Section>
+
+            <Section>
+              <SectionTitle>Mis Alertas de Precio</SectionTitle>
+              <AlertsList />
             </Section>
           </MainContent>
         </Grid>
