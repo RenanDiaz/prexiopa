@@ -13,11 +13,13 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FiHeart } from 'react-icons/fi';
+import { FiHeart, FiShoppingCart } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
 import type { ProductWithLowestPrice } from '@/types/product';
 import { useIsFavorite, useToggleFavoriteMutation } from '@/hooks/useFavorites';
 import { useAuthStore } from '@/store/authStore';
+import { useActiveSessionQuery, useAddItemMutation } from '@/hooks/useShoppingLists';
+import { showWarningNotification } from '@/store/uiStore';
 import {
   CardContainer,
   CardImageWrapper,
@@ -31,6 +33,7 @@ import {
   PriceLabel,
   PriceAmount,
   StoreName,
+  AddToCartButton,
   SkeletonCard,
   SkeletonImage,
   SkeletonContent,
@@ -74,6 +77,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const isFavorite = useIsFavorite(product.id);
   const { toggleFavorite, isLoading: isTogglingFavorite } = useToggleFavoriteMutation();
 
+  // Shopping list hooks
+  const { data: activeSession } = useActiveSessionQuery({ enabled: isAuthenticated });
+  const addItemMutation = useAddItemMutation();
+
   /**
    * Handle favorite button click
    * Prevents event propagation to avoid triggering card navigation
@@ -102,6 +109,43 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const handleCardClick = () => {
     if (onClick) {
       onClick(product);
+    }
+  };
+
+  /**
+   * Handle add to shopping cart
+   */
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!isAuthenticated) {
+      showWarningNotification('Debes iniciar sesión para agregar productos a tu lista');
+      return;
+    }
+
+    if (!activeSession) {
+      showWarningNotification('Debes iniciar una sesión de compras primero');
+      return;
+    }
+
+    if (!product.lowest_price || !product.store_with_lowest_price) {
+      showWarningNotification('No hay información de precio disponible');
+      return;
+    }
+
+    try {
+      await addItemMutation.mutateAsync({
+        session_id: activeSession.id,
+        product_id: product.id,
+        product_name: product.name,
+        price: product.lowest_price,
+        quantity: 1,
+        store_id: product.store_with_lowest_price.id,
+        store_name: product.store_with_lowest_price.name,
+      });
+    } catch (error) {
+      console.error('Error adding to cart:', error);
     }
   };
 
@@ -179,6 +223,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               </StoreName>
             )}
           </PriceSection>
+
+          {/* Add to Cart Button */}
+          {isAuthenticated && activeSession && (
+            <AddToCartButton
+              onClick={handleAddToCart}
+              disabled={addItemMutation.isPending}
+              type="button"
+              aria-label="Agregar a lista de compras"
+            >
+              <FiShoppingCart />
+              Agregar a lista
+            </AddToCartButton>
+          )}
         </CardContent>
       </Link>
     </CardContainer>

@@ -10,7 +10,7 @@ import { supabase } from '../../supabaseClient';
 /**
  * Shopping session status
  */
-export type ShoppingSessionStatus = 'in_progress' | 'completed' | 'cancelled';
+export type SessionStatus = 'in_progress' | 'completed' | 'cancelled';
 
 /**
  * Shopping session interface
@@ -19,24 +19,15 @@ export interface ShoppingSession {
   id: string;
   user_id: string;
   store_id: string | null;
+  store_name?: string | null;
   date: string;
   total: number;
-  status: ShoppingSessionStatus;
+  status: SessionStatus;
   notes: string | null;
   created_at: string;
   updated_at: string;
   completed_at: string | null;
-}
-
-/**
- * Shopping session with store details
- */
-export interface ShoppingSessionWithStore extends ShoppingSession {
-  store: {
-    id: string;
-    name: string;
-    logo: string;
-  } | null;
+  items?: ShoppingItem[];
 }
 
 /**
@@ -51,29 +42,20 @@ export interface ShoppingItem {
   quantity: number;
   unit: string;
   subtotal: number;
+  store_id?: string | null;
+  store_name?: string | null;
+  purchased: boolean;
   notes: string | null;
   created_at: string;
   updated_at: string;
 }
 
 /**
- * Shopping item with product details
- */
-export interface ShoppingItemWithProduct extends ShoppingItem {
-  product: {
-    id: string;
-    name: string;
-    image: string;
-    brand: string | null;
-    category: string;
-  } | null;
-}
-
-/**
  * Create session input
  */
-export interface CreateSessionInput {
+export interface CreateSessionData {
   store_id?: string | null;
+  store_name?: string | null;
   date?: string;
   notes?: string;
 }
@@ -83,31 +65,35 @@ export interface CreateSessionInput {
  */
 export interface UpdateSessionInput {
   store_id?: string | null;
-  status?: ShoppingSessionStatus;
+  store_name?: string | null;
+  status?: SessionStatus;
   notes?: string;
 }
 
 /**
  * Create item input
  */
-export interface CreateItemInput {
+export interface AddItemData {
   session_id: string;
   product_id?: string | null;
   product_name: string;
   price: number;
   quantity?: number;
   unit?: string;
+  store_id?: string | null;
+  store_name?: string | null;
   notes?: string;
 }
 
 /**
  * Update item input
  */
-export interface UpdateItemInput {
+export interface UpdateItemData {
   product_name?: string;
   price?: number;
   quantity?: number;
   unit?: string;
+  purchased?: boolean;
   notes?: string;
 }
 
@@ -130,19 +116,12 @@ export interface ShoppingStats {
 /**
  * Get all shopping sessions for authenticated user
  */
-export const getUserShoppingSessions = async (
-  status?: ShoppingSessionStatus
-): Promise<ShoppingSessionWithStore[]> => {
+export const getShoppingSessions = async (
+  status?: SessionStatus
+): Promise<ShoppingSession[]> => {
   let query = supabase
     .from('shopping_sessions')
-    .select(`
-      *,
-      store:stores (
-        id,
-        name,
-        logo
-      )
-    `)
+    .select('*')
     .order('date', { ascending: false });
 
   if (status) {
@@ -156,89 +135,64 @@ export const getUserShoppingSessions = async (
     throw new Error(`Failed to fetch shopping sessions: ${error.message}`);
   }
 
-  return data as unknown as ShoppingSessionWithStore[];
+  return data || [];
 };
 
 /**
- * Get shopping session by ID
+ * Get active shopping session
  */
-export const getShoppingSessionById = async (
-  id: string
-): Promise<ShoppingSessionWithStore | null> => {
+export const getActiveSession = async (): Promise<ShoppingSession | null> => {
   const { data, error } = await supabase
     .from('shopping_sessions')
-    .select(`
-      *,
-      store:stores (
-        id,
-        name,
-        logo
-      )
-    `)
-    .eq('id', id)
-    .single();
-
-  if (error) {
-    if (error.code === 'PGRST116') {
-      return null;
-    }
-    console.error('Error fetching shopping session:', error);
-    throw new Error(`Failed to fetch shopping session: ${error.message}`);
-  }
-
-  return data as unknown as ShoppingSessionWithStore;
-};
-
-/**
- * Get active shopping session for current user
- */
-export const getActiveShoppingSession = async (): Promise<ShoppingSessionWithStore | null> => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error('User not authenticated');
-  }
-
-  const { data, error } = await supabase.rpc('get_active_shopping_session', {
-    p_user_id: user.id,
-  });
+    .select('*')
+    .eq('status', 'in_progress')
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
 
   if (error) {
     console.error('Error fetching active session:', error);
     throw new Error(`Failed to fetch active session: ${error.message}`);
   }
 
-  if (!data) {
-    return null;
-  }
-
-  return getShoppingSessionById(data);
+  return data;
 };
 
 /**
- * Create a new shopping session
+ * Get shopping session by ID
  */
-export const createShoppingSession = async (
-  input: CreateSessionInput = {}
-): Promise<ShoppingSession> => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export const getShoppingSession = async (
+  id: string
+): Promise<ShoppingSession | null> => {
+  const { data, error } = await supabase
+    .from('shopping_sessions')
+    .select('*')
+    .eq('id', id)
+    .single();
 
-  if (!user) {
-    throw new Error('User not authenticated');
+  if (error) {
+    console.error('Error fetching shopping session:', error);
+    throw new Error(`Failed to fetch shopping session: ${error.message}`);
   }
 
+  return data;
+};
+
+/**
+ * Create new shopping session
+ */
+export const createShoppingSession = async (
+  input: CreateSessionData
+): Promise<ShoppingSession> => {
   const { data, error } = await supabase
     .from('shopping_sessions')
     .insert({
-      user_id: user.id,
       store_id: input.store_id || null,
-      date: input.date || new Date().toISOString().split('T')[0],
-      notes: input.notes || null,
+      store_name: input.store_name || null,
+      date: input.date || new Date().toISOString(),
       status: 'in_progress',
+      total: 0,
+      notes: input.notes || null,
     })
     .select()
     .single();
@@ -274,16 +228,47 @@ export const updateShoppingSession = async (
 };
 
 /**
- * Complete shopping session (updates prices in database)
+ * Complete shopping session
  */
-export const completeShoppingSession = async (id: string): Promise<boolean> => {
-  const { data, error } = await supabase.rpc('complete_shopping_session', {
-    p_session_id: id,
-  });
+export const completeShoppingSession = async (
+  id: string
+): Promise<ShoppingSession> => {
+  const { data, error } = await supabase
+    .from('shopping_sessions')
+    .update({
+      status: 'completed',
+      completed_at: new Date().toISOString(),
+    })
+    .eq('id', id)
+    .select()
+    .single();
 
   if (error) {
     console.error('Error completing shopping session:', error);
     throw new Error(`Failed to complete shopping session: ${error.message}`);
+  }
+
+  return data;
+};
+
+/**
+ * Cancel shopping session
+ */
+export const cancelShoppingSession = async (
+  id: string
+): Promise<ShoppingSession> => {
+  const { data, error } = await supabase
+    .from('shopping_sessions')
+    .update({
+      status: 'cancelled',
+    })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error cancelling shopping session:', error);
+    throw new Error(`Failed to cancel shopping session: ${error.message}`);
   }
 
   return data;
@@ -308,21 +293,12 @@ export const deleteShoppingSession = async (id: string): Promise<void> => {
 /**
  * Get items for a shopping session
  */
-export const getSessionItems = async (
+export const getShoppingItems = async (
   sessionId: string
-): Promise<ShoppingItemWithProduct[]> => {
+): Promise<ShoppingItem[]> => {
   const { data, error } = await supabase
     .from('shopping_items')
-    .select(`
-      *,
-      product:products (
-        id,
-        name,
-        image,
-        brand,
-        category
-      )
-    `)
+    .select('*')
     .eq('session_id', sessionId)
     .order('created_at', { ascending: true });
 
@@ -331,15 +307,17 @@ export const getSessionItems = async (
     throw new Error(`Failed to fetch shopping items: ${error.message}`);
   }
 
-  return data as unknown as ShoppingItemWithProduct[];
+  return data || [];
 };
 
 /**
  * Add item to shopping session
  */
 export const addShoppingItem = async (
-  input: CreateItemInput
+  input: AddItemData
 ): Promise<ShoppingItem> => {
+  const subtotal = input.price * (input.quantity || 1);
+
   const { data, error } = await supabase
     .from('shopping_items')
     .insert({
@@ -349,6 +327,10 @@ export const addShoppingItem = async (
       price: input.price,
       quantity: input.quantity || 1,
       unit: input.unit || 'unidad',
+      subtotal,
+      store_id: input.store_id || null,
+      store_name: input.store_name || null,
+      purchased: false,
       notes: input.notes || null,
     })
     .select()
@@ -359,6 +341,9 @@ export const addShoppingItem = async (
     throw new Error(`Failed to add shopping item: ${error.message}`);
   }
 
+  // Update session total
+  await updateSessionTotal(input.session_id);
+
   return data;
 };
 
@@ -367,11 +352,27 @@ export const addShoppingItem = async (
  */
 export const updateShoppingItem = async (
   id: string,
-  input: UpdateItemInput
+  input: UpdateItemData
 ): Promise<ShoppingItem> => {
+  // Get current item to calculate new subtotal if needed
+  const { data: currentItem } = await supabase
+    .from('shopping_items')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  const updateData: any = { ...input };
+
+  // Recalculate subtotal if price or quantity changed
+  if (currentItem && (input.price !== undefined || input.quantity !== undefined)) {
+    const newPrice = input.price ?? currentItem.price;
+    const newQuantity = input.quantity ?? currentItem.quantity;
+    updateData.subtotal = newPrice * newQuantity;
+  }
+
   const { data, error } = await supabase
     .from('shopping_items')
-    .update(input)
+    .update(updateData)
     .eq('id', id)
     .select()
     .single();
@@ -381,6 +382,11 @@ export const updateShoppingItem = async (
     throw new Error(`Failed to update shopping item: ${error.message}`);
   }
 
+  // Update session total
+  if (currentItem) {
+    await updateSessionTotal(currentItem.session_id);
+  }
+
   return data;
 };
 
@@ -388,70 +394,90 @@ export const updateShoppingItem = async (
  * Delete shopping item
  */
 export const deleteShoppingItem = async (id: string): Promise<void> => {
+  // Get item to know which session to update
+  const { data: item } = await supabase
+    .from('shopping_items')
+    .select('session_id')
+    .eq('id', id)
+    .single();
+
   const { error } = await supabase.from('shopping_items').delete().eq('id', id);
 
   if (error) {
     console.error('Error deleting shopping item:', error);
     throw new Error(`Failed to delete shopping item: ${error.message}`);
   }
+
+  // Update session total
+  if (item) {
+    await updateSessionTotal(item.session_id);
+  }
 };
 
-// ============================================
-// STATISTICS
-// ============================================
+/**
+ * Helper: Update session total based on items
+ */
+const updateSessionTotal = async (sessionId: string): Promise<void> => {
+  const { data: items } = await supabase
+    .from('shopping_items')
+    .select('subtotal')
+    .eq('session_id', sessionId);
+
+  const total = items?.reduce((sum, item) => sum + (item.subtotal || 0), 0) || 0;
+
+  await supabase
+    .from('shopping_sessions')
+    .update({ total })
+    .eq('id', sessionId);
+};
 
 /**
- * Get shopping statistics for current user
+ * Get user shopping statistics
  */
 export const getUserShoppingStats = async (): Promise<ShoppingStats> => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: sessions } = await supabase
+    .from('shopping_sessions')
+    .select('*');
 
-  if (!user) {
-    throw new Error('User not authenticated');
+  if (!sessions) {
+    return {
+      total_sessions: 0,
+      completed_sessions: 0,
+      total_spent: 0,
+      total_items: 0,
+      avg_session_total: 0,
+      most_visited_store: null,
+    };
   }
 
-  const { data, error } = await supabase.rpc('get_user_shopping_stats', {
-    p_user_id: user.id,
+  const completedSessions = sessions.filter((s) => s.status === 'completed');
+  const totalSpent = completedSessions.reduce((sum, s) => sum + s.total, 0);
+
+  // Get total items count
+  const { count } = await supabase
+    .from('shopping_items')
+    .select('*', { count: 'exact', head: true });
+
+  // Find most visited store
+  const storeCounts: Record<string, number> = {};
+  sessions.forEach((s) => {
+    if (s.store_name) {
+      storeCounts[s.store_name] = (storeCounts[s.store_name] || 0) + 1;
+    }
   });
 
-  if (error) {
-    console.error('Error fetching shopping stats:', error);
-    throw new Error(`Failed to fetch shopping stats: ${error.message}`);
-  }
+  const mostVisitedStore =
+    Object.keys(storeCounts).length > 0
+      ? Object.entries(storeCounts).sort((a, b) => b[1] - a[1])[0][0]
+      : null;
 
-  return data?.[0] || {
-    total_sessions: 0,
-    completed_sessions: 0,
-    total_spent: 0,
-    total_items: 0,
-    avg_session_total: 0,
-    most_visited_store: null,
+  return {
+    total_sessions: sessions.length,
+    completed_sessions: completedSessions.length,
+    total_spent: totalSpent,
+    total_items: count || 0,
+    avg_session_total:
+      completedSessions.length > 0 ? totalSpent / completedSessions.length : 0,
+    most_visited_store: mostVisitedStore,
   };
-};
-
-/**
- * Get or create active shopping session
- */
-export const getOrCreateActiveSession = async (
-  storeId?: string | null
-): Promise<ShoppingSessionWithStore> => {
-  // Try to get active session
-  const activeSession = await getActiveShoppingSession();
-
-  if (activeSession) {
-    // Update store if provided and different
-    if (storeId && activeSession.store_id !== storeId) {
-      const updated = await updateShoppingSession(activeSession.id, {
-        store_id: storeId,
-      });
-      return { ...activeSession, ...updated };
-    }
-    return activeSession;
-  }
-
-  // Create new session
-  const newSession = await createShoppingSession({ store_id: storeId });
-  return getShoppingSessionById(newSession.id) as Promise<ShoppingSessionWithStore>;
 };
