@@ -26,9 +26,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { FiSearch, FiCamera, FiX } from 'react-icons/fi';
 import { useDebounce } from '@/hooks/useDebounce';
-import { useProductSearchQuery } from '@/hooks/useProducts';
+// import { useProductSearchQuery } from '@/hooks/useProducts'; // Temporarily disabled
 import type { Product } from '@/types/product';
-import SearchAutocomplete from './SearchAutocomplete'; // Import the new component
+// import SearchAutocomplete from './SearchAutocomplete'; // Commented out - not implemented yet
 import {
   SearchBarContainer,
   SearchInputWrapper,
@@ -78,7 +78,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   value,
   onChange,
   onScanClick,
-  onSearchAutocomplete, // Destructure new prop
+  // onSearchAutocomplete, // Temporarily disabled - not used
   placeholder = 'Buscar productos, marcas...',
   disabled = false,
   debounceDelay = 300,
@@ -87,16 +87,17 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   // Local state for immediate UI updates and autocomplete visibility
   const [localValue, setLocalValue] = useState(value);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  // const [showSuggestions, setShowSuggestions] = useState(false); // Temporarily disabled
   const searchBarRef = useRef<HTMLDivElement>(null); // Ref for click outside detection
 
   // Debounced value that triggers the onChange callback
   const debouncedValue = useDebounce(localValue, debounceDelay);
 
   // Use hook to fetch product suggestions
-  const { data: suggestions = [] } = useProductSearchQuery(debouncedValue, {
-    enabled: showSuggestions && !!debouncedValue && debouncedValue.length >= 2, // Only fetch if suggestions are shown and query is valid
-  });
+  // Temporarily disabled - SearchAutocomplete not implemented yet
+  // const { data: suggestions = [] } = useProductSearchQuery(debouncedValue, {
+  //   enabled: showSuggestions && !!debouncedValue && debouncedValue.length >= 2,
+  // });
 
   // Update parent when debounced value changes
   useEffect(() => {
@@ -121,7 +122,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
    */
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalValue(e.target.value);
-    setShowSuggestions(true); // Show suggestions when user types
+    // setShowSuggestions(true); // Temporarily disabled
   };
 
   /**
@@ -130,19 +131,20 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const handleClear = () => {
     setLocalValue('');
     onChange('');
-    setShowSuggestions(false); // Hide suggestions when cleared
+    // setShowSuggestions(false); // Temporarily disabled
   };
 
   /**
    * Handle autocomplete suggestion selection
+   * Temporarily disabled - SearchAutocomplete not implemented yet
    */
-  const handleSelectSuggestion = (product: Product) => {
-    isSelectingSuggestion.current = true; // Set flag
-    setLocalValue(product.name); // Update input with selected product name
-    onChange(product.name); // Trigger parent onChange for immediate consistency
-    setShowSuggestions(false); // Hide suggestions
-    onSearchAutocomplete?.(product); // Trigger the prop callback
-  };
+  // const handleSelectSuggestion = (product: Product) => {
+  //   isSelectingSuggestion.current = true;
+  //   setLocalValue(product.name);
+  //   onChange(product.name);
+  //   setShowSuggestions(false);
+  //   onSearchAutocomplete?.(product);
+  // };
 
   /**
    * Handle keyboard shortcuts for accessibility (e.g., Escape to close suggestions)
@@ -163,16 +165,17 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const handleScanClick = () => {
     if (onScanClick && !disabled) {
       onScanClick();
-      setShowSuggestions(false); // Hide suggestions when scanner opens
+      // setShowSuggestions(false); // Temporarily disabled
     }
   };
 
   /**
    * Close suggestions when clicking outside the search bar, but not if clicking on a suggestion itself
+   * Temporarily disabled - SearchAutocomplete not implemented yet
    */
-  const handleCloseSuggestions = useCallback(() => {
-    setShowSuggestions(false);
-  }, []);
+  // const handleCloseSuggestions = useCallback(() => {
+  //   setShowSuggestions(false);
+  // }, []);
 
   return (
     <SearchBarContainer className={className} data-testid={testId} ref={searchBarRef}>
@@ -188,7 +191,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           value={localValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          onFocus={() => setShowSuggestions(true)} // Show suggestions when input is focused
+          // onFocus={() => setShowSuggestions(true)} // Temporarily disabled
           placeholder={placeholder}
           disabled={disabled}
           aria-label="Buscar productos"
@@ -227,14 +230,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       </SearchInputWrapper>
 
       {/* Autocomplete Suggestions */}
+      {/* Temporarily disabled - SearchAutocomplete not implemented yet
       {showSuggestions && suggestions.length > 0 && localValue.length >= 2 && (
         <SearchAutocomplete
           suggestions={suggestions}
           onSelect={handleSelectSuggestion}
-          query={debouncedValue} // Use debounced value for highlighting
+          query={debouncedValue}
           onClose={handleCloseSuggestions}
         />
-      )}
+      )} */}
 
       {/* Screen reader hint */}
       <span id="search-hint" className="sr-only">

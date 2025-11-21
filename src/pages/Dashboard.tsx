@@ -22,7 +22,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useSearchStore } from '@/store/searchStore'; // Import useSearchStore
 
 // Types
-import type { PriceRange, FilterChangePayload } from '@/components/search/SearchFilters';
+import type { FilterChangePayload } from '@/components/search/SearchFilters';
 import type { ProductFilters } from '@/services/supabase/products';
 import type { ProductWithLowestPrice } from '@/types/product';
 
@@ -228,7 +228,7 @@ const Dashboard = () => {
 
   // Search & Filter State from Zustand
   const searchQuery = useSearchStore((state) => state.query);
-  const { filters, setFilters, clearFilters: zustandClearFilters } = useSearchStore();
+  const { filters, setQuery, setFilters, clearFilters: zustandClearFilters } = useSearchStore();
   const { category: selectedCategory, store: selectedStores, priceRange, sortBy, sortOrder } = filters;
 
   // Local UI State
@@ -264,12 +264,12 @@ const Dashboard = () => {
     (priceRange?.min && priceRange.min > 0 || priceRange?.max && priceRange.max < 500 ? 1 : 0);
 
   // Handlers
-  const handleSearch = useCallback((query: string) => {
-    // This is handled by SearchBar's internal debounced onChange which will call Zustand's setQuery
-    // For now, local search bar state is sufficient, `searchQuery` is from Zustand
-  }, []);
+  // const handleSearch = useCallback((query: string) => {
+  //   // This is handled by SearchBar's internal debounced onChange which will call Zustand's setQuery
+  //   // For now, local search bar state is sufficient, `searchQuery` is from Zustand
+  // }, []);
 
-  const handleAutocompleteSelect = useCallback((product: Product) => {
+  const handleAutocompleteSelect = useCallback((product: ProductWithLowestPrice) => {
     navigate(`/product/${product.id}`);
   }, [navigate]);
 
@@ -285,10 +285,10 @@ const Dashboard = () => {
     (barcode: string) => {
       setIsScannerOpen(false);
       // Search for product with barcode
-      setFilters({ query: barcode }); // Set query via Zustand
+      setQuery(barcode); // Set query via Zustand
       // TODO: Potentially trigger a search for the barcode directly here
     },
-    [setFilters]
+    [setQuery]
   );
 
   const handleFilterChange = useCallback((payload: FilterChangePayload) => {
@@ -421,7 +421,7 @@ const Dashboard = () => {
               }
             />
           )}
-        </MainContent>
+        </MainSection>
       </MainContent>
 
       {/* Barcode Scanner Modal */}

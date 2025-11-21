@@ -6,8 +6,8 @@
 
 import styled from 'styled-components';
 import { useAuthStore } from '@/store/authStore';
-import { useActiveAlertsCountQuery } from '@/hooks/useAlerts';
-import { AlertsList } from '@/components/alerts/AlertsList';
+// import { useActiveAlertsCountQuery } from '@/hooks/useAlerts';
+// import { AlertsList } from '@/components/alerts/AlertsList'; // Not implemented yet
 
 const ProfileContainer = styled.div`
   min-height: 100vh;
@@ -181,7 +181,8 @@ const Button = styled.button`
 
 const Profile = () => {
   const { user } = useAuthStore();
-  const { data: activeAlertsCount = 0 } = useActiveAlertsCountQuery();
+  // const { data: activeAlertsCount = 0 } = useActiveAlertsCountQuery(); // Not implemented yet
+  const activeAlertsCount = 0; // Temporary placeholder
 
   const userDisplayName = user?.user_metadata?.full_name || user?.email || 'Usuario';
   const userEmail = user?.email || '';
@@ -242,7 +243,8 @@ const Profile = () => {
 
             <Section>
               <SectionTitle>Mis Alertas de Precio</SectionTitle>
-              <AlertsList />
+              {/* <AlertsList /> */}
+              <p style={{ color: '#666' }}>Alertas de precio próximamente disponibles</p>
             </Section>
 
             <Section>
