@@ -5,9 +5,6 @@
  */
 
 import styled from 'styled-components';
-import { useAuthStore } from '@/store/authStore';
-import { useActiveAlertsCountQuery } from '@/hooks/useAlerts';
-import { AlertsList } from '@/components/alerts/AlertsList';
 
 const ProfileContainer = styled.div`
   min-height: 100vh;
@@ -180,12 +177,6 @@ const Button = styled.button`
 `;
 
 const Profile = () => {
-  const { user } = useAuthStore();
-  const { data: activeAlertsCount = 0 } = useActiveAlertsCountQuery();
-
-  const userDisplayName = user?.user_metadata?.full_name || user?.email || 'Usuario';
-  const userEmail = user?.email || '';
-
   return (
     <ProfileContainer>
       <ContentWrapper>
@@ -196,22 +187,22 @@ const Profile = () => {
 
         <Grid>
           <Sidebar>
-            <Avatar>{userDisplayName.charAt(0).toUpperCase()}</Avatar>
-            <UserName>{userDisplayName}</UserName>
-            <UserEmail>{userEmail}</UserEmail>
+            <Avatar>JP</Avatar>
+            <UserName>Juan Pérez</UserName>
+            <UserEmail>juan.perez@email.com</UserEmail>
 
             <StatsList>
               <StatItem>
                 <StatLabel>Favoritos</StatLabel>
-                <StatValue>N/A</StatValue> {/* TODO: Integrate actual favorites count */}
+                <StatValue>12</StatValue>
               </StatItem>
               <StatItem>
                 <StatLabel>Alertas activas</StatLabel>
-                <StatValue>{activeAlertsCount}</StatValue>
+                <StatValue>5</StatValue>
               </StatItem>
               <StatItem>
                 <StatLabel>Ahorro estimado</StatLabel>
-                <StatValue>N/A</StatValue> {/* TODO: Implement estimated savings */}
+                <StatValue>$245</StatValue>
               </StatItem>
             </StatsList>
           </Sidebar>
@@ -222,27 +213,22 @@ const Profile = () => {
               <InfoGrid>
                 <InfoItem>
                   <InfoLabel>Nombre completo</InfoLabel>
-                  <InfoValue>{userDisplayName}</InfoValue>
+                  <InfoValue>Juan Pérez</InfoValue>
                 </InfoItem>
                 <InfoItem>
                   <InfoLabel>Correo electrónico</InfoLabel>
-                  <InfoValue>{userEmail}</InfoValue>
+                  <InfoValue>juan.perez@email.com</InfoValue>
                 </InfoItem>
                 <InfoItem>
                   <InfoLabel>Teléfono</InfoLabel>
-                  <InfoValue>No configurado</InfoValue> {/* TODO: Allow editing phone */}
+                  <InfoValue>+507 6000-0000</InfoValue>
                 </InfoItem>
                 <InfoItem>
                   <InfoLabel>Ubicación</InfoLabel>
-                  <InfoValue>No configurado</InfoValue> {/* TODO: Allow editing location */}
+                  <InfoValue>Ciudad de Panamá, Panamá</InfoValue>
                 </InfoItem>
               </InfoGrid>
               <Button>Editar Información</Button>
-            </Section>
-
-            <Section>
-              <SectionTitle>Mis Alertas de Precio</SectionTitle>
-              <AlertsList />
             </Section>
 
             <Section>
@@ -250,19 +236,19 @@ const Profile = () => {
               <InfoGrid>
                 <InfoItem>
                   <InfoLabel>Tiendas preferidas</InfoLabel>
-                  <InfoValue>No configurado</InfoValue> {/* TODO: Allow editing preferred stores */}
+                  <InfoValue>Super 99, El Rey, Riba Smith</InfoValue>
                 </InfoItem>
                 <InfoItem>
                   <InfoLabel>Notificaciones</InfoLabel>
-                  <InfoValue>Email y Push activadas</InfoValue> {/* TODO: Allow editing notification preferences */}
+                  <InfoValue>Email y Push activadas</InfoValue>
                 </InfoItem>
                 <InfoItem>
                   <InfoLabel>Categorías favoritas</InfoLabel>
-                  <InfoValue>No configurado</InfoValue> {/* TODO: Allow editing favorite categories */}
+                  <InfoValue>Alimentos, Tecnología, Hogar</InfoValue>
                 </InfoItem>
                 <InfoItem>
                   <InfoLabel>Idioma</InfoLabel>
-                  <InfoValue>Español</InfoValue> {/* TODO: Allow editing language */}
+                  <InfoValue>Español</InfoValue>
                 </InfoItem>
               </InfoGrid>
               <Button>Actualizar Preferencias</Button>

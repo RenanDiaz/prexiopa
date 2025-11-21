@@ -7,13 +7,13 @@
 ## Checklist de Progreso General
 
 ```
-Progreso Total: 100% ████████████████████████████████
+Progreso Total: 15% ████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 ✅ Fase 0: Configuración Inicial (100%)
-✅ Fase 1: Fundación y Arquitectura (100%)
-✅ Fase 2: Esqueleto y Navegación (90%)
-✅ Fase 3: Features Core (100%)
-✅ Fase 4: Features Avanzados (100%)
+⏳ Fase 1: Fundación y Arquitectura (0%)
+⏳ Fase 2: Esqueleto y Navegación (0%)
+⏳ Fase 3: Features Core (0%)
+⏳ Fase 4: Features Avanzados (0%)
 ⏳ Fase 5: Pulido y Optimización (0%)
 ```
 
@@ -1556,7 +1556,7 @@ export const DiscountBadge = styled.span`
 
 ## Fase 1: Fundación y Arquitectura
 
-**Estado:** Completado
+**Estado:** Pendiente
 **Duración Estimada:** 4-6 horas
 **Prioridad:** Alta
 
@@ -1566,39 +1566,39 @@ Establecer la arquitectura base del proyecto: sistema de estilos, estado global,
 ### Tareas
 
 #### 1.1 Sistema de Estilos y Tema
-- ✅ Instalar styled-components y tipos
+- [ ] Instalar styled-components y tipos
   ```bash
   npm install styled-components
   npm install -D @types/styled-components
   ```
-- ✅ Crear `src/styles/theme.ts` con colores, tipografía, espaciado (usar guía completa arriba)
-- ✅ Crear `src/styles/GlobalStyles.ts` con reset CSS y estilos globales
-- ✅ Crear `src/styles/breakpoints.ts` para responsive
-- ✅ Crear `src/styles/animations.ts` con transiciones comunes
-- ✅ Crear `src/styles/accessibility.ts` con helpers WCAG
-- ✅ Añadir Google Fonts (Poppins + Roboto Mono) en `index.html`
-- ✅ Aplicar ThemeProvider en `main.tsx`
+- [ ] Crear `src/styles/theme.ts` con colores, tipografía, espaciado (usar guía completa arriba)
+- [ ] Crear `src/styles/GlobalStyles.ts` con reset CSS y estilos globales
+- [ ] Crear `src/styles/breakpoints.ts` para responsive
+- [ ] Crear `src/styles/animations.ts` con transiciones comunes
+- [ ] Crear `src/styles/accessibility.ts` con helpers WCAG
+- [ ] Añadir Google Fonts (Poppins + Roboto Mono) en `index.html`
+- [ ] Aplicar ThemeProvider en `main.tsx`
 
 #### 1.2 Estado Global (Zustand)
-- ✅ Instalar zustand
+- [ ] Instalar zustand
   ```bash
   npm install zustand
   ```
-- ✅ Crear `src/store/useAuthStore.ts`
+- [ ] Crear `src/store/useAuthStore.ts`
   - Estado: user, isAuthenticated, isLoading
   - Acciones: login, logout, register, updateUser
-- ✅ Crear `src/store/useFavoritesStore.ts`
+- [ ] Crear `src/store/useFavoritesStore.ts`
   - Estado: favorites (array de product IDs)
   - Acciones: addFavorite, removeFavorite, loadFavorites
-- ✅ Crear `src/store/useSearchStore.ts`
+- [ ] Crear `src/store/useSearchStore.ts`
   - Estado: query, filters (category, store, priceRange), sortBy
   - Acciones: setQuery, setFilters, clearFilters, setSortBy
-- ✅ Crear `src/store/useUIStore.ts`
+- [ ] Crear `src/store/useUIStore.ts`
   - Estado: sidebarOpen, modalOpen, theme (light/dark)
   - Acciones: toggleSidebar, openModal, closeModal, toggleTheme
 
 #### 1.3 Tipos de TypeScript
-- ✅ Crear `src/types/product.types.ts`
+- [ ] Crear `src/types/product.types.ts`
   ```typescript
   export interface Product {
     id: string;
@@ -1627,7 +1627,7 @@ Establecer la arquitectura base del proyecto: sistema de estilos, estado global,
     highest_price?: number;
   }
   ```
-- ✅ Crear `src/types/store.types.ts`
+- [ ] Crear `src/types/store.types.ts`
   ```typescript
   export interface Store {
     id: string;
@@ -1637,29 +1637,29 @@ Establecer la arquitectura base del proyecto: sistema de estilos, estado global,
     locations?: string[];
   }
   ```
-- ✅ Crear `src/types/user.types.ts`
-- ✅ Crear `src/types/api.types.ts` para respuestas de API
+- [ ] Crear `src/types/user.types.ts`
+- [ ] Crear `src/types/api.types.ts` para respuestas de API
 
 #### 1.4 Estructura de Carpetas
-- ✅ Crear todas las carpetas según estructura definida
-- ✅ Crear archivos `.gitkeep` en carpetas vacías
-- ✅ Actualizar `.gitignore` si es necesario
+- [ ] Crear todas las carpetas según estructura definida
+- [ ] Crear archivos `.gitkeep` en carpetas vacías
+- [ ] Actualizar `.gitignore` si es necesario
 
 #### 1.5 Configuración de React Router
-- ✅ Instalar react-router-dom
+- [ ] Instalar react-router-dom
   ```bash
   npm install react-router-dom
   ```
-- ✅ Crear `src/routes/AppRoutes.tsx` con BrowserRouter y rutas básicas
-- ✅ Crear `src/routes/ProtectedRoute.tsx` (wrapper para rutas autenticadas)
-- ✅ Crear `src/routes/PublicRoute.tsx` (wrapper para login/registro)
+- [ ] Crear `src/routes/AppRoutes.tsx` con BrowserRouter y rutas básicas
+- [ ] Crear `src/routes/ProtectedRoute.tsx` (wrapper para rutas autenticadas)
+- [ ] Crear `src/routes/PublicRoute.tsx` (wrapper para login/registro)
 
 ### Criterios de Completado
-- ✅ Tema aplicado globalmente con ThemeProvider
-- ✅ Stores de Zustand funcionando con persist
-- ✅ Tipos definidos y exportados correctamente
-- ✅ Navegación básica funcionando con React Router
-- ✅ Todas las carpetas creadas según estructura
+- [ ] Tema aplicado globalmente con ThemeProvider
+- [ ] Stores de Zustand funcionando con persist
+- [ ] Tipos definidos y exportados correctamente
+- [ ] Navegación básica funcionando con React Router
+- [ ] Todas las carpetas creadas según estructura
 
 ### Tecnologías
 - styled-components, zustand, react-router-dom, TypeScript
@@ -1668,7 +1668,7 @@ Establecer la arquitectura base del proyecto: sistema de estilos, estado global,
 
 ## Fase 2: Esqueleto y Navegación
 
-**Estado:** Casi Completado (90%)
+**Estado:** Pendiente
 **Duración Estimada:** 6-8 horas
 **Prioridad:** Alta
 **Dependencias:** Fase 1
@@ -1679,46 +1679,46 @@ Crear el layout principal, navegación y páginas esqueleto sin funcionalidad co
 ### Tareas
 
 #### 2.1 Layout Components
-- ✅ Crear `Navbar` component
+- [ ] Crear `Navbar` component
   - Logo
   - Barra de búsqueda (placeholder)
   - Links: Dashboard, Tiendas, Favoritos
   - Avatar/menú de usuario
   - Responsive (hamburger menu en mobile)
-- ✅ Crear `Footer` component
+- [ ] Crear `Footer` component
   - Links útiles
   - Copyright
   - Redes sociales (icons)
-- ✅ Crear `Sidebar` component (opcional, para filtros)
+- [ ] Crear `Sidebar` component (opcional, para filtros)
   - Categorías
   - Rangos de precio
   - Tiendas
   - Botón "Aplicar Filtros"
 
 #### 2.2 Common Components
-- ✅ Crear `Button` component
+- [ ] Crear `Button` component
   - Variantes: primary, secondary, outlined, text
   - Tamaños: small, medium, large
   - Estados: default, hover, active, disabled
-- ✅ Crear `Input` component
+- [ ] Crear `Input` component
   - Variantes: text, email, password, number
   - Con/sin icon
   - Estados de validación
-- ✅ Crear `Modal` component
+- [ ] Crear `Modal` component
   - Backdrop
   - Animación de entrada/salida
   - Botón de cerrar
-- ✅ Crear `Loader` component
+- [ ] Crear `Loader` component
   - Spinner animado con colores del tema
-- ✅ Crear `Badge` component
+- [ ] Crear `Badge` component
   - Para mostrar descuentos, ofertas, etc.
 
 #### 2.3 Páginas Esqueleto
-- ✅ Refactorizar `Login.tsx` y `Register.tsx`
+- [ ] Refactorizar `Login.tsx` y `Register.tsx`
   - Usar componentes Button e Input
   - Aplicar estilos del tema
   - Integrar con useAuthStore
-- ✅ Crear `Dashboard.tsx`
+- [ ] Crear `Dashboard.tsx`
   - Hero section
   - Sección "Top Ofertas" (placeholder cards)
   - Sección "Productos Populares" (placeholder cards)
@@ -1740,7 +1740,7 @@ Crear el layout principal, navegación y páginas esqueleto sin funcionalidad co
   - Página 404 con diseño bonito
 
 #### 2.4 Navegación
-- ✅ Configurar todas las rutas en `AppRoutes.tsx`
+- [ ] Configurar todas las rutas en `AppRoutes.tsx`
   ```typescript
   - / -> Dashboard (protected)
   - /login -> Login (public)
@@ -1751,20 +1751,20 @@ Crear el layout principal, navegación y páginas esqueleto sin funcionalidad co
   - /favorites -> Favorites (protected)
   - /* -> NotFound
   ```
-- ✅ Implementar lógica de ProtectedRoute
+- [ ] Implementar lógica de ProtectedRoute
   - Redirigir a /login si no autenticado
-- ✅ Implementar lógica de PublicRoute
+- [ ] Implementar lógica de PublicRoute
   - Redirigir a / si ya autenticado
-- ✅ Añadir loading state durante verificación de auth
+- [ ] Añadir loading state durante verificación de auth
 
 #### 2.5 Notificaciones Toast
-- ✅ Instalar react-toastify
+- [ ] Instalar react-toastify
   ```bash
   npm install react-toastify
   ```
-- ✅ Configurar ToastContainer en `App.tsx`
-- ✅ Personalizar estilos según tema
-- ✅ Crear helper `src/utils/toast.ts` para notificaciones comunes
+- [ ] Configurar ToastContainer en `App.tsx`
+- [ ] Personalizar estilos según tema
+- [ ] Crear helper `src/utils/toast.ts` para notificaciones comunes
 
 ### Criterios de Completado
 - [ ] Navegación completa funciona correctamente
@@ -1781,7 +1781,7 @@ Crear el layout principal, navegación y páginas esqueleto sin funcionalidad co
 
 ## Fase 3: Features Core
 
-**Estado:** Completado (100%)
+**Estado:** Pendiente
 **Duración Estimada:** 10-12 horas
 **Prioridad:** Alta
 **Dependencias:** Fase 2
@@ -1792,15 +1792,15 @@ Implementar las funcionalidades principales: búsqueda de productos (incluyendo 
 ### Tareas
 
 #### 3.1 Configuración de Servicios
-- ✅ Instalar axios
+- [ ] Instalar axios
   ```bash
   npm install axios
   ```
-- ✅ Crear `src/services/api/client.ts`
+- [ ] Crear `src/services/api/client.ts`
   - Instancia de axios con baseURL
   - Interceptores para auth token
   - Manejo de errores global
-- ✅ Crear servicios Supabase:
+- [ ] Crear servicios Supabase:
   - `src/services/supabase/products.ts`
     - getProducts(query, filters)
     - getProductById(id)
@@ -1814,12 +1814,12 @@ Implementar las funcionalidades principales: búsqueda de productos (incluyendo 
     - removeFavorite(userId, productId)
 
 #### 3.2 React Query Setup
-- ✅ Instalar @tanstack/react-query
+- [ ] Instalar @tanstack/react-query
   ```bash
   npm install @tanstack/react-query
   ```
-- ✅ Configurar QueryClient en `main.tsx`
-- ✅ Crear hooks personalizados:
+- [ ] Configurar QueryClient en `main.tsx`
+- [ ] Crear hooks personalizados:
   - `src/hooks/useProducts.ts`
     - useProductsQuery(filters)
     - useProductQuery(id)
@@ -1830,43 +1830,43 @@ Implementar las funcionalidades principales: búsqueda de productos (incluyendo 
     - useRemoveFavoriteMutation()
 
 #### 3.3 Componentes de Producto
-- ✅ Crear `ProductCard` component
+- [ ] Crear `ProductCard` component
   - Imagen del producto
   - Nombre y descripción corta
   - Precio más bajo encontrado
   - Badge de descuento si aplica
   - Botón de favorito (corazón)
   - Click para ir a detalle
-- ✅ Crear `ProductList` component
+- [ ] Crear `ProductList` component
   - Grid responsive de ProductCards
   - Loader mientras carga
   - Estado vacío si no hay resultados
-- ✅ Crear `ProductDetail` component
+- [ ] Crear `ProductDetail` component
   - Imagen grande
   - Descripción completa
   - Categoría y marca
   - Botón de favorito
-- ✅ Crear `PriceComparison` component
+- [ ] Crear `PriceComparison` component
   - Tabla/cards con precios por tienda
   - Indicador de mejor precio
   - Links a tiendas
   - Estado de disponibilidad
 
 #### 3.4 Búsqueda y Filtros
-- ✅ Crear `SearchBar` component
+- [ ] Crear `SearchBar` component
   - Input con icono de búsqueda
   - Debounce en el input
   - Integrar con useSearchStore
-- ✅ Crear `SearchFilters` component
+- [ ] Crear `SearchFilters` component
   - Filtro por categoría (dropdown/chips)
   - Filtro por tienda (checkboxes)
   - Filtro por rango de precio (slider)
   - Botón "Limpiar filtros"
   - Integrar con useSearchStore
-- ✅ Implementar lógica de búsqueda en Dashboard
+- [ ] Implementar lógica de búsqueda en Dashboard
   - Conectar SearchBar con useProducts
   - Mostrar resultados filtrados
-- ✅ Crear `BarcodeScanner` component
+- [ ] Crear `BarcodeScanner` component
   - Acceso a cámara del dispositivo
   - Escaneo de códigos QR y de barra (EAN-13, UPC-A, Code-128, etc.)
   - UI de feedback durante escaneo (overlay, guías visuales)
@@ -1877,12 +1877,12 @@ Implementar las funcionalidades principales: búsqueda de productos (incluyendo 
   - Integración con búsqueda de productos
   - Estados de error (código no encontrado, sin permisos, cámara no disponible)
   - Animación de éxito cuando detecta un código
-- ✅ Integrar BarcodeScanner en SearchBar
+- [ ] Integrar BarcodeScanner en SearchBar
   - Botón/icono de scanner junto al input de búsqueda
   - Modal o fullscreen overlay para el scanner
   - Cerrar automáticamente al escanear código válido
   - Buscar producto por código escaneado
-- ✅ Crear servicio para búsqueda por código de barra
+- [ ] Crear servicio para búsqueda por código de barra
   - Función en products.ts: getProductByBarcode(code)
   - Manejo de múltiples formatos de códigos
   - Fallback si código no existe en BD
@@ -1890,42 +1890,44 @@ Implementar las funcionalidades principales: búsqueda de productos (incluyendo 
   - Loading states
 
 #### 3.5 Sistema de Favoritos
-- ✅ Crear `FavoriteButton` component
+- [ ] Crear `FavoriteButton` component
   - Icono de corazón (vacío/lleno)
   - Animación al hacer click
   - Integrar con useFavoritesStore
   - Mutation para agregar/quitar
-- ✅ Crear `FavoritesList` component
+- [ ] Crear `FavoritesList` component
   - Grid de ProductCards favoritos
   - Mensaje si no hay favoritos
   - Integrar con useFavoritesQuery
-- ✅ Implementar página Favorites
+- [ ] Implementar página Favorites
   - Usar FavoritesList
   - Botón para limpiar todos
 
 #### 3.6 Datos Mock / Supabase
-- ✅ Crear tablas en Supabase:
+- [ ] Crear tablas en Supabase:
   - `products` (id, name, description, image, category, brand)
   - `stores` (id, name, logo, website)
   - `prices` (id, product_id, store_id, price, date, in_stock)
   - `favorites` (id, user_id, product_id)
 - [ ] Insertar datos de prueba (10-20 productos, 5 tiendas)
-- ✅ Configurar RLS (Row Level Security) en Supabase
+- [ ] Configurar RLS (Row Level Security) en Supabase
 
 ### Criterios de Completado
-- ✅ Búsqueda de productos funciona correctamente
-- ✅ Filtros aplican y muestran resultados correctos
-- ✅ Comparación de precios visible en página de producto
-- ✅ Sistema de favoritos funciona (agregar, quitar, listar)
-- ✅ Datos de Supabase se muestran correctamente
-- ✅ Loading y error states implementados
+- [ ] Búsqueda de productos funciona correctamente
+- [ ] Filtros aplican y muestran resultados correctos
+- [ ] Comparación de precios visible en página de producto
+- [ ] Sistema de favoritos funciona (agregar, quitar, listar)
+- [ ] Datos de Supabase se muestran correctamente
+- [ ] Loading y error states implementados
 
 ### Tecnologías
 - axios, @tanstack/react-query, Supabase, zustand
 
 ---
 
-**Estado:** Completado (100%)
+## Fase 4: Features Avanzados
+
+**Estado:** Pendiente
 **Duración Estimada:** 8-10 horas
 **Prioridad:** Media
 **Dependencias:** Fase 3
@@ -1936,65 +1938,478 @@ Implementar gráficos de historial de precios, alertas, autocompletado y mejoras
 ### Tareas
 
 #### 4.1 Gráficos de Precios
-- ✅ Instalar recharts
+- [ ] Instalar recharts
   ```bash
   npm install recharts
   npm install -D @types/recharts
 npm install @zxing/browser
 npm install react-webcam
   ```
-- ✅ Crear `PriceHistoryChart` component
+- [ ] Crear `PriceHistoryChart` component
   - LineChart con precio por fecha
   - Múltiples líneas para diferentes tiendas
   - Tooltip con info detallada
   - Responsive
   - Colores según tema
 - [ ] Añadir datos de historial a tabla `prices` (registros con diferentes fechas)
-- ✅ Integrar gráfico en ProductPage
+- [ ] Integrar gráfico en ProductPage
 
 #### 4.2 Sistema de Alertas
-- ✅ Crear tabla `alerts` en Supabase
+- [ ] Crear tabla `alerts` en Supabase
   - id, user_id, product_id, target_price, active, created_at
-- ✅ Crear servicio `src/services/supabase/alerts.ts`
+- [ ] Crear servicio `src/services/supabase/alerts.ts`
   - getAlerts(userId)
   - createAlert(userId, productId, targetPrice)
   - deleteAlert(id)
   - updateAlert(id, data)
-- ✅ Crear `PriceAlert` component (modal/form)
+- [ ] Crear `PriceAlert` component (modal/form)
   - Input para precio objetivo
   - Dropdown para seleccionar tienda (o todas)
   - Botón "Crear Alerta"
-- ✅ Crear `AlertsList` component
+- [ ] Crear `AlertsList` component
   - Lista de alertas activas
   - Botón para editar/eliminar
   - Estado: activa, pausada, cumplida
-- ✅ Integrar en Profile page
+- [ ] Integrar en Profile page
 
 #### 4.3 Autocompletado de Búsqueda
-- ✅ Crear `SearchAutocomplete` component
+- [ ] Crear `SearchAutocomplete` component
   - Dropdown con sugerencias
   - Highlight del texto buscado
   - Navegación con teclado (flechas, enter)
   - Click en sugerencia redirige a producto
-- ✅ Implementar lógica de autocompletado
+- [ ] Implementar lógica de autocompletado
   - Query a Supabase con ILIKE
   - Debounce de 300ms
   - Máximo 10 resultados
-- ✅ Integrar en `SearchBar`
+- [ ] Integrar en SearchBar
 
 #### 4.4 Ordenamiento de Productos
-- ✅ Añadir dropdown "Ordenar por" en Dashboard
+- [ ] Añadir dropdown "Ordenar por" en Dashboard
   - Precio: menor a mayor
   - Precio: mayor a menor
   - Nombre: A-Z
   - Más populares (por cantidad de búsquedas)
-- ✅ Implementar lógica en `useSearchStore`
-- ✅ Aplicar ordenamiento en query de productos
+- [ ] Implementar lógica en useSearchStore
+- [ ] Aplicar ordenamiento en query de productos
 
 #### 4.5 Mejoras de UX
-- ✅ Instalar librerías auxiliares
+- [ ] Instalar librerías auxiliares
   ```bash
   npm install date-fns
   npm install react-responsive
   ```
 - [ ] Añadir animaciones con framer-motion (opcional)
+- [ ] Crear `useMediaQuery` hook personalizado
+- [ ] Implementar skeleton loaders
+  - Para ProductCard
+  - Para ProductList
+  - Para PriceComparison
+- [ ] Añadir estados vacíos con ilustraciones
+  - No hay productos
+  - No hay favoritos
+  - No hay alertas
+- [ ] Mejorar accesibilidad
+  - ARIA labels
+  - Navegación por teclado
+  - Contraste de colores
+
+#### 4.6 Registro de Compras y Precios 🛒 **[FEATURE CORE]**
+**Motivación:** Permitir a los usuarios contribuir precios mientras compran, creando una base de datos colaborativa.
+
+- [ ] Crear tabla `shopping_sessions` en Supabase
+  - id, user_id, store_id, date, total, status (in_progress, completed), created_at
+- [ ] Crear tabla `shopping_items` en Supabase
+  - id, session_id, product_id, price, quantity, unit, created_at
+- [ ] Crear `ShoppingSession` component
+  - Header con tienda seleccionada y total acumulado
+  - Botón para cambiar tienda
+  - Estado: "En progreso" / "Completada"
+- [ ] Crear `AddProductToCart` component
+  - Búsqueda/escaneo de producto
+  - Input de precio
+  - Input de cantidad y unidad
+  - Botón "Agregar al carrito"
+- [ ] Crear `ShoppingCartItem` component
+  - Producto con precio ingresado
+  - Botón para editar/eliminar
+  - Indicador de diferencia de precio vs último registrado
+- [ ] Crear `ReceiptScanner` component (opcional)
+  - Upload de foto de factura
+  - OCR para extraer productos y precios automáticamente
+  - Revisión manual antes de guardar
+- [ ] Crear `ShoppingHistory` component
+  - Lista de compras pasadas
+  - Ver detalle de cada compra
+  - Comparar precios entre compras
+- [ ] Implementar flujos:
+  - **Mientras compro**: Agregar productos uno por uno en tiempo real
+  - **Después de comprar**: Subir factura o ingresar productos manualmente
+- [ ] Integrar en página `/shopping` o `/my-shopping`
+- [ ] Actualizar tabla `prices` con datos de shopping_items al completar sesión
+
+**Beneficios:**
+- Crowdsourcing de precios en tiempo real
+- Usuarios ven cuánto les va a costar la compra
+- Gamificación: puntos por contribuir precios
+
+#### 4.7 Calculadora de Precio por Unidad 📊 **[FEATURE CORE]**
+**Motivación:** Comparar presentaciones diferentes del mismo producto (ej: cereal 490g vs 370g).
+
+- [ ] Crear `UnitPriceCalculator` component
+  - Grid responsive para múltiples entradas
+  - Cada fila tiene: Nombre/Label, Precio, Cantidad, Unidad
+  - Campos calculados: Precio por unidad, Unidades por dólar
+  - Botón "Agregar otro" para comparar más
+  - Botón "Limpiar todo"
+- [ ] Crear `UnitPriceRow` component
+  - 3 inputs: precio, cantidad, precio por unidad
+  - Lógica: completar 2 de 3 campos, calcular el tercero
+  - Dropdown para unidad: g, kg, ml, L, lb, oz
+  - Indicador visual del mejor precio (verde)
+  - Indicador del peor precio (rojo/amarillo)
+- [ ] Crear `UnitComparison` component
+  - Tabla comparativa visual
+  - Barra de progreso para precio por unidad
+  - Porcentaje de diferencia vs el más barato
+  - Ordenar por mejor precio
+- [ ] Implementar lógica de conversión de unidades
+  - g ↔ kg, ml ↔ L, lb ↔ oz
+  - Normalización a unidad estándar
+- [ ] Crear página `/calculator` o integrar en ProductDetail
+- [ ] Guardar comparaciones en localStorage
+  - Historial de comparaciones recientes
+  - Botón "Guardar comparación"
+- [ ] (Opcional) Integrar con productos reales
+  - Autocompletar con presentaciones existentes del producto
+  - Mostrar datos históricos
+
+**Ejemplos de uso:**
+```
+Cereal Brand X:
+  1. $5.20 / 490g = $10.61/kg → $0.094 por gramo
+  2. $4.50 / 370g = $12.16/kg → $0.082 por gramo ✅ Mejor
+
+Resultado: La presentación de $4.50 es 12% más económica por gramo
+```
+
+#### 4.8 Página de Tienda Completa
+- [ ] Crear `StoreCard` component
+  - Logo de tienda
+  - Nombre
+  - Cantidad de productos
+  - Link a página de tienda
+- [ ] Crear `StoreList` component
+  - Grid de StoreCards
+- [ ] Completar StorePage
+  - Header con info de tienda
+  - Lista de productos de esa tienda
+  - Filtros aplicables
+
+### Criterios de Completado
+- [ ] Gráfico de historial de precios funcional y responsive
+- [ ] Sistema de alertas de precios implementado
+- [ ] Autocompletado de búsqueda funciona correctamente
+- [ ] Ordenamiento de productos funcional
+- [ ] Skeleton loaders y estados vacíos implementados
+- [ ] Página de tienda completa y funcional
+
+### Tecnologías
+- recharts, date-fns, react-responsive, Supabase
+
+---
+
+## Fase 5: Pulido y Optimización
+
+**Estado:** Pendiente
+**Duración Estimada:** 6-8 horas
+**Prioridad:** Baja
+**Dependencias:** Fase 4
+
+### Objetivos
+Optimizar rendimiento, añadir dark mode, mejorar SEO y preparar para producción.
+
+### Tareas
+
+#### 5.1 Dark Mode
+- [ ] Aplicar `darkTheme` ya definido en guía de estilos
+- [ ] Implementar toggle de tema en useUIStore
+- [ ] Añadir botón de toggle en Navbar
+- [ ] Guardar preferencia en localStorage
+- [ ] Aplicar tema según preferencia del sistema (prefers-color-scheme)
+
+#### 5.2 Optimización de Rendimiento
+- [ ] Implementar React.lazy() para code-splitting
+  - Lazy load de páginas
+  - Lazy load de componentes pesados (charts)
+- [ ] Añadir React.memo() en componentes que no cambian frecuentemente
+- [ ] Optimizar imágenes
+  - Usar formatos modernos (WebP)
+  - Lazy loading de imágenes
+  - Placeholder blur mientras carga
+- [ ] Configurar caché de React Query
+  - staleTime, cacheTime
+  - Prefetch de datos comunes
+- [ ] Analizar bundle size con vite-plugin-visualizer
+
+#### 5.3 SEO y Meta Tags
+- [ ] Instalar react-helmet-async
+  ```bash
+  npm install react-helmet-async
+  ```
+- [ ] Añadir meta tags en cada página
+  - title, description, keywords
+  - Open Graph tags
+  - Twitter Card tags
+- [ ] Crear sitemap.xml
+- [ ] Crear robots.txt
+- [ ] Añadir favicon y app icons
+
+#### 5.4 Testing (Opcional)
+- [ ] Instalar Vitest y Testing Library
+  ```bash
+  npm install -D vitest @testing-library/react @testing-library/jest-dom
+  ```
+- [ ] Escribir tests para componentes críticos
+  - Button, Input, Modal
+  - ProductCard
+  - SearchBar
+- [ ] Escribir tests para stores
+  - useAuthStore
+  - useFavoritesStore
+
+#### 5.5 Documentación
+- [ ] Actualizar README.md
+  - Descripción del proyecto
+  - Screenshots
+  - Instrucciones de instalación
+  - Variables de entorno
+  - Scripts disponibles
+- [ ] Documentar componentes principales
+  - Props y tipos
+  - Ejemplos de uso
+- [ ] Crear CONTRIBUTING.md (si proyecto open source)
+
+#### 5.6 Preparación para Producción
+- [ ] Revisar y limpiar console.logs
+- [ ] Configurar variables de entorno para producción
+- [ ] Crear `.env.example` con todas las variables necesarias
+- [ ] Configurar analytics (Google Analytics, Plausible, etc)
+- [ ] Configurar error tracking (Sentry)
+- [ ] Crear script de deployment
+
+### Criterios de Completado
+- [ ] Dark mode funcional y persistente
+- [ ] Tiempos de carga optimizados (<3s First Contentful Paint)
+- [ ] Meta tags configurados en todas las páginas
+- [ ] Tests básicos pasando
+- [ ] Documentación completa y actualizada
+- [ ] Listo para deploy en producción
+
+### Tecnologías
+- react-helmet-async, vitest, testing-library, analytics tools
+
+---
+
+## 📝 Notas y Consideraciones Técnicas
+
+### Backend: Supabase vs API Mock
+
+**Opción 1: Supabase (Recomendado)**
+- Ya está configurado
+- Auth incluido
+- Realtime opcional
+- Tablas a crear:
+  ```sql
+  -- products
+  CREATE TABLE products (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name TEXT NOT NULL,
+    description TEXT,
+    image TEXT,
+    category TEXT,
+    brand TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+  );
+
+  -- stores
+  CREATE TABLE stores (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name TEXT NOT NULL,
+    logo TEXT,
+    website TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
+  );
+
+  -- prices
+  CREATE TABLE prices (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    product_id UUID REFERENCES products(id) ON DELETE CASCADE,
+    store_id UUID REFERENCES stores(id) ON DELETE CASCADE,
+    price DECIMAL(10,2) NOT NULL,
+    currency TEXT DEFAULT 'USD',
+    date TIMESTAMP DEFAULT NOW(),
+    in_stock BOOLEAN DEFAULT true
+  );
+
+  -- favorites
+  CREATE TABLE favorites (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    product_id UUID REFERENCES products(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(user_id, product_id)
+  );
+
+  -- alerts
+  CREATE TABLE alerts (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    product_id UUID REFERENCES products(id) ON DELETE CASCADE,
+    target_price DECIMAL(10,2) NOT NULL,
+    active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT NOW()
+  );
+  ```
+
+**Opción 2: API Mock con MSW**
+- Para desarrollo sin backend
+- Útil para demos
+- Migración posterior a Supabase
+
+### Estado Global: Zustand vs Redux Toolkit
+
+**Zustand (Recomendado para este proyecto)**
+- Más simple y ligero
+- Menos boilerplate
+- Perfecto para proyectos medianos
+- Fácil integración con persist
+
+**Redux Toolkit**
+- Más verboso
+- Mejor para proyectos grandes
+- DevTools más robustas
+
+### Estrategia de Caché
+
+```typescript
+// Configuración recomendada de React Query
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutos
+      cacheTime: 1000 * 60 * 10, // 10 minutos
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+```
+
+### Manejo de Errores
+
+```typescript
+// src/utils/errorHandler.ts
+export const handleError = (error: unknown) => {
+  if (axios.isAxiosError(error)) {
+    const message = error.response?.data?.message || error.message;
+    toast.error(message);
+    return;
+  }
+
+  if (error instanceof Error) {
+    toast.error(error.message);
+    return;
+  }
+
+  toast.error('Ocurrió un error inesperado');
+};
+```
+
+### Convenciones de Código
+
+- **Nombres de componentes:** PascalCase (Button.tsx)
+- **Nombres de archivos de estilos:** ComponentName.styles.ts
+- **Nombres de hooks:** useNombreDelHook
+- **Nombres de stores:** useNombreStore
+- **Nombres de tipos:** TipoInterface (PascalCase)
+- **Constantes:** UPPER_SNAKE_CASE
+- **Funciones utilitarias:** camelCase
+
+### Performance Tips
+
+1. **Memoización:**
+   ```typescript
+   const MemoizedComponent = React.memo(ProductCard);
+   ```
+
+2. **useCallback para funciones:**
+   ```typescript
+   const handleClick = useCallback(() => {
+     // lógica
+   }, [dependencies]);
+   ```
+
+3. **useMemo para cálculos costosos:**
+   ```typescript
+   const sortedProducts = useMemo(() =>
+     products.sort((a, b) => a.price - b.price),
+     [products]
+   );
+   ```
+
+### Accesibilidad
+
+- Usar etiquetas semánticas (nav, main, section, article)
+- Añadir aria-label en iconos sin texto
+- Asegurar contraste de colores (WCAG AA)
+- Navegación por teclado en todos los componentes interactivos
+- Focus visible en elementos interactivos
+
+---
+
+## 🎯 Próximos Pasos Inmediatos
+
+1. **Ejecutar Fase 1** (Fundación y Arquitectura)
+   - Instalar dependencias base
+   - Crear sistema de estilos completo (usar guía actualizada)
+   - Configurar estado global
+   - Definir tipos
+
+2. **Setup de ambiente de desarrollo**
+   - Configurar ESLint con reglas específicas
+   - Configurar Prettier
+   - Añadir pre-commit hooks con husky (opcional)
+
+3. **Crear branch de desarrollo**
+   ```bash
+   git checkout -b develop
+   ```
+
+---
+
+## ✅ Checklist de Inicio Rápido
+
+Antes de empezar con Fase 1:
+
+- [ ] Leer este documento completo
+- [ ] Verificar que Node.js >= 18 esté instalado
+- [ ] Verificar que npm funcione correctamente
+- [ ] Tener credenciales de Supabase listas
+- [ ] Crear branch de desarrollo
+- [ ] Instalar extensiones recomendadas en VS Code:
+  - ESLint
+  - Prettier
+  - styled-components
+  - TypeScript Importer
+
+---
+
+**Última actualización:** 2025-11-11
+**Versión del plan:** 2.0
+**Estado general:** En planificación
+
+---
+
+¿Listo para comenzar? Empieza con la **Fase 1: Fundación y Arquitectura**

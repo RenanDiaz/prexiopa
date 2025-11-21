@@ -5,8 +5,6 @@
 
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Button } from '../components/common/Button';
-import { Input } from '../components/common/Input';
 
 const RegisterContainer = styled.div`
   min-height: 100vh;
@@ -61,6 +59,62 @@ const Form = styled.form`
   gap: ${({ theme }) => theme.spacing[4]};
 `;
 
+const InputGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing[2]};
+`;
+
+const Label = styled.label`
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.colors.text.primary};
+`;
+
+const Input = styled.input`
+  height: ${({ theme }) => theme.components.input.height.medium};
+  padding: ${({ theme }) => theme.components.input.padding};
+  border: 2px solid ${({ theme }) => theme.colors.border.main};
+  border-radius: ${({ theme }) => theme.borderRadius.input};
+  font-size: ${({ theme }) => theme.components.input.fontSize};
+  color: ${({ theme }) => theme.colors.text.primary};
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.secondary[500]};
+    box-shadow: 0 0 0 3px ${({ theme }) => theme.colors.secondary[500]}1A;
+  }
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.text.hint};
+  }
+`;
+
+const Button = styled.button`
+  height: ${({ theme }) => theme.components.button.size.large.height};
+  padding: ${({ theme }) => theme.components.button.size.large.padding};
+  background: ${({ theme }) => theme.colors.secondary[500]};
+  color: ${({ theme }) => theme.colors.secondary.contrast};
+  border: none;
+  border-radius: ${({ theme }) => theme.borderRadius.button};
+  font-size: ${({ theme }) => theme.components.button.size.large.fontSize};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: ${({ theme }) => theme.spacing[2]};
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.secondary[600]};
+    transform: translateY(-2px);
+    box-shadow: ${({ theme }) => theme.shadows.secondary};
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`;
+
 const FooterText = styled.p`
   text-align: center;
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
@@ -88,47 +142,51 @@ const Register = () => {
         </Logo>
 
         <Form>
-          <Input
-            id="name"
-            type="text"
-            label="Nombre completo"
-            placeholder="Juan Pérez"
-            autoComplete="name"
-            required
-            fullWidth
-          />
+          <InputGroup>
+            <Label htmlFor="name">Nombre completo</Label>
+            <Input
+              id="name"
+              type="text"
+              placeholder="Juan Pérez"
+              autoComplete="name"
+              required
+            />
+          </InputGroup>
 
-          <Input
-            id="email"
-            type="email"
-            label="Correo electrónico"
-            placeholder="tu@email.com"
-            autoComplete="email"
-            required
-            fullWidth
-          />
+          <InputGroup>
+            <Label htmlFor="email">Correo electrónico</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="tu@email.com"
+              autoComplete="email"
+              required
+            />
+          </InputGroup>
 
-          <Input
-            id="password"
-            type="password"
-            label="Contraseña"
-            placeholder="••••••••"
-            autoComplete="new-password"
-            required
-            fullWidth
-          />
+          <InputGroup>
+            <Label htmlFor="password">Contraseña</Label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              autoComplete="new-password"
+              required
+            />
+          </InputGroup>
 
-          <Input
-            id="confirm-password"
-            type="password"
-            label="Confirmar contraseña"
-            placeholder="••••••••"
-            autoComplete="new-password"
-            required
-            fullWidth
-          />
+          <InputGroup>
+            <Label htmlFor="confirm-password">Confirmar contraseña</Label>
+            <Input
+              id="confirm-password"
+              type="password"
+              placeholder="••••••••"
+              autoComplete="new-password"
+              required
+            />
+          </InputGroup>
 
-          <Button type="submit" variant="secondary" size="lg" fullWidth style={{ marginTop: '8px' }}>
+          <Button type="submit">
             Crear Cuenta
           </Button>
         </Form>

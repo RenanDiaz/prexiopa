@@ -9,7 +9,7 @@ import { useParams, Link } from 'react-router-dom';
 import { FiChevronRight, FiPackage, FiTag, FiHash } from 'react-icons/fi';
 
 // Components
-import { PriceComparison, PriceHistoryChart } from '@/components/products';
+import { PriceComparison } from '@/components/products';
 import { FavoriteButton } from '@/components/favorites';
 
 // Hooks
@@ -371,11 +371,6 @@ const ProductDetail = () => {
               {isLoadingPrices && (
                 <LoadingContainer>Cargando precios...</LoadingContainer>
               )}
-            </Section>
-
-            <Section>
-              <SectionTitle>Historial de Precios</SectionTitle>
-              {product.id && <PriceHistoryChart productId={product.id} height={300} />}
             </Section>
           </MainContent>
         </Grid>

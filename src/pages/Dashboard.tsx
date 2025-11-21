@@ -13,13 +13,11 @@ import { FiFilter, FiX } from 'react-icons/fi';
 import { SearchBar, SearchFilters } from '@/components/search';
 import { BarcodeScanner } from '@/components/scanner';
 import { ProductList } from '@/components/products';
-import { Select } from '@/components/common/Select'; // Import Select component
 
 // Hooks
 import { useProductsQuery, useCategoriesQuery } from '@/hooks/useProducts';
 import { useStoresQuery } from '@/hooks/useStores';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { useSearchStore } from '@/store/searchStore'; // Import useSearchStore
 
 // Types
 import type { PriceRange, FilterChangePayload } from '@/components/search/SearchFilters';
@@ -226,12 +224,13 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width: 1023px)');
 
-  // Search & Filter State from Zustand
-  const searchQuery = useSearchStore((state) => state.query);
-  const { filters, setFilters, clearFilters: zustandClearFilters } = useSearchStore();
-  const { category: selectedCategory, store: selectedStores, priceRange, sortBy, sortOrder } = filters;
+  // Search & Filter State
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
+  const [selectedStores, setSelectedStores] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState<PriceRange>({ min: 0, max: 500 });
 
-  // Local UI State
+  // UI State
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
@@ -240,38 +239,31 @@ const Dashboard = () => {
   const { data: stores = [] } = useStoresQuery();
 
   // Build filters for products query
-  const productFilters: ProductFilters = {
+  const filters: ProductFilters = {
     query: searchQuery || undefined,
     category: selectedCategory,
-    storeId: selectedStores,
-    minPrice: priceRange?.min && priceRange.min > 0 ? priceRange.min : undefined,
-    maxPrice: priceRange?.max && priceRange.max < 500 ? priceRange.max : undefined,
+    storeId: selectedStores.length === 1 ? selectedStores[0] : undefined,
+    minPrice: priceRange.min > 0 ? priceRange.min : undefined,
+    maxPrice: priceRange.max < 500 ? priceRange.max : undefined,
     limit: 50,
-    sortBy: sortBy,
-    sortOrder: sortOrder,
   };
 
   const {
     data: products = [],
     isLoading: productsLoading,
     error: productsError,
-  } = useProductsQuery(productFilters);
+  } = useProductsQuery(filters);
 
   // Calculate active filters count
   const activeFiltersCount =
     (selectedCategory ? 1 : 0) +
-    (selectedStores ? 1 : 0) + // Assuming selectedStores is a single string ID for simplicity here, adjust if it's an array
-    (priceRange?.min && priceRange.min > 0 || priceRange?.max && priceRange.max < 500 ? 1 : 0);
+    selectedStores.length +
+    (priceRange.min > 0 || priceRange.max < 500 ? 1 : 0);
 
   // Handlers
   const handleSearch = useCallback((query: string) => {
-    // This is handled by SearchBar's internal debounced onChange which will call Zustand's setQuery
-    // For now, local search bar state is sufficient, `searchQuery` is from Zustand
+    setSearchQuery(query);
   }, []);
-
-  const handleAutocompleteSelect = useCallback((product: Product) => {
-    navigate(`/product/${product.id}`);
-  }, [navigate]);
 
   const handleScannerOpen = useCallback(() => {
     setIsScannerOpen(true);
@@ -285,23 +277,28 @@ const Dashboard = () => {
     (barcode: string) => {
       setIsScannerOpen(false);
       // Search for product with barcode
-      setFilters({ query: barcode }); // Set query via Zustand
-      // TODO: Potentially trigger a search for the barcode directly here
+      setSearchQuery(barcode);
     },
-    [setFilters]
+    []
   );
 
   const handleFilterChange = useCallback((payload: FilterChangePayload) => {
-    setFilters({
-      category: payload.category !== undefined ? payload.category : filters.category,
-      store: payload.stores !== undefined ? (payload.stores.length > 0 ? payload.stores[0] : undefined) : filters.store,
-      priceRange: payload.priceRange !== undefined ? payload.priceRange : filters.priceRange,
-    });
-  }, [setFilters, filters]);
+    if (payload.category !== undefined) {
+      setSelectedCategory(payload.category || undefined);
+    }
+    if (payload.stores !== undefined) {
+      setSelectedStores(payload.stores);
+    }
+    if (payload.priceRange !== undefined) {
+      setPriceRange(payload.priceRange);
+    }
+  }, []);
 
   const handleClearFilters = useCallback(() => {
-    zustandClearFilters(); // Clear filters via Zustand
-  }, [zustandClearFilters]);
+    setSelectedCategory(undefined);
+    setSelectedStores([]);
+    setPriceRange({ min: 0, max: 500 });
+  }, []);
 
   const handleProductClick = useCallback(
     (product: ProductWithLowestPrice) => {
@@ -309,22 +306,6 @@ const Dashboard = () => {
     },
     [navigate]
   );
-
-  const handleSortChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    const [newSortBy, newSortOrder] = e.target.value.split(':');
-    setFilters({
-      sortBy: newSortBy as 'price' | 'name' | 'relevance',
-      sortOrder: newSortOrder as 'asc' | 'desc',
-    });
-  }, [setFilters]);
-
-  const sortOptions = [
-    { value: 'relevance:asc', label: 'Relevancia' },
-    { value: 'name:asc', label: 'Nombre (A-Z)' },
-    { value: 'name:desc', label: 'Nombre (Z-A)' },
-    { value: 'price:asc', label: 'Precio (Menor a Mayor)' },
-    { value: 'price:desc', label: 'Precio (Mayor a Menor)' },
-  ];
 
   return (
     <DashboardContainer>
@@ -334,9 +315,8 @@ const Dashboard = () => {
           <Subtitle>Encuentra los mejores precios en supermercados de Panamá</Subtitle>
           <SearchBar
             value={searchQuery}
-            onChange={(val) => useSearchStore.getState().setQuery(val)}
+            onChange={handleSearch}
             onScanClick={handleScannerOpen}
-            onSearchAutocomplete={handleAutocompleteSelect}
             placeholder="Buscar productos por nombre o código de barras..."
           />
         </HeaderContent>
@@ -358,8 +338,8 @@ const Dashboard = () => {
               categories={categories}
               stores={stores}
               selectedCategory={selectedCategory}
-              selectedStores={selectedStores ? [selectedStores] : []} // Convert back to array for SearchFilters
-              priceRange={priceRange || { min: 0, max: 500 }}
+              selectedStores={selectedStores}
+              priceRange={priceRange}
               maxPrice={500}
               onFilterChange={handleFilterChange}
               onClearFilters={handleClearFilters}
@@ -392,13 +372,6 @@ const Dashboard = () => {
                 </>
               )}
             </ResultsCount>
-            <Select
-              label="Ordenar por"
-              options={sortOptions}
-              value={`${sortBy}:${sortOrder}`}
-              onChange={handleSortChange}
-              aria-label="Ordenar resultados por"
-            />
           </ResultsHeader>
 
           {/* Error Message */}
@@ -421,7 +394,7 @@ const Dashboard = () => {
               }
             />
           )}
-        </MainContent>
+        </MainSection>
       </MainContent>
 
       {/* Barcode Scanner Modal */}
