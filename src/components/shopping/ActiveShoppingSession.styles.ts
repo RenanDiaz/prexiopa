@@ -29,13 +29,13 @@ export const Spinner = styled.div`
   width: 48px;
   height: 48px;
   border: 4px solid ${({ theme }) => theme.colors.border.light};
-  border-top-color: ${({ theme }) => theme.colors.primary.main};
+  border-top-color: ${({ theme }) => theme.colors.primary[500]};
   border-radius: 50%;
   animation: ${spin} 0.8s linear infinite;
 `;
 
 export const LoadingText = styled.p`
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   color: ${({ theme }) => theme.colors.text.secondary};
 `;
 
@@ -67,7 +67,7 @@ export const Title = styled.h2`
   svg {
     width: 28px;
     height: 28px;
-    color: ${({ theme }) => theme.colors.primary.main};
+    color: ${({ theme }) => theme.colors.primary[500]};
   }
 `;
 
@@ -82,12 +82,12 @@ export const StoreInfo = styled.div`
   align-items: center;
   gap: ${({ theme }) => theme.spacing[2]};
   color: ${({ theme }) => theme.colors.text.secondary};
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
 
   svg {
     width: 18px;
     height: 18px;
-    color: ${({ theme }) => theme.colors.primary.main};
+    color: ${({ theme }) => theme.colors.primary[500]};
   }
 `;
 
@@ -121,8 +121,8 @@ export const StatValue = styled.span<StatValueProps>`
   font-size: ${({ theme }) => theme.typography.fontSize['2xl']};
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   color: ${({ theme, $highlight, $primary }) => {
-    if ($highlight) return theme.colors.success.main;
-    if ($primary) return theme.colors.primary.main;
+    if ($highlight) return theme.colors.functional.bestPrice.main;
+    if ($primary) return theme.colors.primary[500];
     return theme.colors.text.primary;
   }};
 `;
@@ -147,7 +147,7 @@ export const ProgressLabel = styled.span`
 export const ProgressPercentage = styled.span`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  color: ${({ theme }) => theme.colors.success.main};
+  color: ${({ theme }) => theme.colors.functional.bestPrice.main};
 `;
 
 export const ProgressBarContainer = styled.div`
@@ -165,7 +165,7 @@ interface ProgressBarProps {
 export const ProgressBar = styled.div<ProgressBarProps>`
   height: 100%;
   width: ${({ $progress }) => $progress}%;
-  background: ${({ theme }) => theme.colors.success.main};
+  background: ${({ theme }) => theme.colors.functional.bestPrice.main};
   border-radius: ${({ theme }) => theme.borderRadius.full};
   transition: width 0.3s ease;
 `;
@@ -207,8 +207,8 @@ export const ModalIcon = styled.div<ModalIconProps>`
   align-items: center;
   justify-content: center;
   background: ${({ theme, $success, $error }) => {
-    if ($success) return `${theme.colors.success.light}20`;
-    if ($error) return `${theme.colors.error.light}20`;
+    if ($success) return `${theme.colors.functional.bestPrice.light}20`;
+    if ($error) return `${theme.colors.functional.highPrice.light}20`;
     return theme.colors.background.default;
   }};
 
@@ -216,8 +216,8 @@ export const ModalIcon = styled.div<ModalIconProps>`
     width: 32px;
     height: 32px;
     color: ${({ theme, $success, $error }) => {
-      if ($success) return theme.colors.success.main;
-      if ($error) return theme.colors.error.main;
+      if ($success) return theme.colors.functional.bestPrice.main;
+      if ($error) return theme.colors.functional.highPrice.main;
       return theme.colors.text.primary;
     }};
   }
@@ -244,7 +244,7 @@ export const ModalStatRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   color: ${({ theme }) => theme.colors.text.secondary};
 
   strong {
@@ -258,10 +258,10 @@ export const ModalWarning = styled.div`
   align-items: center;
   gap: ${({ theme }) => theme.spacing[2]};
   padding: ${({ theme }) => theme.spacing[3]};
-  background: ${({ theme }) => theme.colors.warning.light}20;
-  border: 1px solid ${({ theme }) => theme.colors.warning.main};
+  background: ${({ theme }) => theme.colors.secondary[200]}20;
+  border: 1px solid ${({ theme }) => theme.colors.secondary[500]};
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  color: ${({ theme }) => theme.colors.warning.dark};
+  color: ${({ theme }) => theme.colors.secondary[700]};
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
 
   svg {

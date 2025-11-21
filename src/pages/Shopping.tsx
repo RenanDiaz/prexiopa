@@ -3,7 +3,7 @@
  * Gestiona sesiones de compras activas e historial
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiShoppingCart, FiPlus, FiClock } from 'react-icons/fi';
 import styled from 'styled-components';
@@ -57,7 +57,7 @@ const Title = styled.h1`
   gap: ${({ theme }) => theme.spacing[3]};
 
   svg {
-    color: ${({ theme }) => theme.colors.primary.main};
+    color: ${({ theme }) => theme.colors.primary[500]};
   }
 `;
 
@@ -83,10 +83,10 @@ const Tab = styled.button<TabProps>`
   background: transparent;
   border: none;
   border-bottom: 2px solid transparent;
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   color: ${({ theme, $active }) =>
-    $active ? theme.colors.primary.main : theme.colors.text.secondary};
+    $active ? theme.colors.primary[500] : theme.colors.text.secondary};
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: -2px;
@@ -94,11 +94,11 @@ const Tab = styled.button<TabProps>`
   ${({ $active, theme }) =>
     $active &&
     `
-    border-bottom-color: ${theme.colors.primary.main};
+    border-bottom-color: ${theme.colors.primary[500]};
   `}
 
   &:hover {
-    color: ${({ theme }) => theme.colors.primary.main};
+    color: ${({ theme }) => theme.colors.primary[500]};
   }
 `;
 
@@ -155,7 +155,7 @@ const ModalLabel = styled.label`
 
 const ModalHint = styled.p`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
-  color: ${({ theme }) => theme.colors.text.tertiary};
+  color: ${({ theme }) => theme.colors.text.disabled};
   margin: 0;
 `;
 
@@ -252,18 +252,11 @@ const Shopping = () => {
               <ActiveShoppingSession onAddProduct={handleAddProduct} />
             ) : (
               <EmptyState
-                icon={<FiShoppingCart />}
+                icon={FiShoppingCart}
                 title="No hay sesión activa"
                 message="Inicia una nueva sesión de compras para comenzar"
-                action={
-                  <Button
-                    variant="primary"
-                    iconLeft={<FiPlus />}
-                    onClick={() => setShowNewSessionModal(true)}
-                  >
-                    Iniciar Nueva Sesión
-                  </Button>
-                }
+                actionLabel="Iniciar Nueva Sesión"
+                onAction={() => setShowNewSessionModal(true)}
               />
             )}
           </Section>
@@ -281,7 +274,7 @@ const Shopping = () => {
 
             {historySessions.length === 0 ? (
               <EmptyState
-                icon={<FiClock />}
+                icon={FiClock}
                 title="Sin historial"
                 message="Aquí aparecerán tus sesiones completadas y canceladas"
               />
@@ -304,9 +297,8 @@ const Shopping = () => {
         <Modal
           open={showNewSessionModal}
           onClose={() => setShowNewSessionModal(false)}
-          maxWidth="sm"
         >
-          <Modal.Header onClose={() => setShowNewSessionModal(false)}>
+          <Modal.Header>
             Nueva Sesión de Compras
           </Modal.Header>
 

@@ -3,7 +3,7 @@
  * Interfaz principal para gestionar una sesión de compras activa
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   FiShoppingCart,
   FiCheck,
@@ -33,10 +33,10 @@ export interface ActiveShoppingSessionProps {
   className?: string;
 }
 
-export const ActiveShoppingSession: React.FC<ActiveShoppingSessionProps> = ({
+export const ActiveShoppingSession = ({
   onAddProduct,
   className,
-}) => {
+}: ActiveShoppingSessionProps) => {
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
 
@@ -135,7 +135,7 @@ export const ActiveShoppingSession: React.FC<ActiveShoppingSessionProps> = ({
     return (
       <S.Container className={className}>
         <EmptyState
-          icon={<FiShoppingCart />}
+          icon={FiShoppingCart}
           title="No hay sesión activa"
           message="Inicia una nueva sesión de compras para comenzar a agregar productos"
         />
@@ -218,7 +218,7 @@ export const ActiveShoppingSession: React.FC<ActiveShoppingSessionProps> = ({
       <S.ItemsList>
         {totalItems === 0 ? (
           <EmptyState
-            icon={<FiShoppingCart />}
+            icon={FiShoppingCart}
             title="Lista vacía"
             message="Agrega productos a tu lista de compras"
           />
@@ -254,9 +254,8 @@ export const ActiveShoppingSession: React.FC<ActiveShoppingSessionProps> = ({
       <Modal
         open={showCompleteModal}
         onClose={() => setShowCompleteModal(false)}
-        maxWidth="sm"
       >
-        <Modal.Header onClose={() => setShowCompleteModal(false)}>
+        <Modal.Header>
           Completar Compra
         </Modal.Header>
 
@@ -315,9 +314,8 @@ export const ActiveShoppingSession: React.FC<ActiveShoppingSessionProps> = ({
       <Modal
         open={showCancelModal}
         onClose={() => setShowCancelModal(false)}
-        maxWidth="sm"
       >
-        <Modal.Header onClose={() => setShowCancelModal(false)}>
+        <Modal.Header>
           Cancelar Sesión
         </Modal.Header>
 

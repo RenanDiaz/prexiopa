@@ -6,8 +6,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as shoppingService from '@/services/supabase/shopping';
 import type {
-  ShoppingSession,
-  ShoppingItem,
   CreateSessionData,
   AddItemData,
   UpdateItemData,
@@ -281,7 +279,6 @@ export const useDeleteItemMutation = () => {
   return useMutation({
     mutationFn: ({
       itemId,
-      sessionId,
     }: {
       itemId: string;
       sessionId: string;
@@ -316,7 +313,7 @@ export const useToggleItemPurchasedMutation = () => {
       purchased: boolean;
       sessionId: string;
     }) => shoppingService.updateShoppingItem(itemId, { purchased }),
-    onSuccess: (updatedItem, { sessionId }) => {
+    onSuccess: (_, { sessionId }) => {
       // Invalidar queries
       queryClient.invalidateQueries({ queryKey: shoppingKeys.items(sessionId) });
       queryClient.invalidateQueries({ queryKey: shoppingKeys.session(sessionId) });
@@ -338,7 +335,6 @@ export const useIncrementItemQuantityMutation = () => {
   return useMutation({
     mutationFn: async ({
       itemId,
-      sessionId,
       currentQuantity,
     }: {
       itemId: string;
@@ -371,7 +367,6 @@ export const useDecrementItemQuantityMutation = () => {
   return useMutation({
     mutationFn: async ({
       itemId,
-      sessionId,
       currentQuantity,
     }: {
       itemId: string;

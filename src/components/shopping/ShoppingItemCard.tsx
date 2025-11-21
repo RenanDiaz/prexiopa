@@ -3,8 +3,7 @@
  * Tarjeta para mostrar un item individual en la lista de compras
  */
 
-import React from 'react';
-import { FiCheck, FiX, FiPlus, FiMinus, FiTrash2 } from 'react-icons/fi';
+import { FiCheck, FiPlus, FiMinus, FiTrash2 } from 'react-icons/fi';
 import type { ShoppingItem } from '@/services/supabase/shopping';
 import * as S from './ShoppingItemCard.styles';
 
@@ -18,7 +17,7 @@ export interface ShoppingItemCardProps {
   className?: string;
 }
 
-export const ShoppingItemCard: React.FC<ShoppingItemCardProps> = ({
+export const ShoppingItemCard = ({
   item,
   onTogglePurchased,
   onIncrementQuantity,
@@ -26,7 +25,7 @@ export const ShoppingItemCard: React.FC<ShoppingItemCardProps> = ({
   onDelete,
   readOnly = false,
   className,
-}) => {
+}: ShoppingItemCardProps) => {
   // Formatear precio
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-PA', {

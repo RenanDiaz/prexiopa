@@ -27,7 +27,7 @@ export const Card = styled.div<CardProps>`
     !$readOnly &&
     `
     &:hover {
-      border-color: ${theme.colors.primary.main};
+      border-color: ${theme.colors.primary[500]};
       box-shadow: ${theme.shadows.sm};
     }
   `}
@@ -51,9 +51,9 @@ export const Checkbox = styled.div<CheckboxProps>`
   width: 24px;
   height: 24px;
   border: 2px solid ${({ theme, $checked }) =>
-    $checked ? theme.colors.success.main : theme.colors.border.main};
+    $checked ? theme.colors.functional.bestPrice.main : theme.colors.border.main};
   background: ${({ theme, $checked }) =>
-    $checked ? theme.colors.success.main : 'transparent'};
+    $checked ? theme.colors.functional.bestPrice.main : 'transparent'};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   display: flex;
   align-items: center;
@@ -66,13 +66,10 @@ export const Checkbox = styled.div<CheckboxProps>`
     height: 16px;
   }
 
-  ${({ $checked }) =>
-    !$checked &&
-    `
-    &:hover {
-      border-color: ${({ theme }) => theme.colors.success.main};
-    }
-  `}
+  &:hover {
+    border-color: ${({ theme, $checked }) =>
+      $checked ? theme.colors.functional.bestPrice.main : theme.colors.functional.bestPrice.main};
+  }
 `;
 
 interface ProductInfoProps {
@@ -93,7 +90,7 @@ export const ProductInfo = styled.div<ProductInfoProps>`
 `;
 
 export const ProductName = styled.h3`
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   color: ${({ theme }) => theme.colors.text.primary};
   margin: 0;
@@ -112,17 +109,17 @@ export const UnitPrice = styled.span`
 `;
 
 export const Subtotal = styled.span`
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  color: ${({ theme }) => theme.colors.primary.main};
+  color: ${({ theme }) => theme.colors.primary[500]};
 `;
 
 export const StoreTag = styled.span`
   display: inline-block;
   width: fit-content;
   padding: ${({ theme }) => `${theme.spacing[1]} ${theme.spacing[2]}`};
-  background: ${({ theme }) => theme.colors.primary.light}20;
-  color: ${({ theme }) => theme.colors.primary.main};
+  background: ${({ theme }) => theme.colors.primary[100]}20;
+  color: ${({ theme }) => theme.colors.primary[500]};
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
@@ -130,7 +127,7 @@ export const StoreTag = styled.span`
 
 export const Notes = styled.p`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
-  color: ${({ theme }) => theme.colors.text.tertiary};
+  color: ${({ theme }) => theme.colors.text.disabled};
   margin: 0;
   font-style: italic;
 `;
@@ -160,13 +157,13 @@ export const QuantityButton = styled.button`
   height: 28px;
   border: none;
   background: ${({ theme }) => theme.colors.background.paper};
-  color: ${({ theme }) => theme.colors.primary.main};
+  color: ${({ theme }) => theme.colors.primary[500]};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover:not(:disabled) {
-    background: ${({ theme }) => theme.colors.primary.light}20;
+    background: ${({ theme }) => theme.colors.primary[100]}20;
     transform: scale(1.05);
   }
 
@@ -188,7 +185,7 @@ export const QuantityButton = styled.button`
 export const Quantity = styled.span`
   min-width: 24px;
   text-align: center;
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.colors.text.primary};
 `;
@@ -200,14 +197,14 @@ export const DeleteButton = styled.button`
   width: 32px;
   height: 32px;
   border: none;
-  background: ${({ theme }) => theme.colors.error.light}20;
-  color: ${({ theme }) => theme.colors.error.main};
+  background: ${({ theme }) => theme.colors.functional.highPrice.light}20;
+  color: ${({ theme }) => theme.colors.functional.highPrice.main};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    background: ${({ theme }) => theme.colors.error.light}40;
+    background: ${({ theme }) => theme.colors.functional.highPrice.light}40;
     transform: scale(1.05);
   }
 

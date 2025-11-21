@@ -20,7 +20,7 @@ export const Card = styled.div<CardProps>`
     $clickable &&
     `
     &:hover {
-      border-color: ${theme.colors.primary.main};
+      border-color: ${theme.colors.primary[500]};
       box-shadow: ${theme.shadows.md};
       transform: translateY(-2px);
     }
@@ -55,18 +55,18 @@ export const StatusBadge = styled.div<StatusBadgeProps>`
     switch ($status) {
       case 'in_progress':
         return `
-          background: ${theme.colors.primary.light}20;
-          color: ${theme.colors.primary.main};
+          background: ${theme.colors.primary[100]}20;
+          color: ${theme.colors.primary[500]};
         `;
       case 'completed':
         return `
-          background: ${theme.colors.success.light}20;
-          color: ${theme.colors.success.main};
+          background: ${theme.colors.functional.bestPrice.light}20;
+          color: ${theme.colors.functional.bestPrice.main};
         `;
       case 'cancelled':
         return `
-          background: ${theme.colors.error.light}20;
-          color: ${theme.colors.error.main};
+          background: ${theme.colors.functional.highPrice.light}20;
+          color: ${theme.colors.functional.highPrice.main};
         `;
     }
   }}
@@ -84,14 +84,14 @@ export const DeleteButton = styled.button`
   width: 32px;
   height: 32px;
   border: none;
-  background: ${({ theme }) => theme.colors.error.light}20;
-  color: ${({ theme }) => theme.colors.error.main};
+  background: ${({ theme }) => theme.colors.functional.highPrice.light}20;
+  color: ${({ theme }) => theme.colors.functional.highPrice.main};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    background: ${({ theme }) => theme.colors.error.light}40;
+    background: ${({ theme }) => theme.colors.functional.highPrice.light}40;
     transform: scale(1.05);
   }
 
@@ -121,12 +121,12 @@ export const StoreInfo = styled.div`
   svg {
     width: 16px;
     height: 16px;
-    color: ${({ theme }) => theme.colors.primary.main};
+    color: ${({ theme }) => theme.colors.primary[500]};
   }
 `;
 
 export const StoreName = styled.span`
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   color: ${({ theme }) => theme.colors.text.primary};
 `;
@@ -139,7 +139,7 @@ export const DateInfo = styled.div`
   svg {
     width: 14px;
     height: 14px;
-    color: ${({ theme }) => theme.colors.text.tertiary};
+    color: ${({ theme }) => theme.colors.text.disabled};
   }
 `;
 
@@ -170,7 +170,7 @@ export const ItemsCount = styled.div`
 
 export const PurchasedCount = styled.span`
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
-  color: ${({ theme }) => theme.colors.success.main};
+  color: ${({ theme }) => theme.colors.functional.bestPrice.main};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 `;
 
@@ -189,7 +189,7 @@ interface ProgressBarProps {
 export const ProgressBar = styled.div<ProgressBarProps>`
   height: 100%;
   width: ${({ $progress }) => $progress}%;
-  background: ${({ theme }) => theme.colors.success.main};
+  background: ${({ theme }) => theme.colors.functional.bestPrice.main};
   border-radius: ${({ theme }) => theme.borderRadius.full};
   transition: width 0.3s ease;
 `;
@@ -218,5 +218,5 @@ export const TotalLabel = styled.div`
 export const TotalAmount = styled.span`
   font-size: ${({ theme }) => theme.typography.fontSize.xl};
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-  color: ${({ theme }) => theme.colors.primary.main};
+  color: ${({ theme }) => theme.colors.primary[500]};
 `;

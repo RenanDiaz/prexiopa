@@ -3,7 +3,6 @@
  * Tarjeta para mostrar el resumen de una sesión de compras
  */
 
-import React from 'react';
 import { FiShoppingCart, FiMapPin, FiCalendar, FiDollarSign, FiCheck, FiX } from 'react-icons/fi';
 import type { ShoppingSession } from '@/services/supabase/shopping';
 import * as S from './ShoppingListCard.styles';
@@ -15,12 +14,12 @@ export interface ShoppingListCardProps {
   className?: string;
 }
 
-export const ShoppingListCard: React.FC<ShoppingListCardProps> = ({
+export const ShoppingListCard = ({
   session,
   onClick,
   onDelete,
   className,
-}) => {
+}: ShoppingListCardProps) => {
   // Calcular estadísticas
   const totalItems = session.items?.length || 0;
   const purchasedItems = session.items?.filter((item) => item.purchased).length || 0;
