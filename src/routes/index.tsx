@@ -20,6 +20,8 @@ const ProductDetail = lazy(() => import('../pages/ProductDetail'));
 const StorePage = lazy(() => import('../pages/StorePage'));
 const Favorites = lazy(() => import('../pages/Favorites'));
 const SearchResults = lazy(() => import('../pages/SearchResults'));
+const Shopping = lazy(() => import('../pages/Shopping'));
+const Stores = lazy(() => import('../pages/Stores'));
 const ScannerDemo = lazy(() => import('../pages/ScannerDemo'));
 // const ProductsDemo = lazy(() => import('../pages/ProductsDemo'));
 const AuthCallback = lazy(() => import('../pages/AuthCallback'));
@@ -124,6 +126,25 @@ export const router = createBrowserRouter([
         element: (
           <SuspenseWrapper>
             <Favorites />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        // Lista de compras
+        // TODO: Agregar autenticación - Esta ruta debe ser protegida
+        path: 'shopping',
+        element: (
+          <SuspenseWrapper>
+            <Shopping />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        // Tiendas disponibles
+        path: 'stores',
+        element: (
+          <SuspenseWrapper>
+            <Stores />
           </SuspenseWrapper>
         ),
       },
