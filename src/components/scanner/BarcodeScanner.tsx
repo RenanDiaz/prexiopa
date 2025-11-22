@@ -430,10 +430,33 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
    * Render loading content
    */
   const renderLoadingContent = () => (
-    <S.LoadingContainer>
-      <S.LoadingSpinner />
-      <S.LoadingText>Iniciando cámara...</S.LoadingText>
-    </S.LoadingContainer>
+    <>
+      {/* Hidden webcam to trigger initialization */}
+      <div style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }}>
+        <Webcam
+          ref={webcamRef}
+          audio={false}
+          screenshotFormat="image/jpeg"
+          videoConstraints={{
+            facingMode,
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+          }}
+          onUserMedia={handleUserMedia}
+          onUserMediaError={handleUserMediaError}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+          }}
+        />
+      </div>
+
+      <S.LoadingContainer>
+        <S.LoadingSpinner />
+        <S.LoadingText>Iniciando cámara...</S.LoadingText>
+      </S.LoadingContainer>
+    </>
   );
 
   /**
@@ -452,50 +475,57 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
   /**
    * Render scanner content
    */
-  const renderScannerContent = () => (
-    <>
-      <S.WebcamContainer>
-        <Webcam
-          ref={webcamRef}
-          audio={false}
-          screenshotFormat="image/jpeg"
-          videoConstraints={{
-            facingMode,
-            width: { ideal: 1920 },
-            height: { ideal: 1080 },
-          }}
-          onUserMedia={handleUserMedia}
-          onUserMediaError={handleUserMediaError}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-        />
-      </S.WebcamContainer>
+  const renderScannerContent = () => {
+    console.log('[BarcodeScanner] Rendering scanner content with state:', state);
+    console.log('[BarcodeScanner] Webcam facingMode:', facingMode);
 
-      <S.ScanOverlay>
-        <S.ScanGuide>
-          <S.ScanFrame />
-        </S.ScanGuide>
-        <S.ScanInstructions>
-          Coloca el código de barras dentro del marco
-        </S.ScanInstructions>
-      </S.ScanOverlay>
+    return (
+      <>
+        <S.WebcamContainer>
+          <Webcam
+            ref={webcamRef}
+            audio={false}
+            screenshotFormat="image/jpeg"
+            videoConstraints={{
+              facingMode,
+              width: { ideal: 1920 },
+              height: { ideal: 1080 },
+            }}
+            onUserMedia={handleUserMedia}
+            onUserMediaError={handleUserMediaError}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        </S.WebcamContainer>
 
-      <S.ToggleCameraButton
-        onClick={handleToggleCamera}
-        aria-label="Cambiar cámara"
-      >
-        <FiRotateCw size={24} />
-      </S.ToggleCameraButton>
-    </>
-  );
+        <S.ScanOverlay>
+          <S.ScanGuide>
+            <S.ScanFrame />
+          </S.ScanGuide>
+          <S.ScanInstructions>
+            Coloca el código de barras dentro del marco
+          </S.ScanInstructions>
+        </S.ScanOverlay>
+
+        <S.ToggleCameraButton
+          onClick={handleToggleCamera}
+          aria-label="Cambiar cámara"
+        >
+          <FiRotateCw size={24} />
+        </S.ToggleCameraButton>
+      </>
+    );
+  };
 
   /**
    * Render content based on state
    */
   const renderContent = () => {
+    console.log('[BarcodeScanner] renderContent called, state:', state);
+
     switch (state) {
       case 'loading':
         return renderLoadingContent();
