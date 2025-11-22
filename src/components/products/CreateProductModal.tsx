@@ -34,7 +34,7 @@ const BarcodeValue = styled.code`
   font-size: ${({ theme }) => theme.typography.fontSize.xl};
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   color: ${({ theme }) => theme.colors.primary[500]};
-  font-family: 'Monaco', 'Courier New', monospace;
+  font-family: "Monaco", "Courier New", monospace;
 `;
 
 const FormGroup = styled.div`
@@ -111,8 +111,8 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
   onClose,
   onCreateProduct,
 }) => {
-  const [productName, setProductName] = useState('');
-  const [brand, setBrand] = useState('');
+  const [productName, setProductName] = useState("");
+  const [brand, setBrand] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -132,11 +132,11 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
       });
 
       // Reset form
-      setProductName('');
-      setBrand('');
+      setProductName("");
+      setBrand("");
       onClose();
     } catch (error) {
-      console.error('Error creating product:', error);
+      console.error("Error creating product:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -144,17 +144,15 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
 
   const handleClose = () => {
     if (!isSubmitting) {
-      setProductName('');
-      setBrand('');
+      setProductName("");
+      setBrand("");
       onClose();
     }
   };
 
   return (
     <Modal open={isOpen} onClose={handleClose} size="md">
-      <Modal.Header>
-        Producto no encontrado
-      </Modal.Header>
+      <Modal.Header>Producto no encontrado</Modal.Header>
 
       <Modal.Body>
         <ModalContent>
@@ -179,7 +177,7 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
           <form onSubmit={handleSubmit}>
             <FormGroup>
               <Label htmlFor="product-name">
-                Nombre del producto <span style={{ color: 'red' }}>*</span>
+                Nombre del producto <span style={{ color: "red" }}>*</span>
               </Label>
               <Input
                 id="product-name"
