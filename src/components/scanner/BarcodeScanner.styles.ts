@@ -389,11 +389,18 @@ export const ScanInstructions = styled.p`
  * Loading container
  */
 export const LoadingContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: ${theme.spacing[4]};
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 10;
   animation: ${slideUp} 0.3s ease-out;
 `;
 

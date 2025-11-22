@@ -314,6 +314,8 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
    */
   useEffect(() => {
     console.log('[BarcodeScanner] Component mounted, isOpen:', isOpen);
+    console.log('[BarcodeScanner] Protocol:', window.location.protocol);
+    console.log('[BarcodeScanner] getUserMedia available:', !!navigator.mediaDevices?.getUserMedia);
 
     if (isOpen) {
       console.log('[BarcodeScanner] Scanner opening...');
@@ -328,6 +330,14 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
 
       // Add ESC listener
       document.addEventListener('keydown', handleEscKey);
+
+      // Check for camera access immediately
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        console.error('[BarcodeScanner] getUserMedia not supported');
+        setState('error');
+        setError('no-camera');
+        return;
+      }
 
       // Set initialization timeout (10 seconds)
       initTimeoutRef.current = window.setTimeout(() => {
@@ -429,35 +439,40 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
   /**
    * Render loading content
    */
-  const renderLoadingContent = () => (
-    <>
-      {/* Hidden webcam to trigger initialization */}
-      <div style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }}>
-        <Webcam
-          ref={webcamRef}
-          audio={false}
-          screenshotFormat="image/jpeg"
-          videoConstraints={{
-            facingMode,
-            width: { ideal: 1920 },
-            height: { ideal: 1080 },
-          }}
-          onUserMedia={handleUserMedia}
-          onUserMediaError={handleUserMediaError}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-        />
-      </div>
+  const renderLoadingContent = () => {
+    console.log('[BarcodeScanner] Rendering loading content');
 
-      <S.LoadingContainer>
-        <S.LoadingSpinner />
-        <S.LoadingText>Iniciando cámara...</S.LoadingText>
-      </S.LoadingContainer>
-    </>
-  );
+    return (
+      <>
+        {/* Webcam visible but behind loading overlay */}
+        <S.WebcamContainer>
+          <Webcam
+            ref={webcamRef}
+            audio={false}
+            screenshotFormat="image/jpeg"
+            videoConstraints={{
+              facingMode,
+              width: { ideal: 1920 },
+              height: { ideal: 1080 },
+            }}
+            onUserMedia={handleUserMedia}
+            onUserMediaError={handleUserMediaError}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        </S.WebcamContainer>
+
+        {/* Loading overlay on top */}
+        <S.LoadingContainer>
+          <S.LoadingSpinner />
+          <S.LoadingText>Iniciando cámara...</S.LoadingText>
+        </S.LoadingContainer>
+      </>
+    );
+  };
 
   /**
    * Render success content
