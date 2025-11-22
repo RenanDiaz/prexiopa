@@ -12,7 +12,7 @@ import { FiFilter, FiX } from 'react-icons/fi';
 // Components
 import { SearchBar, SearchFilters } from '@/components/search';
 import { BarcodeScanner } from '@/components/scanner';
-import { ProductList } from '@/components/products';
+import { ProductList, CreateProductModal } from '@/components/products';
 
 // Hooks
 import { useProductsQuery, useCategoriesQuery } from '@/hooks/useProducts';
@@ -21,8 +21,12 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 // Types
 import type { PriceRange, FilterChangePayload } from '@/components/search/SearchFilters';
-import type { ProductFilters } from '@/services/supabase/products';
+import type { ProductFilters, CreateProductInput } from '@/services/supabase/products';
 import type { Product } from '@/types/product.types';
+
+// Services
+import { createProduct } from '@/services/supabase/products';
+import { toast } from 'react-toastify';
 
 const DashboardContainer = styled.div`
   min-height: 100vh;
@@ -233,6 +237,8 @@ const Dashboard = () => {
   // UI State
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [isCreateProductModalOpen, setIsCreateProductModalOpen] = useState(false);
+  const [scannedBarcode, setScannedBarcode] = useState<string>('');
 
   // Data Queries
   const { data: categories = [] } = useCategoriesQuery();
@@ -277,11 +283,35 @@ const Dashboard = () => {
   const handleScanSuccess = useCallback(
     (barcode: string) => {
       setIsScannerOpen(false);
+      setScannedBarcode(barcode);
       // Search for product with barcode
       setSearchQuery(barcode);
+
+      // Check if products are found after a short delay
+      setTimeout(() => {
+        if (products.length === 0) {
+          // No products found, show create product modal
+          setIsCreateProductModalOpen(true);
+        }
+      }, 500);
     },
-    []
+    [products]
   );
+
+  const handleCreateProduct = useCallback(async (productData: CreateProductInput) => {
+    try {
+      const newProduct = await createProduct(productData);
+      toast.success(`Producto "${newProduct.name}" creado exitosamente`);
+      setIsCreateProductModalOpen(false);
+      setScannedBarcode('');
+      // Refresh products
+      setSearchQuery('');
+      setTimeout(() => setSearchQuery(productData.barcode), 100);
+    } catch (error) {
+      console.error('Error creating product:', error);
+      toast.error('Error al crear el producto. Inténtalo de nuevo.');
+    }
+  }, []);
 
   const handleFilterChange = useCallback((payload: FilterChangePayload) => {
     if (payload.category !== undefined) {
@@ -403,6 +433,17 @@ const Dashboard = () => {
         isOpen={isScannerOpen}
         onClose={handleScannerClose}
         onScan={handleScanSuccess}
+      />
+
+      {/* Create Product Modal */}
+      <CreateProductModal
+        isOpen={isCreateProductModalOpen}
+        barcode={scannedBarcode}
+        onClose={() => {
+          setIsCreateProductModalOpen(false);
+          setScannedBarcode('');
+        }}
+        onCreateProduct={handleCreateProduct}
       />
     </DashboardContainer>
   );

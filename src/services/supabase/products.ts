@@ -248,3 +248,38 @@ export const getCategories = async (): Promise<string[]> => {
     throw error;
   }
 };
+
+/**
+ * Crear un nuevo producto (crowdsourcing desde barcode scanner)
+ */
+export interface CreateProductInput {
+  barcode: string;
+  name: string;
+  brand?: string;
+  category?: string;
+}
+
+export const createProduct = async (input: CreateProductInput): Promise<Product> => {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .insert({
+        barcode: input.barcode,
+        name: input.name,
+        brand: input.brand || null,
+        category: input.category || 'Sin categoría',
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('[Products Service] Error creating product:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('[Products Service] Unexpected error creating product:', error);
+    throw error;
+  }
+};

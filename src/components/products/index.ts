@@ -21,5 +21,9 @@ export type { PriceComparisonProps } from './PriceComparison';
 export { PriceHistoryChart } from './PriceHistoryChart';
 export type { PriceHistoryChartProps } from './PriceHistoryChart';
 
+// Create Product Modal (Phase 4 - Barcode scanner integration)
+export { CreateProductModal } from './CreateProductModal';
+export type { CreateProductModalProps } from './CreateProductModal';
+
 // Re-export common types for convenience
 export type { Product, ProductWithLowestPrice, Price, Store } from '@/types/product';
