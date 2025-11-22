@@ -266,6 +266,7 @@ const Dashboard = () => {
   }, []);
 
   const handleScannerOpen = useCallback(() => {
+    console.log('[Dashboard] Opening scanner...');
     setIsScannerOpen(true);
   }, []);
 
@@ -398,13 +399,11 @@ const Dashboard = () => {
       </MainContent>
 
       {/* Barcode Scanner Modal */}
-      {isScannerOpen && (
-        <BarcodeScanner
-          isOpen={isScannerOpen}
-          onClose={handleScannerClose}
-          onScan={handleScanSuccess}
-        />
-      )}
+      <BarcodeScanner
+        isOpen={isScannerOpen}
+        onClose={handleScannerClose}
+        onScan={handleScanSuccess}
+      />
     </DashboardContainer>
   );
 };

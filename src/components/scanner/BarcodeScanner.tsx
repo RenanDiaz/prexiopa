@@ -313,7 +313,10 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
    * Cleanup on unmount or close
    */
   useEffect(() => {
+    console.log('[BarcodeScanner] Component mounted, isOpen:', isOpen);
+
     if (isOpen) {
+      console.log('[BarcodeScanner] Scanner opening...');
       // Store previous active element
       previousActiveElement.current = document.activeElement as HTMLElement;
 
