@@ -184,9 +184,17 @@ export const getShoppingSession = async (
 export const createShoppingSession = async (
   input: CreateSessionData
 ): Promise<ShoppingSession> => {
+  // Get authenticated user
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error('User must be authenticated to create a shopping session');
+  }
+
   const { data, error } = await supabase
     .from('shopping_sessions')
     .insert({
+      user_id: user.id,
       store_id: input.store_id || null,
       store_name: input.store_name || null,
       date: input.date || new Date().toISOString(),
