@@ -3,12 +3,12 @@
  * Modal para crear un nuevo producto cuando se escanea un código de barras que no existe
  */
 
-import { useState } from 'react';
-import styled from 'styled-components';
-import { FiX, FiPackage } from 'react-icons/fi';
-import { Modal } from '@/components/common/Modal';
-import { Input } from '@/components/common/Input';
-import { Button } from '@/components/common/Button';
+import { useState } from "react";
+import styled from "styled-components";
+import { FiPackage } from "react-icons/fi";
+import { Modal } from "@/components/common/Modal";
+import { Input } from "@/components/common/Input";
+import { Button } from "@/components/common/Button";
 
 const ModalContent = styled.div`
   display: flex;
