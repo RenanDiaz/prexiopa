@@ -126,6 +126,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
   const codeReaderRef = useRef<BrowserMultiFormatReader | null>(null);
   const scanningIntervalRef = useRef<number | null>(null);
   const timeoutRef = useRef<number | null>(null);
+  const initTimeoutRef = useRef<number | null>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -216,6 +217,14 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
    * Handle camera user media success
    */
   const handleUserMedia = useCallback(() => {
+    console.log('[BarcodeScanner] Camera initialized successfully');
+
+    // Clear initialization timeout
+    if (initTimeoutRef.current) {
+      clearTimeout(initTimeoutRef.current);
+      initTimeoutRef.current = null;
+    }
+
     initializeReader();
     // Small delay to ensure video is ready
     setTimeout(() => {
@@ -227,16 +236,20 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
    * Handle camera user media error
    */
   const handleUserMediaError = useCallback((err: string | DOMException) => {
-    console.error('Camera error:', err);
+    console.error('[BarcodeScanner] Camera error:', err);
     setState('error');
 
     if (typeof err === 'string') {
+      console.error('[BarcodeScanner] String error:', err);
       setError('unknown');
     } else if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+      console.error('[BarcodeScanner] Permission denied');
       setError('permission-denied');
     } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+      console.error('[BarcodeScanner] No camera found');
       setError('no-camera');
     } else {
+      console.error('[BarcodeScanner] Unknown error:', err.name);
       setError('unknown');
     }
   }, []);
@@ -313,6 +326,13 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
       // Add ESC listener
       document.addEventListener('keydown', handleEscKey);
 
+      // Set initialization timeout (10 seconds)
+      initTimeoutRef.current = window.setTimeout(() => {
+        console.error('[BarcodeScanner] Camera initialization timeout');
+        setState('error');
+        setError('unknown');
+      }, 10000);
+
       return () => {
         // Cleanup scanning
         if (scanningIntervalRef.current) {
@@ -322,6 +342,10 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current);
           timeoutRef.current = null;
+        }
+        if (initTimeoutRef.current) {
+          clearTimeout(initTimeoutRef.current);
+          initTimeoutRef.current = null;
         }
 
         // Cleanup reader
