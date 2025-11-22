@@ -3,12 +3,14 @@
  * Modal para crear un nuevo producto cuando se escanea un código de barras que no existe
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { FiPackage } from "react-icons/fi";
+import { FiPackage, FiCheckCircle } from "react-icons/fi";
 import { Modal } from "@/components/common/Modal";
 import { Input } from "@/components/common/Input";
 import { Button } from "@/components/common/Button";
+import { getProductByBarcode } from "@/services/supabase/products";
+import type { Product } from "@/types/product.types";
 
 const ModalContent = styled.div`
   display: flex;
@@ -114,6 +116,8 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
   const [productName, setProductName] = useState("");
   const [brand, setBrand] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCheckingProduct, setIsCheckingProduct] = useState(true);
+  const [existingProduct, setExistingProduct] = useState<Product | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,86 +150,164 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
     if (!isSubmitting) {
       setProductName("");
       setBrand("");
+      setExistingProduct(null);
+      setIsCheckingProduct(true);
       onClose();
     }
   };
 
+  // Check if product exists when modal opens
+  useEffect(() => {
+    const checkProduct = async () => {
+      if (isOpen && barcode) {
+        setIsCheckingProduct(true);
+        try {
+          const product = await getProductByBarcode(barcode);
+          setExistingProduct(product);
+        } catch (error) {
+          console.error("Error checking product:", error);
+          setExistingProduct(null);
+        } finally {
+          setIsCheckingProduct(false);
+        }
+      }
+    };
+
+    checkProduct();
+  }, [isOpen, barcode]);
+
   return (
     <Modal open={isOpen} onClose={handleClose} size="md">
-      <Modal.Header>Producto no encontrado</Modal.Header>
+      <Modal.Header>
+        {isCheckingProduct ? "Verificando producto..." : existingProduct ? "Producto encontrado" : "Producto no encontrado"}
+      </Modal.Header>
 
       <Modal.Body>
         <ModalContent>
-          <InfoBox>
-            <InfoIcon>
-              <FiPackage />
-            </InfoIcon>
-            <InfoContent>
-              <InfoTitle>Ayúdanos a crear este producto</InfoTitle>
-              <InfoText>
-                Este código de barras no está en nuestra base de datos. Puedes agregarlo para que
-                otros usuarios también lo encuentren.
-              </InfoText>
-            </InfoContent>
-          </InfoBox>
+          {isCheckingProduct ? (
+            // Loading state
+            <InfoBox>
+              <InfoIcon>
+                <FiPackage />
+              </InfoIcon>
+              <InfoContent>
+                <InfoTitle>Verificando código de barras</InfoTitle>
+                <InfoText>Buscando el producto en nuestra base de datos...</InfoText>
+              </InfoContent>
+            </InfoBox>
+          ) : existingProduct ? (
+            // Product exists
+            <>
+              <InfoBox style={{ background: "rgba(0, 200, 83, 0.1)", borderLeftColor: "#00C853" }}>
+                <InfoIcon style={{ color: "#00C853" }}>
+                  <FiCheckCircle />
+                </InfoIcon>
+                <InfoContent>
+                  <InfoTitle style={{ color: "#00C853" }}>¡Producto encontrado!</InfoTitle>
+                  <InfoText style={{ color: "#00693B" }}>
+                    Este producto ya existe en nuestra base de datos.
+                  </InfoText>
+                </InfoContent>
+              </InfoBox>
 
-          <BarcodeDisplay>
-            <BarcodeLabel>Código de barras escaneado</BarcodeLabel>
-            <BarcodeValue>{barcode}</BarcodeValue>
-          </BarcodeDisplay>
+              <BarcodeDisplay>
+                <BarcodeLabel>Código de barras</BarcodeLabel>
+                <BarcodeValue>{barcode}</BarcodeValue>
+              </BarcodeDisplay>
 
-          <form onSubmit={handleSubmit}>
-            <FormGroup>
-              <Label htmlFor="product-name">
-                Nombre del producto <span style={{ color: "red" }}>*</span>
-              </Label>
-              <Input
-                id="product-name"
-                type="text"
-                placeholder="Ej: Coca Cola 2L"
-                value={productName}
-                onChange={(e) => setProductName(e.target.value)}
-                required
-                disabled={isSubmitting}
-                autoFocus
-              />
-              <HelpText>Ingresa el nombre completo del producto</HelpText>
-            </FormGroup>
+              <FormGroup>
+                <Label>Nombre del producto</Label>
+                <Input value={existingProduct.name} disabled />
+              </FormGroup>
 
-            <FormGroup>
-              <Label htmlFor="brand">Marca (opcional)</Label>
-              <Input
-                id="brand"
-                type="text"
-                placeholder="Ej: Coca Cola"
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
-                disabled={isSubmitting}
-              />
-              <HelpText>Ayuda a otros usuarios a encontrar productos de esta marca</HelpText>
-            </FormGroup>
+              {existingProduct.brand && (
+                <FormGroup>
+                  <Label>Marca</Label>
+                  <Input value={existingProduct.brand} disabled />
+                </FormGroup>
+              )}
 
-            <ButtonGroup>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleClose}
-                disabled={isSubmitting}
-                fullWidth
-              >
-                Cancelar
-              </Button>
-              <Button
-                type="submit"
-                variant="primary"
-                disabled={!productName.trim() || isSubmitting}
-                loading={isSubmitting}
-                fullWidth
-              >
-                Crear Producto
-              </Button>
-            </ButtonGroup>
-          </form>
+              <ButtonGroup>
+                <Button type="button" variant="primary" onClick={handleClose} fullWidth>
+                  Cerrar
+                </Button>
+              </ButtonGroup>
+            </>
+          ) : (
+            // Product doesn't exist - create form
+            <>
+              <InfoBox>
+                <InfoIcon>
+                  <FiPackage />
+                </InfoIcon>
+                <InfoContent>
+                  <InfoTitle>Ayúdanos a crear este producto</InfoTitle>
+                  <InfoText>
+                    Este código de barras no está en nuestra base de datos. Puedes agregarlo para que
+                    otros usuarios también lo encuentren.
+                  </InfoText>
+                </InfoContent>
+              </InfoBox>
+
+              <BarcodeDisplay>
+                <BarcodeLabel>Código de barras escaneado</BarcodeLabel>
+                <BarcodeValue>{barcode}</BarcodeValue>
+              </BarcodeDisplay>
+
+              <form onSubmit={handleSubmit}>
+                <FormGroup>
+                  <Label htmlFor="product-name">
+                    Nombre del producto <span style={{ color: "red" }}>*</span>
+                  </Label>
+                  <Input
+                    id="product-name"
+                    type="text"
+                    placeholder="Ej: Coca Cola 2L"
+                    value={productName}
+                    onChange={(e) => setProductName(e.target.value)}
+                    required
+                    disabled={isSubmitting}
+                    autoFocus
+                  />
+                  <HelpText>Ingresa el nombre completo del producto</HelpText>
+                </FormGroup>
+
+                <FormGroup>
+                  <Label htmlFor="brand">Marca (opcional)</Label>
+                  <Input
+                    id="brand"
+                    type="text"
+                    placeholder="Ej: Coca Cola"
+                    value={brand}
+                    onChange={(e) => setBrand(e.target.value)}
+                    disabled={isSubmitting}
+                  />
+                  <HelpText>Ayuda a otros usuarios a encontrar productos de esta marca</HelpText>
+                </FormGroup>
+
+                <ButtonGroup>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleClose}
+                    disabled={isSubmitting}
+                    fullWidth
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    disabled={!productName.trim() || isSubmitting}
+                    loading={isSubmitting}
+                    fullWidth
+                  >
+                    Crear Producto
+                  </Button>
+                </ButtonGroup>
+              </form>
+            </>
+          )}
         </ModalContent>
       </Modal.Body>
     </Modal>

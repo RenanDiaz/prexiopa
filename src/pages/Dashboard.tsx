@@ -272,7 +272,6 @@ const Dashboard = () => {
   }, []);
 
   const handleScannerOpen = useCallback(() => {
-    console.log('[Dashboard] Opening scanner...');
     setIsScannerOpen(true);
   }, []);
 
@@ -280,23 +279,13 @@ const Dashboard = () => {
     setIsScannerOpen(false);
   }, []);
 
-  const handleScanSuccess = useCallback(
-    (barcode: string) => {
-      setIsScannerOpen(false);
-      setScannedBarcode(barcode);
-      // Search for product with barcode
-      setSearchQuery(barcode);
-
-      // Check if products are found after a short delay
-      setTimeout(() => {
-        if (products.length === 0) {
-          // No products found, show create product modal
-          setIsCreateProductModalOpen(true);
-        }
-      }, 500);
-    },
-    [products]
-  );
+  const handleScanSuccess = useCallback((barcode: string) => {
+    setIsScannerOpen(false);
+    setScannedBarcode(barcode);
+    // Always show the modal when a barcode is scanned
+    // The modal can check if the product exists and show appropriate UI
+    setIsCreateProductModalOpen(true);
+  }, []);
 
   const handleCreateProduct = useCallback(async (productData: CreateProductInput) => {
     try {

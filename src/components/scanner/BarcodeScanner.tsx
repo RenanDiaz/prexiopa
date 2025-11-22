@@ -217,8 +217,6 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
    * Handle camera user media success
    */
   const handleUserMedia = useCallback(() => {
-    console.log('[BarcodeScanner] Camera initialized successfully');
-
     // Clear initialization timeout
     if (initTimeoutRef.current) {
       clearTimeout(initTimeoutRef.current);
@@ -236,20 +234,15 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
    * Handle camera user media error
    */
   const handleUserMediaError = useCallback((err: string | DOMException) => {
-    console.error('[BarcodeScanner] Camera error:', err);
     setState('error');
 
     if (typeof err === 'string') {
-      console.error('[BarcodeScanner] String error:', err);
       setError('unknown');
     } else if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-      console.error('[BarcodeScanner] Permission denied');
       setError('permission-denied');
     } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
-      console.error('[BarcodeScanner] No camera found');
       setError('no-camera');
     } else {
-      console.error('[BarcodeScanner] Unknown error:', err.name);
       setError('unknown');
     }
   }, []);
@@ -313,12 +306,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
    * Cleanup on unmount or close
    */
   useEffect(() => {
-    console.log('[BarcodeScanner] Component mounted, isOpen:', isOpen);
-    console.log('[BarcodeScanner] Protocol:', window.location.protocol);
-    console.log('[BarcodeScanner] getUserMedia available:', !!navigator.mediaDevices?.getUserMedia);
-
     if (isOpen) {
-      console.log('[BarcodeScanner] Scanner opening...');
       // Store previous active element
       previousActiveElement.current = document.activeElement as HTMLElement;
 
@@ -333,7 +321,6 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
 
       // Check for camera access immediately
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        console.error('[BarcodeScanner] getUserMedia not supported');
         setState('error');
         setError('no-camera');
         return;
@@ -341,7 +328,6 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
 
       // Set initialization timeout (10 seconds)
       initTimeoutRef.current = window.setTimeout(() => {
-        console.error('[BarcodeScanner] Camera initialization timeout');
         setState('error');
         setError('unknown');
       }, 10000);
@@ -440,8 +426,6 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
    * Render loading content
    */
   const renderLoadingContent = () => {
-    console.log('[BarcodeScanner] Rendering loading content');
-
     return (
       <>
         {/* Webcam visible but behind loading overlay */}
@@ -491,9 +475,6 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
    * Render scanner content
    */
   const renderScannerContent = () => {
-    console.log('[BarcodeScanner] Rendering scanner content with state:', state);
-    console.log('[BarcodeScanner] Webcam facingMode:', facingMode);
-
     return (
       <>
         <S.WebcamContainer>
@@ -539,8 +520,6 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
    * Render content based on state
    */
   const renderContent = () => {
-    console.log('[BarcodeScanner] renderContent called, state:', state);
-
     switch (state) {
       case 'loading':
         return renderLoadingContent();
