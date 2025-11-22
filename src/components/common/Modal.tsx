@@ -97,6 +97,7 @@ const ModalRoot: React.FC<ModalProps> = ({
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
+  const isInitialMount = useRef(true);
 
   // Handle ESC key press
   const handleEscKey = useCallback(
@@ -118,14 +119,18 @@ const ModalRoot: React.FC<ModalProps> = ({
   // Manage focus and body scroll
   useEffect(() => {
     if (open) {
-      // Store current active element
-      previousActiveElement.current = document.activeElement as HTMLElement;
+      // Only store active element and focus modal on initial mount
+      if (isInitialMount.current) {
+        previousActiveElement.current = document.activeElement as HTMLElement;
+        // Focus modal container, not individual inputs
+        setTimeout(() => {
+          modalRef.current?.focus();
+        }, 0);
+        isInitialMount.current = false;
+      }
 
       // Prevent body scroll
       document.body.style.overflow = 'hidden';
-
-      // Focus modal
-      modalRef.current?.focus();
 
       // Add ESC listener
       document.addEventListener('keydown', handleEscKey);
@@ -137,9 +142,14 @@ const ModalRoot: React.FC<ModalProps> = ({
         // Remove ESC listener
         document.removeEventListener('keydown', handleEscKey);
 
-        // Restore focus
-        previousActiveElement.current?.focus();
+        // Restore focus on close
+        if (!open) {
+          previousActiveElement.current?.focus();
+        }
       };
+    } else {
+      // Reset on close
+      isInitialMount.current = true;
     }
   }, [open, handleEscKey]);
 
@@ -180,9 +190,10 @@ interface ModalHeaderProps {
   className?: string;
 }
 
-const ModalHeader: React.FC<ModalHeaderProps> = ({ children, className }) => (
+const ModalHeader: React.FC<ModalHeaderProps> = React.memo(({ children, className }) => (
   <S.ModalHeader className={className}>{children}</S.ModalHeader>
-);
+));
+ModalHeader.displayName = 'ModalHeader';
 
 /**
  * Modal Body Component
@@ -192,9 +203,10 @@ interface ModalBodyProps {
   className?: string;
 }
 
-const ModalBody: React.FC<ModalBodyProps> = ({ children, className }) => (
+const ModalBody: React.FC<ModalBodyProps> = React.memo(({ children, className }) => (
   <S.ModalBody className={className}>{children}</S.ModalBody>
-);
+));
+ModalBody.displayName = 'ModalBody';
 
 /**
  * Modal Footer Component
@@ -204,9 +216,10 @@ interface ModalFooterProps {
   className?: string;
 }
 
-const ModalFooter: React.FC<ModalFooterProps> = ({ children, className }) => (
+const ModalFooter: React.FC<ModalFooterProps> = React.memo(({ children, className }) => (
   <S.ModalFooter className={className}>{children}</S.ModalFooter>
-);
+));
+ModalFooter.displayName = 'ModalFooter';
 
 /**
  * Composite Modal Component with sub-components
