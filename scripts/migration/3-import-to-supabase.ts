@@ -30,8 +30,9 @@ dotenv.config();
 // ============================================================================
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_KEY =
-  process.env.SUPABASE_SERVICE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+// Service role key is REQUIRED to bypass RLS policies for data import
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const USING_SERVICE_KEY = !!process.env.SUPABASE_SERVICE_KEY;
 
 const BATCH_SIZE = 100; // Number of records per insert batch
 const DRY_RUN = process.argv.includes("--dry-run");
@@ -179,8 +180,22 @@ const runImport = async (): Promise<void> => {
   // Validate environment
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
     console.error("Error: Missing Supabase credentials");
-    console.error("Set SUPABASE_URL and SUPABASE_SERVICE_KEY environment variables");
+    console.error("");
+    console.error("Required environment variables:");
+    console.error("  SUPABASE_URL or VITE_SUPABASE_URL - Your Supabase project URL");
+    console.error("  SUPABASE_SERVICE_KEY - Service role key (NOT the anon key!)");
+    console.error("");
+    console.error("The service role key is required to bypass Row Level Security (RLS).");
+    console.error("Find it in: Supabase Dashboard > Settings > API > service_role key");
+    console.error("");
+    console.error("Usage:");
+    console.error("  SUPABASE_SERVICE_KEY=your-service-key npx ts-node scripts/migration/3-import-to-supabase.ts");
     process.exit(1);
+  }
+
+  if (!USING_SERVICE_KEY) {
+    console.warn("⚠️  Warning: Using anon key instead of service key.");
+    console.warn("   This will fail due to RLS policies. Set SUPABASE_SERVICE_KEY.\n");
   }
 
   // Initialize Supabase client
@@ -199,12 +214,10 @@ const runImport = async (): Promise<void> => {
 
   // Step 1: Read transformed data
   console.log("Step 1: Reading transformed data...");
-  const categories = readTransformedFile<Record<string, unknown>>("categories.json");
   const stores = readTransformedFile<Record<string, unknown>>("stores.json");
   const products = readTransformedFile<Record<string, unknown>>("products.json");
   const prices = readTransformedFile<Record<string, unknown>>("prices.json");
 
-  console.log(`  - Categories: ${categories.length}`);
   console.log(`  - Stores: ${stores.length}`);
   console.log(`  - Products: ${products.length}`);
   console.log(`  - Prices: ${prices.length}`);
@@ -212,12 +225,10 @@ const runImport = async (): Promise<void> => {
 
   // Step 2: Check existing data
   console.log("Step 2: Checking existing data...");
-  const existingCategories = await checkExistingData(supabase, "categories");
   const existingStores = await checkExistingData(supabase, "stores");
   const existingProducts = await checkExistingData(supabase, "products");
   const existingPrices = await checkExistingData(supabase, "prices");
 
-  console.log(`  - Existing categories: ${existingCategories}`);
   console.log(`  - Existing stores: ${existingStores}`);
   console.log(`  - Existing products: ${existingProducts}`);
   console.log(`  - Existing prices: ${existingPrices}`);
@@ -233,15 +244,11 @@ const runImport = async (): Promise<void> => {
 
   const allStats: ImportStats[] = [];
 
-  // Categories first (no dependencies)
-  console.log("Importing categories...");
-  allStats.push(await importTable(supabase, "categories", categories));
-
-  // Stores (no dependencies)
-  console.log("\nImporting stores...");
+  // Stores first (no dependencies)
+  console.log("Importing stores...");
   allStats.push(await importTable(supabase, "stores", stores));
 
-  // Products (depends on categories)
+  // Products (no foreign key dependencies in current schema)
   console.log("\nImporting products...");
   allStats.push(await importTable(supabase, "products", products));
 

@@ -87,45 +87,30 @@ interface MongoItem {
 
 // ============================================================================
 // Types - PostgreSQL Target (Prexiopá)
+// Matches the actual schema in supabase/schema.sql
 // ============================================================================
 
 interface PgProduct {
   id: string;
   name: string;
+  description: string | null;
+  image: string;
+  category: string;
   brand: string | null;
-  category_id: string | null;
   barcode: string | null;
-  image_url: string | null;
-  is_active: boolean;
   created_at: string;
   updated_at: string;
   // Migration metadata
   _mongo_id: string;
-  _original_description: string;
-  _measurement_value: number;
-  _unit_name: string;
 }
 
 interface PgStore {
   id: string;
   name: string;
-  address: string | null;
-  city: string;
-  latitude: number | null;
-  longitude: number | null;
-  is_active: boolean;
+  logo: string;
+  website: string | null;
   created_at: string;
-  // Migration metadata
-  _mongo_id: string;
-}
-
-interface PgCategory {
-  id: string;
-  name: string;
-  parent_id: string | null;
-  icon: string | null;
-  is_active: boolean;
-  created_at: string;
+  updated_at: string;
   // Migration metadata
   _mongo_id: string;
 }
@@ -135,17 +120,9 @@ interface PgPrice {
   product_id: string;
   store_id: string;
   price: number;
-  original_price: number | null;
-  unit: string;
-  quantity: number;
-  is_promotion: boolean;
-  promotion_type: string | null;
-  promotion_end_date: string | null;
-  verified: boolean;
-  verified_count: number;
-  reported_by: string | null;
+  date: string;
+  in_stock: boolean;
   created_at: string;
-  updated_at: string;
   // Migration metadata
   _mongo_item_id: string;
   _mongo_receipt_id: string;
@@ -218,39 +195,18 @@ const transformUnits = (units: MongoUnit[]): Map<string, string> => {
   return unitMap;
 };
 
-const transformCategories = (categories: MongoCategory[]): PgCategory[] => {
-  const transformed: PgCategory[] = [];
+const transformCategories = (categories: MongoCategory[]): Map<string, string> => {
+  // No categories table in current schema - just build mapping for product category names
+  const categoryNameMap = new Map<string, string>();
 
-  // First pass: create all categories with new UUIDs
   categories.forEach((cat) => {
     const mongoId = getMongoId(cat._id);
-    const newId = uuidv4();
-    idMappings.categories.set(mongoId, newId);
+    categoryNameMap.set(mongoId, cat.name);
+    idMappings.categories.set(mongoId, cat.name);
   });
 
-  // Second pass: transform with parent references
-  categories.forEach((cat) => {
-    const mongoId = getMongoId(cat._id);
-    const newId = idMappings.categories.get(mongoId)!;
-
-    let parentId: string | null = null;
-    if (cat.parent) {
-      const parentMongoId = getMongoId(cat.parent);
-      parentId = idMappings.categories.get(parentMongoId) || null;
-    }
-
-    transformed.push({
-      id: newId,
-      name: cat.name,
-      parent_id: parentId,
-      icon: null,
-      is_active: cat.isActive !== false,
-      created_at: new Date().toISOString(),
-      _mongo_id: mongoId,
-    });
-  });
-
-  return transformed;
+  console.log(`Processed ${categories.length} categories (for product category names)`);
+  return categoryNameMap;
 };
 
 const transformStores = (stores: MongoStore[]): PgStore[] => {
@@ -259,21 +215,13 @@ const transformStores = (stores: MongoStore[]): PgStore[] => {
     const newId = uuidv4();
     idMappings.stores.set(mongoId, newId);
 
-    let lat: number | null = null;
-    let lng: number | null = null;
-    if (store.location?.coordinates) {
-      [lng, lat] = store.location.coordinates;
-    }
-
     return {
       id: newId,
       name: store.name,
-      address: store.address || null,
-      city: "Panamá", // Default city
-      latitude: lat,
-      longitude: lng,
-      is_active: store.isActive !== false,
+      logo: "/images/stores/default.png", // Default logo
+      website: null,
       created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       _mongo_id: mongoId,
     };
   });
@@ -281,7 +229,8 @@ const transformStores = (stores: MongoStore[]): PgStore[] => {
 
 const transformProducts = (
   products: MongoProduct[],
-  unitMap: Map<string, string>
+  unitMap: Map<string, string>,
+  categoryMap: Map<string, string>
 ): PgProduct[] => {
   return products.map((product) => {
     const mongoId = getMongoId(product._id);
@@ -300,27 +249,24 @@ const transformProducts = (
         : "";
     const productName = `${product.description}${measurementPart}`;
 
-    // Get first category if exists
-    let categoryId: string | null = null;
+    // Get first category name if exists
+    let categoryName = "General";
     if (product.categories && product.categories.length > 0) {
       const catMongoId = getMongoId(product.categories[0]);
-      categoryId = idMappings.categories.get(catMongoId) || null;
+      categoryName = categoryMap.get(catMongoId) || "General";
     }
 
     return {
       id: newId,
       name: productName,
-      brand: null, // Could be extracted from description in future
-      category_id: categoryId,
+      description: null,
+      image: "/images/products/default.png", // Default image
+      category: categoryName,
+      brand: null,
       barcode: product.barcode || null,
-      image_url: null,
-      is_active: product.isActive !== false,
       created_at: getMongoDate(product.createdAt),
       updated_at: getMongoDate(product.updatedAt),
       _mongo_id: mongoId,
-      _original_description: product.description,
-      _measurement_value: product.measurementValue,
-      _unit_name: unitAbbrev,
     };
   });
 };
@@ -341,7 +287,10 @@ const transformPrices = (
     if (storeId) {
       receiptStoreMap.set(receiptId, storeId);
     }
-    receiptDateMap.set(receiptId, getMongoDate(receipt.purchaseDate));
+    // Extract just the date part (YYYY-MM-DD) from the purchase date
+    const fullDate = getMongoDate(receipt.purchaseDate);
+    const dateOnly = fullDate.split("T")[0];
+    receiptDateMap.set(receiptId, dateOnly);
 
     // Store receipt mapping for reference
     idMappings.receipts.set(receiptId, uuidv4());
@@ -349,6 +298,8 @@ const transformPrices = (
 
   const transformed: PgPrice[] = [];
   const skipped: string[] = [];
+  // Track unique product+store+date combinations to avoid duplicates
+  const seenKeys = new Set<string>();
 
   items.forEach((item) => {
     const productMongoId = getMongoId(item.product);
@@ -358,31 +309,31 @@ const transformPrices = (
     const storeId = receiptStoreMap.get(receiptMongoId);
     const purchaseDate = receiptDateMap.get(receiptMongoId);
 
-    if (!productId || !storeId) {
+    if (!productId || !storeId || !purchaseDate) {
       skipped.push(
         `Item ${getMongoId(item._id)}: missing product (${productMongoId}) or store`
       );
       return;
     }
 
-    const isPromotion = (item.discount || 0) > 0;
+    // Check for duplicates (same product+store+date)
+    const uniqueKey = `${productId}-${storeId}-${purchaseDate}`;
+    if (seenKeys.has(uniqueKey)) {
+      skipped.push(
+        `Item ${getMongoId(item._id)}: duplicate product+store+date`
+      );
+      return;
+    }
+    seenKeys.add(uniqueKey);
 
     transformed.push({
       id: uuidv4(),
       product_id: productId,
       store_id: storeId,
       price: item.unitPrice,
-      original_price: isPromotion ? item.unitPrice + (item.discount || 0) : null,
-      unit: "unidad",
-      quantity: item.quantity,
-      is_promotion: isPromotion,
-      promotion_type: isPromotion ? "discount" : null,
-      promotion_end_date: null,
-      verified: true, // Historical data is verified
-      verified_count: 1,
-      reported_by: null, // System migration
-      created_at: purchaseDate || new Date().toISOString(),
-      updated_at: purchaseDate || new Date().toISOString(),
+      date: purchaseDate,
+      in_stock: true,
+      created_at: new Date().toISOString(),
       _mongo_item_id: getMongoId(item._id),
       _mongo_receipt_id: receiptMongoId,
     });
@@ -438,16 +389,15 @@ const runTransformation = (): void => {
   // Units first (needed for product names)
   const unitMap = transformUnits(units);
 
-  // Categories (needed for product category_id)
-  const pgCategories = transformCategories(categories);
-  writeJsonFile("categories.json", pgCategories);
+  // Categories (for product category names - no separate table)
+  const categoryMap = transformCategories(categories);
 
   // Stores
   const pgStores = transformStores(stores);
   writeJsonFile("stores.json", pgStores);
 
   // Products (depends on units and categories)
-  const pgProducts = transformProducts(products, unitMap);
+  const pgProducts = transformProducts(products, unitMap, categoryMap);
   writeJsonFile("products.json", pgProducts);
 
   // Prices (depends on products, stores, and receipts)
@@ -467,7 +417,6 @@ const runTransformation = (): void => {
   console.log("\n========================================");
   console.log("Transformation Complete!");
   console.log("========================================");
-  console.log(`Categories: ${pgCategories.length}`);
   console.log(`Stores: ${pgStores.length}`);
   console.log(`Products: ${pgProducts.length}`);
   console.log(`Prices: ${pgPrices.length}`);
