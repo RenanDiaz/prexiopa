@@ -181,11 +181,11 @@ const Button = styled.button`
 `;
 
 const LogoutButton = styled(Button)`
-  background: ${({ theme }) => theme.colors.functional.error.main};
+  background: ${({ theme }) => theme.colors.semantic.error.main};
   margin-top: ${({ theme }) => theme.spacing[6]};
 
   &:hover {
-    background: ${({ theme }) => theme.colors.functional.error.dark || '#c62828'};
+    background: ${({ theme }) => theme.colors.semantic.error.dark};
   }
 `;
 
