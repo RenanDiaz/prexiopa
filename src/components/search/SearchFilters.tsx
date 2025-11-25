@@ -23,9 +23,10 @@
  * ```
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { FiFilter, FiX, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import type { Store } from '@/types/store.types';
+import storePlaceholder from '@/assets/images/store-placeholder.svg';
 import {
   FiltersContainer,
   FiltersHeader,
@@ -114,6 +115,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
   testId = 'search-filters',
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(initialCollapsed);
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+
+  const handleImageError = useCallback((storeId: string) => {
+    setFailedImages(prev => new Set(prev).add(storeId));
+  }, []);
 
   /**
    * Calculate number of active filters
@@ -247,13 +253,12 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
                   aria-label={`Filtrar por ${store.name}`}
                 />
                 <StoreLabel htmlFor={`store-${store.id}`}>
-                  {store.logo && (
-                    <StoreLogo
-                      src={store.logo}
-                      alt=""
-                      aria-hidden="true"
-                    />
-                  )}
+                  <StoreLogo
+                    src={failedImages.has(store.id) || !store.logo ? storePlaceholder : store.logo}
+                    alt=""
+                    aria-hidden="true"
+                    onError={() => handleImageError(store.id)}
+                  />
                   {store.name}
                 </StoreLabel>
               </StoreCheckboxItem>
