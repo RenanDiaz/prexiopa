@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect width="200" height="200" fill="#F5F5F5"/>
+  <g transform="translate(50, 50)">
+    <rect x="20" y="10" width="60" height="80" rx="4" fill="#E0E0E0" stroke="#BDBDBD" stroke-width="2"/>
+    <rect x="30" y="25" width="40" height="8" rx="2" fill="#BDBDBD"/>
+    <rect x="30" y="40" width="30" height="6" rx="2" fill="#BDBDBD"/>
+    <rect x="30" y="52" width="35" height="6" rx="2" fill="#BDBDBD"/>
+    <circle cx="50" cy="75" r="8" fill="#00BCD4" opacity="0.6"/>
+    <path d="M47 75L49 77L53 73" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="100" y="170" text-anchor="middle" fill="#9E9E9E" font-family="Poppins, Arial, sans-serif" font-size="12">Sin imagen</text>
+</svg>

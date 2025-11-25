@@ -13,10 +13,11 @@
  * ```
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { FiMapPin, FiGlobe, FiPhone, FiChevronRight } from 'react-icons/fi';
 import type { Store } from '@/types/store.types';
 import * as S from './StoreCard.styles';
+import storePlaceholder from '@/assets/images/store-placeholder.svg';
 
 export interface StoreCardProps {
   /** Store data */
@@ -38,20 +39,28 @@ export const StoreCard: React.FC<StoreCardProps> = ({
   variant = 'default',
   className,
 }) => {
+  const [imgSrc, setImgSrc] = useState(store.logo || storePlaceholder);
+  const [imgError, setImgError] = useState(false);
   const locationCount = store.locations?.length || 0;
   const activeLocations = store.locations?.filter((loc) => loc.isActive).length || 0;
+
+  const handleImageError = () => {
+    if (!imgError) {
+      setImgError(true);
+      setImgSrc(storePlaceholder);
+    }
+  };
 
   return (
     <S.Card onClick={onClick} $clickable={!!onClick} className={className}>
       {/* Store Logo */}
       <S.LogoWrapper>
-        {store.logo ? (
-          <S.Logo src={store.logo} alt={store.name} loading="lazy" />
-        ) : (
-          <S.LogoPlaceholder>
-            <FiMapPin />
-          </S.LogoPlaceholder>
-        )}
+        <S.Logo
+          src={imgSrc}
+          alt={store.name}
+          loading="lazy"
+          onError={handleImageError}
+        />
       </S.LogoWrapper>
 
       {/* Store Info */}

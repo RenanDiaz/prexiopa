@@ -11,11 +11,12 @@
  * ```
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiHeart, FiShoppingCart } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
 import type { Product } from '@/types/product.types';
+import productPlaceholder from '@/assets/images/product-placeholder.svg';
 import {
   formatProductMeasurement,
   calculatePricePerBaseUnit,
@@ -80,6 +81,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onClick,
   testId = 'product-card',
 }) => {
+  const [imgSrc, setImgSrc] = useState(product.image || productPlaceholder);
+  const [imgError, setImgError] = useState(false);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isFavorite = useIsFavorite(product.id);
   const { toggleFavorite, isLoading: isTogglingFavorite } = useToggleFavoriteMutation();
@@ -164,6 +167,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     return price.toFixed(2);
   };
 
+  /**
+   * Handle image load error - show fallback
+   */
+  const handleImageError = () => {
+    if (!imgError) {
+      setImgError(true);
+      setImgSrc(productPlaceholder);
+    }
+  };
+
   return (
     <CardContainer
       className={className}
@@ -174,9 +187,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {/* Image Section */}
         <CardImageWrapper>
           <CardImage
-            src={product.image}
+            src={imgSrc}
             alt={product.name}
             loading="lazy"
+            onError={handleImageError}
           />
 
           {/* Category Badge */}

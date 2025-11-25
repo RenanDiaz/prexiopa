@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect width="200" height="200" fill="#F5F5F5"/>
+  <g transform="translate(50, 40)">
+    <!-- Store building -->
+    <rect x="10" y="40" width="80" height="60" rx="2" fill="#E0E0E0" stroke="#BDBDBD" stroke-width="2"/>
+    <!-- Roof/awning -->
+    <path d="M5 40L50 15L95 40" fill="#00C853" opacity="0.7"/>
+    <path d="M5 40L50 15L95 40" stroke="#00C853" stroke-width="3" fill="none"/>
+    <!-- Door -->
+    <rect x="40" y="65" width="20" height="35" rx="2" fill="#BDBDBD"/>
+    <circle cx="55" cy="82" r="2" fill="#9E9E9E"/>
+    <!-- Windows -->
+    <rect x="18" y="50" width="15" height="12" rx="1" fill="#00BCD4" opacity="0.4"/>
+    <rect x="67" y="50" width="15" height="12" rx="1" fill="#00BCD4" opacity="0.4"/>
+    <!-- Store sign -->
+    <rect x="25" y="25" width="50" height="12" rx="2" fill="white" stroke="#BDBDBD"/>
+  </g>
+  <text x="100" y="170" text-anchor="middle" fill="#9E9E9E" font-family="Poppins, Arial, sans-serif" font-size="12">Sin logo</text>
+</svg>
