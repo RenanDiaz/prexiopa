@@ -1,11 +1,13 @@
 /**
  * Profile - Página de perfil de usuario
- * Muestra y permite editar información del usuario
- * TODO: Agregar autenticación - Esta ruta debe ser protegida
+ * Muestra información real del usuario autenticado
  */
 
+import { useNavigate } from 'react-router-dom';
 import { AlertsList } from '../components/alerts';
 import { useActiveAlertsCountQuery } from '../hooks/useAlerts';
+import { useFavoriteIdsQuery } from '../hooks/useFavorites';
+import { useAuthStore } from '../store/authStore';
 import styled from 'styled-components';
 
 const ProfileContainer = styled.div`
@@ -178,8 +180,70 @@ const Button = styled.button`
   }
 `;
 
+const LogoutButton = styled(Button)`
+  background: ${({ theme }) => theme.colors.functional.error.main};
+  margin-top: ${({ theme }) => theme.spacing[6]};
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.functional.error.dark || '#c62828'};
+  }
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  font-size: ${({ theme }) => theme.typography.fontSize.lg};
+  color: ${({ theme }) => theme.colors.text.secondary};
+`;
+
 const Profile = () => {
+  const navigate = useNavigate();
+  const { user, isAuthenticated, isLoading, logout } = useAuthStore();
   const { data: alertsCount = 0 } = useActiveAlertsCountQuery();
+  const { data: favoriteIds = [] } = useFavoriteIdsQuery();
+
+  // Redirect to login if not authenticated
+  if (!isLoading && !isAuthenticated) {
+    navigate('/login');
+    return null;
+  }
+
+  if (isLoading) {
+    return (
+      <ProfileContainer>
+        <LoadingContainer>Cargando...</LoadingContainer>
+      </ProfileContainer>
+    );
+  }
+
+  // Extract user metadata
+  const userMetadata = user?.user_metadata || {};
+  const displayName = userMetadata.full_name || userMetadata.name || user?.email?.split('@')[0] || 'Usuario';
+  const initials = displayName
+    .split(' ')
+    .map((n: string) => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
+  const email = user?.email || '';
+  const phone = userMetadata.phone || 'No especificado';
+  const location = userMetadata.location || 'Panamá';
+  const createdAt = user?.created_at ? new Date(user.created_at).toLocaleDateString('es-PA', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }) : 'N/A';
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+  };
 
   return (
     <ProfileContainer>
@@ -191,71 +255,69 @@ const Profile = () => {
 
         <Grid>
           <Sidebar>
-            <Avatar>JP</Avatar>
-            <UserName>Juan Pérez</UserName>
-            <UserEmail>juan.perez@email.com</UserEmail>
+            <Avatar>{initials}</Avatar>
+            <UserName>{displayName}</UserName>
+            <UserEmail>{email}</UserEmail>
 
             <StatsList>
               <StatItem>
                 <StatLabel>Favoritos</StatLabel>
-                <StatValue>12</StatValue>
+                <StatValue>{favoriteIds.length}</StatValue>
               </StatItem>
               <StatItem>
                 <StatLabel>Alertas activas</StatLabel>
                 <StatValue>{alertsCount}</StatValue>
               </StatItem>
               <StatItem>
-                <StatLabel>Ahorro estimado</StatLabel>
-                <StatValue>$245</StatValue>
+                <StatLabel>Miembro desde</StatLabel>
+                <StatValue style={{ fontSize: '14px' }}>{createdAt}</StatValue>
               </StatItem>
             </StatsList>
+
+            <LogoutButton onClick={handleLogout}>Cerrar Sesión</LogoutButton>
           </Sidebar>
 
           <MainContent>
             <Section>
-              <SectionTitle>Información Personal</SectionTitle>
+              <SectionTitle>Información de la Cuenta</SectionTitle>
               <InfoGrid>
                 <InfoItem>
-                  <InfoLabel>Nombre completo</InfoLabel>
-                  <InfoValue>Juan Pérez</InfoValue>
+                  <InfoLabel>Nombre</InfoLabel>
+                  <InfoValue>{displayName}</InfoValue>
                 </InfoItem>
                 <InfoItem>
                   <InfoLabel>Correo electrónico</InfoLabel>
-                  <InfoValue>juan.perez@email.com</InfoValue>
+                  <InfoValue>{email}</InfoValue>
                 </InfoItem>
                 <InfoItem>
                   <InfoLabel>Teléfono</InfoLabel>
-                  <InfoValue>+507 6000-0000</InfoValue>
+                  <InfoValue>{phone}</InfoValue>
                 </InfoItem>
                 <InfoItem>
                   <InfoLabel>Ubicación</InfoLabel>
-                  <InfoValue>Ciudad de Panamá, Panamá</InfoValue>
+                  <InfoValue>{location}</InfoValue>
+                </InfoItem>
+                <InfoItem>
+                  <InfoLabel>ID de usuario</InfoLabel>
+                  <InfoValue style={{ fontSize: '12px', fontFamily: 'monospace' }}>
+                    {user?.id?.slice(0, 8)}...
+                  </InfoValue>
+                </InfoItem>
+                <InfoItem>
+                  <InfoLabel>Última conexión</InfoLabel>
+                  <InfoValue>
+                    {user?.last_sign_in_at
+                      ? new Date(user.last_sign_in_at).toLocaleDateString('es-PA', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })
+                      : 'N/A'}
+                  </InfoValue>
                 </InfoItem>
               </InfoGrid>
-              <Button>Editar Información</Button>
-            </Section>
-
-            <Section>
-              <SectionTitle>Preferencias</SectionTitle>
-              <InfoGrid>
-                <InfoItem>
-                  <InfoLabel>Tiendas preferidas</InfoLabel>
-                  <InfoValue>Super 99, El Rey, Riba Smith</InfoValue>
-                </InfoItem>
-                <InfoItem>
-                  <InfoLabel>Notificaciones</InfoLabel>
-                  <InfoValue>Email y Push activadas</InfoValue>
-                </InfoItem>
-                <InfoItem>
-                  <InfoLabel>Categorías favoritas</InfoLabel>
-                  <InfoValue>Alimentos, Tecnología, Hogar</InfoValue>
-                </InfoItem>
-                <InfoItem>
-                  <InfoLabel>Idioma</InfoLabel>
-                  <InfoValue>Español</InfoValue>
-                </InfoItem>
-              </InfoGrid>
-              <Button>Actualizar Preferencias</Button>
             </Section>
 
             <Section>
