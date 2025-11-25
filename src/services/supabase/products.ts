@@ -4,7 +4,7 @@
  */
 
 import { supabase } from '../../supabaseClient';
-import type { Product } from '../../types/product.types';
+import type { Product, ProductUnit } from '../../types/product.types';
 
 export interface ProductFilters {
   query?: string;
@@ -257,6 +257,9 @@ export interface CreateProductInput {
   name: string;
   brand?: string;
   category?: string;
+  unit?: ProductUnit | string;
+  measurement_value?: number;
+  tax_percentage?: number;
 }
 
 export const createProduct = async (input: CreateProductInput): Promise<Product> => {
@@ -268,6 +271,9 @@ export const createProduct = async (input: CreateProductInput): Promise<Product>
         name: input.name,
         brand: input.brand || null,
         category: input.category || 'Sin categoría',
+        unit: input.unit || 'un',
+        measurement_value: input.measurement_value || 1,
+        tax_percentage: input.tax_percentage || 0,
       })
       .select()
       .single();

@@ -16,6 +16,11 @@ import { Link } from 'react-router-dom';
 import { FiHeart, FiShoppingCart } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
 import type { Product } from '@/types/product.types';
+import {
+  formatProductMeasurement,
+  calculatePricePerBaseUnit,
+  formatPricePerBaseUnit,
+} from '@/types/product.types';
 import { useIsFavorite, useToggleFavoriteMutation } from '@/hooks/useFavorites';
 import { useAuthStore } from '@/store/authStore';
 import { useActiveSessionQuery, useAddItemMutation } from '@/hooks/useShoppingLists';
@@ -29,9 +34,11 @@ import {
   CardContent,
   ProductName,
   BrandName,
+  ProductMeasurement,
   PriceSection,
   PriceLabel,
   PriceAmount,
+  PricePerUnit,
   StoreName,
   AddToCartButton,
   SkeletonCard,
@@ -211,12 +218,32 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             </BrandName>
           )}
 
+          {/* Product Measurement */}
+          {product.unit && product.measurement_value && (
+            <ProductMeasurement>
+              {formatProductMeasurement(product.measurement_value, product.unit)}
+            </ProductMeasurement>
+          )}
+
           {/* Price Section */}
           <PriceSection>
             <PriceLabel>Desde</PriceLabel>
             <PriceAmount>
               ${formatPrice(product.lowest_price)}
             </PriceAmount>
+            {/* Price per unit */}
+            {product.lowest_price && product.unit && product.measurement_value && (
+              <PricePerUnit>
+                {formatPricePerBaseUnit(
+                  calculatePricePerBaseUnit(
+                    product.lowest_price,
+                    product.unit,
+                    product.measurement_value
+                  ),
+                  product.unit
+                )}
+              </PricePerUnit>
+            )}
             {product.store_with_lowest_price && (
               <StoreName>
                 en {product.store_with_lowest_price.name}

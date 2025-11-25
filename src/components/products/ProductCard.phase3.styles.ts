@@ -209,6 +209,20 @@ export const BrandName = styled.p`
 `;
 
 /**
+ * Product measurement (e.g., "500g", "1L", "12 un")
+ */
+export const ProductMeasurement = styled.span`
+  display: inline-block;
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.colors.text.secondary};
+  background: ${({ theme }) => theme.colors.neutral[100]};
+  padding: ${({ theme }) => `${theme.spacing[1]} ${theme.spacing[2]}`};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  width: fit-content;
+`;
+
+/**
  * Price section container
  */
 export const PriceSection = styled.div`
@@ -238,6 +252,19 @@ export const PriceAmount = styled.div`
   ${({ theme }) => theme.typography.variants.priceSmall};
   color: ${({ theme }) => theme.colors.primary[500]};
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+`;
+
+/**
+ * Price per unit (e.g., "$1.50/L", "$3.00/kg")
+ */
+export const PricePerUnit = styled.span`
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.colors.secondary[600]};
+  background: ${({ theme }) => theme.colors.secondary[50]};
+  padding: ${({ theme }) => `${theme.spacing[0.5] || '2px'} ${theme.spacing[2]}`};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  width: fit-content;
 `;
 
 /**

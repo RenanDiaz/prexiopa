@@ -10,7 +10,8 @@ import { Modal } from "@/components/common/Modal";
 import { Input } from "@/components/common/Input";
 import { Button } from "@/components/common/Button";
 import { getProductByBarcode } from "@/services/supabase/products";
-import type { Product } from "@/types/product.types";
+import type { Product, ProductUnit } from "@/types/product.types";
+import { UNIT_NAMES, formatProductMeasurement } from "@/types/product.types";
 
 const ModalContent = styled.div`
   display: flex;
@@ -55,6 +56,43 @@ const HelpText = styled.p`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   color: ${({ theme }) => theme.colors.text.secondary};
   margin: 0;
+`;
+
+const Row = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing[3]};
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
+`;
+
+const Select = styled.select`
+  width: 100%;
+  height: 44px;
+  padding: 0 ${({ theme }) => theme.spacing[3]};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
+  color: ${({ theme }) => theme.colors.text.primary};
+  background: ${({ theme }) => theme.colors.background.default};
+  border: 2px solid ${({ theme }) => theme.colors.border.main};
+  border-radius: ${({ theme }) => theme.borderRadius.button};
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.primary[400]};
+  }
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.primary[500]};
+    box-shadow: 0 0 0 3px ${({ theme }) => theme.colors.primary[100]};
+  }
+
+  &:disabled {
+    background: ${({ theme }) => theme.colors.neutral[100]};
+    cursor: not-allowed;
+  }
 `;
 
 const ButtonGroup = styled.div`
@@ -104,7 +142,13 @@ export interface CreateProductModalProps {
   isOpen: boolean;
   barcode: string;
   onClose: () => void;
-  onCreateProduct: (productData: { barcode: string; name: string; brand?: string }) => void;
+  onCreateProduct: (productData: {
+    barcode: string;
+    name: string;
+    brand?: string;
+    unit?: ProductUnit;
+    measurement_value?: number;
+  }) => void;
 }
 
 export const CreateProductModal: React.FC<CreateProductModalProps> = ({
@@ -115,6 +159,8 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
 }) => {
   const [productName, setProductName] = useState("");
   const [brand, setBrand] = useState("");
+  const [unit, setUnit] = useState<ProductUnit>("un");
+  const [measurementValue, setMeasurementValue] = useState<string>("1");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCheckingProduct, setIsCheckingProduct] = useState(true);
   const [existingProduct, setExistingProduct] = useState<Product | null>(null);
@@ -129,15 +175,20 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
     setIsSubmitting(true);
 
     try {
+      const parsedMeasurement = parseFloat(measurementValue);
       await onCreateProduct({
         barcode,
         name: productName.trim(),
         brand: brand.trim() || undefined,
+        unit,
+        measurement_value: isNaN(parsedMeasurement) ? 1 : parsedMeasurement,
       });
 
       // Reset form
       setProductName("");
       setBrand("");
+      setUnit("un");
+      setMeasurementValue("1");
       onClose();
     } catch (error) {
       console.error("Error creating product:", error);
@@ -150,6 +201,8 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
     if (!isSubmitting) {
       setProductName("");
       setBrand("");
+      setUnit("un");
+      setMeasurementValue("1");
       setExistingProduct(null);
       setIsCheckingProduct(true);
       onClose();
@@ -227,6 +280,16 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
                 </FormGroup>
               )}
 
+              {existingProduct.unit && existingProduct.measurement_value && (
+                <FormGroup>
+                  <Label>Presentación</Label>
+                  <Input
+                    value={formatProductMeasurement(existingProduct.measurement_value, existingProduct.unit) || ""}
+                    disabled
+                  />
+                </FormGroup>
+              )}
+
               <ButtonGroup>
                 <Button type="button" variant="primary" onClick={handleClose} fullWidth>
                   Cerrar
@@ -283,6 +346,37 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
                     disabled={isSubmitting}
                   />
                   <HelpText>Ayuda a otros usuarios a encontrar productos de esta marca</HelpText>
+                </FormGroup>
+
+                <FormGroup>
+                  <Label>Presentación <span style={{ color: "red" }}>*</span></Label>
+                  <Row>
+                    <Input
+                      id="measurement-value"
+                      type="number"
+                      placeholder="Ej: 500"
+                      value={measurementValue}
+                      onChange={(e) => setMeasurementValue(e.target.value)}
+                      disabled={isSubmitting}
+                      min="0.01"
+                      step="any"
+                      style={{ flex: 1 }}
+                    />
+                    <Select
+                      id="unit"
+                      value={unit}
+                      onChange={(e) => setUnit(e.target.value as ProductUnit)}
+                      disabled={isSubmitting}
+                      style={{ flex: 1 }}
+                    >
+                      {Object.entries(UNIT_NAMES).map(([value, label]) => (
+                        <option key={value} value={value}>
+                          {label} ({value})
+                        </option>
+                      ))}
+                    </Select>
+                  </Row>
+                  <HelpText>Ej: 500g, 1L, 12 unidades</HelpText>
                 </FormGroup>
 
                 <ButtonGroup>
