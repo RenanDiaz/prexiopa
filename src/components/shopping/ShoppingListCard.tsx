@@ -3,7 +3,7 @@
  * Tarjeta para mostrar el resumen de una sesión de compras
  */
 
-import { FiShoppingCart, FiMapPin, FiCalendar, FiDollarSign, FiCheck, FiX } from 'react-icons/fi';
+import { FiShoppingCart, FiMapPin, FiCalendar, FiDollarSign, FiCheck, FiX, FiList, FiFileText } from 'react-icons/fi';
 import type { ShoppingSession } from '@/services/supabase/shopping';
 import * as S from './ShoppingListCard.styles';
 
@@ -91,13 +91,31 @@ export const ShoppingListCard = ({
     }
   };
 
+  // Get mode label and icon
+  const getModeLabel = () => {
+    return session.mode === 'completed' ? 'Registro' : 'Plan';
+  };
+
+  const getModeIcon = () => {
+    return session.mode === 'completed' ? <FiFileText /> : <FiList />;
+  };
+
   return (
     <S.Card onClick={onClick} $clickable={!!onClick} className={className}>
       <S.Header>
-        <S.StatusBadge $status={session.status}>
-          {getStatusIcon()}
-          <span>{getStatusText()}</span>
-        </S.StatusBadge>
+        <S.HeaderBadges>
+          <S.StatusBadge $status={session.status}>
+            {getStatusIcon()}
+            <span>{getStatusText()}</span>
+          </S.StatusBadge>
+
+          {session.mode && (
+            <S.ModeBadge $mode={session.mode}>
+              {getModeIcon()}
+              {getModeLabel()}
+            </S.ModeBadge>
+          )}
+        </S.HeaderBadges>
 
         {session.status !== 'in_progress' && onDelete && (
           <S.DeleteButton onClick={handleDelete} aria-label="Eliminar sesión">

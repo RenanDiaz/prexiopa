@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiShoppingCart, FiPlus, FiClock } from 'react-icons/fi';
+import { FiShoppingCart, FiPlus, FiClock, FiCalendar, FiCheckSquare } from 'react-icons/fi';
 import styled from 'styled-components';
 import { ActiveShoppingSession, ShoppingListCard } from '@/components/shopping';
 import { Button } from '@/components/common/Button';
@@ -18,6 +18,7 @@ import {
   useCreateSessionMutation,
   useDeleteSessionMutation,
 } from '@/hooks/useShoppingLists';
+import type { SessionMode } from '@/services/supabase/shopping';
 
 const ShoppingContainer = styled.div`
   min-height: 100vh;
@@ -159,6 +160,59 @@ const ModalHint = styled.p`
   margin: 0;
 `;
 
+const ModeSelector = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing[3]};
+  margin-top: ${({ theme }) => theme.spacing[2]};
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
+`;
+
+interface ModeCardProps {
+  $selected?: boolean;
+}
+
+const ModeCard = styled.button<ModeCardProps>`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing[2]};
+  padding: ${({ theme }) => theme.spacing[4]};
+  background: ${({ theme, $selected }) =>
+    $selected ? theme.colors.primary[50] : theme.colors.background.paper};
+  border: 2px solid ${({ theme, $selected }) =>
+    $selected ? theme.colors.primary[500] : theme.colors.border.main};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.primary[400]};
+  }
+
+  svg {
+    font-size: 24px;
+    color: ${({ theme, $selected }) =>
+      $selected ? theme.colors.primary[500] : theme.colors.text.secondary};
+  }
+`;
+
+const ModeTitle = styled.span<ModeCardProps>`
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme, $selected }) =>
+    $selected ? theme.colors.primary[600] : theme.colors.text.primary};
+`;
+
+const ModeDescription = styled.span`
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  color: ${({ theme }) => theme.colors.text.secondary};
+  text-align: center;
+`;
+
 type TabType = 'active' | 'history';
 
 const Shopping = () => {
@@ -166,6 +220,7 @@ const Shopping = () => {
   const [activeTab, setActiveTab] = useState<TabType>('active');
   const [showNewSessionModal, setShowNewSessionModal] = useState(false);
   const [storeName, setStoreName] = useState('');
+  const [sessionMode, setSessionMode] = useState<SessionMode>('planning');
 
   // Queries
   const { data: activeSession } = useActiveSessionQuery();
@@ -184,11 +239,15 @@ const Shopping = () => {
   // Handlers
   const handleCreateSession = () => {
     createSessionMutation.mutate(
-      { store_name: storeName || undefined },
+      {
+        store_name: storeName || undefined,
+        mode: sessionMode,
+      },
       {
         onSuccess: () => {
           setShowNewSessionModal(false);
           setStoreName('');
+          setSessionMode('planning');
           setActiveTab('active');
         },
       }
@@ -304,6 +363,38 @@ const Shopping = () => {
 
           <Modal.Body>
             <ModalFormGroup>
+              <ModalLabel>Tipo de sesión</ModalLabel>
+              <ModeSelector>
+                <ModeCard
+                  type="button"
+                  $selected={sessionMode === 'planning'}
+                  onClick={() => setSessionMode('planning')}
+                >
+                  <FiCalendar />
+                  <ModeTitle $selected={sessionMode === 'planning'}>
+                    Planear Compra
+                  </ModeTitle>
+                  <ModeDescription>
+                    Crea una lista para tu próxima visita al supermercado
+                  </ModeDescription>
+                </ModeCard>
+                <ModeCard
+                  type="button"
+                  $selected={sessionMode === 'completed'}
+                  onClick={() => setSessionMode('completed')}
+                >
+                  <FiCheckSquare />
+                  <ModeTitle $selected={sessionMode === 'completed'}>
+                    Registrar Compra
+                  </ModeTitle>
+                  <ModeDescription>
+                    Registra una compra ya realizada con los precios reales
+                  </ModeDescription>
+                </ModeCard>
+              </ModeSelector>
+            </ModalFormGroup>
+
+            <ModalFormGroup style={{ marginTop: '16px' }}>
               <ModalLabel htmlFor="store-name">
                 Nombre de la tienda (opcional)
               </ModalLabel>
@@ -315,8 +406,9 @@ const Shopping = () => {
                 onChange={(e) => setStoreName(e.target.value)}
               />
               <ModalHint>
-                Agrega el nombre de la tienda donde harás tus compras para mejor
-                organización
+                {sessionMode === 'planning'
+                  ? 'Agrega el nombre de la tienda donde planeas hacer tus compras'
+                  : 'Agrega el nombre de la tienda donde realizaste la compra'}
               </ModalHint>
             </ModalFormGroup>
           </Modal.Body>
@@ -333,7 +425,7 @@ const Shopping = () => {
               onClick={handleCreateSession}
               loading={createSessionMutation.isPending}
             >
-              Iniciar Sesión
+              {sessionMode === 'planning' ? 'Crear Lista' : 'Registrar Compra'}
             </Button>
           </Modal.Footer>
         </Modal>

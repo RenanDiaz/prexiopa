@@ -13,6 +13,13 @@ import { supabase } from '../../supabaseClient';
 export type SessionStatus = 'in_progress' | 'completed' | 'cancelled';
 
 /**
+ * Shopping session mode (Phase 5.3)
+ * - 'planning': Future purchase, uses prices from DB
+ * - 'completed': Past purchase, user enters actual paid prices
+ */
+export type SessionMode = 'planning' | 'completed';
+
+/**
  * Shopping session interface
  */
 export interface ShoppingSession {
@@ -23,6 +30,7 @@ export interface ShoppingSession {
   date: string;
   total: number;
   status: SessionStatus;
+  mode: SessionMode;
   notes: string | null;
   created_at: string;
   updated_at: string;
@@ -48,6 +56,11 @@ export interface ShoppingItem {
   notes: string | null;
   created_at: string;
   updated_at: string;
+  // Phase 5.3 - Dual Mode fields
+  paid_price?: number | null;
+  paid_quantity?: number | null;
+  paid_discount?: number | null;
+  save_to_history?: boolean;
 }
 
 /**
@@ -58,6 +71,7 @@ export interface CreateSessionData {
   store_name?: string | null;
   date?: string;
   notes?: string;
+  mode?: SessionMode;
 }
 
 /**
@@ -95,6 +109,11 @@ export interface UpdateItemData {
   unit?: string;
   purchased?: boolean;
   notes?: string;
+  // Phase 5.3 - Dual Mode fields
+  paid_price?: number | null;
+  paid_quantity?: number | null;
+  paid_discount?: number | null;
+  save_to_history?: boolean;
 }
 
 /**
@@ -199,6 +218,7 @@ export const createShoppingSession = async (
       store_name: input.store_name || null,
       date: input.date || new Date().toISOString(),
       status: 'in_progress',
+      mode: input.mode || 'planning',
       total: 0,
       notes: input.notes || null,
     })
@@ -488,4 +508,135 @@ export const getUserShoppingStats = async (): Promise<ShoppingStats> => {
       completedSessions.length > 0 ? totalSpent / completedSessions.length : 0,
     most_visited_store: mostVisitedStore,
   };
+};
+
+// ============================================
+// PHASE 5.3 - DUAL MODE FUNCTIONS
+// ============================================
+
+/**
+ * Get sessions by mode
+ */
+export const getSessionsByMode = async (
+  mode: SessionMode,
+  status?: SessionStatus
+): Promise<ShoppingSession[]> => {
+  let query = supabase
+    .from('shopping_sessions')
+    .select('*')
+    .eq('mode', mode)
+    .order('date', { ascending: false });
+
+  if (status) {
+    query = query.eq('status', status);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error('Error fetching sessions by mode:', error);
+    throw new Error(`Failed to fetch sessions by mode: ${error.message}`);
+  }
+
+  return data || [];
+};
+
+/**
+ * Update item paid prices (for completed mode)
+ */
+export interface UpdatePaidPriceData {
+  paid_price: number;
+  paid_quantity?: number;
+  paid_discount?: number;
+  save_to_history?: boolean;
+}
+
+export const updateItemPaidPrice = async (
+  itemId: string,
+  data: UpdatePaidPriceData
+): Promise<ShoppingItem> => {
+  const { data: updatedItem, error } = await supabase
+    .from('shopping_items')
+    .update({
+      paid_price: data.paid_price,
+      paid_quantity: data.paid_quantity ?? null,
+      paid_discount: data.paid_discount ?? 0,
+      save_to_history: data.save_to_history ?? true,
+    })
+    .eq('id', itemId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error updating paid price:', error);
+    throw new Error(`Failed to update paid price: ${error.message}`);
+  }
+
+  return updatedItem;
+};
+
+/**
+ * Mark all items in session to save to history
+ */
+export const markAllItemsForHistory = async (
+  sessionId: string,
+  saveToHistory: boolean
+): Promise<void> => {
+  const { error } = await supabase
+    .from('shopping_items')
+    .update({ save_to_history: saveToHistory })
+    .eq('session_id', sessionId)
+    .not('product_id', 'is', null);
+
+  if (error) {
+    console.error('Error marking items for history:', error);
+    throw new Error(`Failed to mark items for history: ${error.message}`);
+  }
+};
+
+/**
+ * Get purchase history (completed sessions with mode='completed')
+ */
+export const getPurchaseHistory = async (
+  limit: number = 20,
+  offset: number = 0
+): Promise<ShoppingSession[]> => {
+  const { data, error } = await supabase
+    .from('shopping_sessions')
+    .select('*')
+    .eq('mode', 'completed')
+    .eq('status', 'completed')
+    .order('date', { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  if (error) {
+    console.error('Error fetching purchase history:', error);
+    throw new Error(`Failed to fetch purchase history: ${error.message}`);
+  }
+
+  return data || [];
+};
+
+/**
+ * Calculate actual total for completed mode (using paid prices)
+ */
+export const calculateActualTotal = async (sessionId: string): Promise<number> => {
+  const { data: items, error } = await supabase
+    .from('shopping_items')
+    .select('price, quantity, paid_price, paid_quantity, paid_discount')
+    .eq('session_id', sessionId);
+
+  if (error) {
+    console.error('Error calculating actual total:', error);
+    throw new Error(`Failed to calculate actual total: ${error.message}`);
+  }
+
+  const total = items?.reduce((sum, item) => {
+    const price = item.paid_price ?? item.price;
+    const quantity = item.paid_quantity ?? item.quantity;
+    const discount = item.paid_discount ?? 0;
+    return sum + (price * quantity) - discount;
+  }, 0) || 0;
+
+  return total;
 };

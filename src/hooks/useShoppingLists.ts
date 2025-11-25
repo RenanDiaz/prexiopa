@@ -10,6 +10,8 @@ import type {
   AddItemData,
   UpdateItemData,
   SessionStatus,
+  SessionMode,
+  UpdatePaidPriceData,
 } from '@/services/supabase/shopping';
 import { useAuthStore } from '@/store/authStore';
 import {
@@ -21,9 +23,11 @@ import {
 export const shoppingKeys = {
   all: ['shopping'] as const,
   sessions: () => [...shoppingKeys.all, 'sessions'] as const,
+  sessionsByMode: (mode: SessionMode) => [...shoppingKeys.all, 'sessions', 'mode', mode] as const,
   session: (id: string) => [...shoppingKeys.all, 'session', id] as const,
   activeSession: () => [...shoppingKeys.all, 'active-session'] as const,
   items: (sessionId: string) => [...shoppingKeys.all, 'items', sessionId] as const,
+  purchaseHistory: () => [...shoppingKeys.all, 'purchase-history'] as const,
 };
 
 // ============================================================================
@@ -386,6 +390,99 @@ export const useDecrementItemQuantityMutation = () => {
     onError: (error: Error) => {
       console.error('Error al decrementar cantidad:', error);
       showErrorNotification('No se pudo actualizar la cantidad');
+    },
+  });
+};
+
+// ============================================================================
+// Phase 5.3 - Dual Mode Hooks
+// ============================================================================
+
+/**
+ * Hook para obtener sesiones por modo
+ */
+export const useSessionsByModeQuery = (
+  mode: SessionMode,
+  status?: SessionStatus,
+  options?: { enabled?: boolean }
+) => {
+  const user = useAuthStore((state) => state.user);
+
+  return useQuery({
+    queryKey: [...shoppingKeys.sessionsByMode(mode), status],
+    queryFn: () => shoppingService.getSessionsByMode(mode, status),
+    enabled: !!user && (options?.enabled ?? true),
+    staleTime: 1000 * 60 * 5,
+  });
+};
+
+/**
+ * Hook para obtener historial de compras
+ */
+export const usePurchaseHistoryQuery = (
+  limit: number = 20,
+  offset: number = 0,
+  options?: { enabled?: boolean }
+) => {
+  const user = useAuthStore((state) => state.user);
+
+  return useQuery({
+    queryKey: [...shoppingKeys.purchaseHistory(), limit, offset],
+    queryFn: () => shoppingService.getPurchaseHistory(limit, offset),
+    enabled: !!user && (options?.enabled ?? true),
+    staleTime: 1000 * 60 * 5,
+  });
+};
+
+/**
+ * Hook para actualizar precio pagado de un item
+ */
+export const useUpdatePaidPriceMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      itemId,
+      data,
+    }: {
+      itemId: string;
+      sessionId: string;
+      data: UpdatePaidPriceData;
+    }) => shoppingService.updateItemPaidPrice(itemId, data),
+    onSuccess: (_, { sessionId }) => {
+      queryClient.invalidateQueries({ queryKey: shoppingKeys.items(sessionId) });
+      queryClient.invalidateQueries({ queryKey: shoppingKeys.session(sessionId) });
+    },
+    onError: (error: Error) => {
+      console.error('Error al actualizar precio pagado:', error);
+      showErrorNotification('No se pudo actualizar el precio pagado');
+    },
+  });
+};
+
+/**
+ * Hook para marcar todos los items para guardar en historial
+ */
+export const useMarkAllForHistoryMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      sessionId,
+      saveToHistory,
+    }: {
+      sessionId: string;
+      saveToHistory: boolean;
+    }) => shoppingService.markAllItemsForHistory(sessionId, saveToHistory),
+    onSuccess: (_, { sessionId }) => {
+      queryClient.invalidateQueries({ queryKey: shoppingKeys.items(sessionId) });
+      showSuccessNotification(
+        'Items actualizados para guardar en historial'
+      );
+    },
+    onError: (error: Error) => {
+      console.error('Error al marcar items:', error);
+      showErrorNotification('No se pudieron actualizar los items');
     },
   });
 };

@@ -220,3 +220,42 @@ export const TotalAmount = styled.span`
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   color: ${({ theme }) => theme.colors.primary[500]};
 `;
+
+// Phase 5.3 - Mode Badge
+interface ModeBadgeProps {
+  $mode: 'planning' | 'completed';
+}
+
+export const ModeBadge = styled.span<ModeBadgeProps>`
+  display: inline-flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing[1]};
+  padding: ${({ theme }) => `${theme.spacing[1]} ${theme.spacing[2]}`};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  ${({ $mode, theme }) =>
+    $mode === 'planning'
+      ? `
+        background: ${theme.colors.secondary[100]};
+        color: ${theme.colors.secondary[700]};
+      `
+      : `
+        background: ${theme.colors.functional.bestPrice.light};
+        color: ${theme.colors.functional.bestPrice.main};
+      `}
+
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+`;
+
+export const HeaderBadges = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing[2]};
+`;
