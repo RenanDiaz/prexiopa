@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { useParams, Link } from 'react-router-dom';
 import { FiChevronRight, FiPackage, FiTag, FiHash, FiBell } from 'react-icons/fi';
 import { useState } from 'react';
+import productPlaceholder from '@/assets/images/product-placeholder.svg';
 
 // Components
 import { PriceComparison } from '@/components/products';
@@ -95,17 +96,8 @@ const ProductImageWrapper = styled.div`
 const ProductImage = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: cover;
-`;
-
-const ProductImagePlaceholder = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 80px;
-  color: ${({ theme }) => theme.colors.text.hint};
+  object-fit: contain;
+  padding: ${({ theme }) => theme.spacing[4]};
 `;
 
 const FavoriteButtonWrapper = styled.div`
@@ -254,6 +246,7 @@ const BackButton = styled(Link)`
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   // Fetch product and prices
   const {
@@ -328,11 +321,11 @@ const ProductDetail = () => {
           {/* Left Column - Product Image & Details */}
           <ImageSection>
             <ProductImageWrapper>
-              {product.images?.[0]?.url ? (
-                <ProductImage src={product.images[0].url} alt={product.images[0].alt || product.name} />
-              ) : (
-                <ProductImagePlaceholder>📦</ProductImagePlaceholder>
-              )}
+              <ProductImage
+                src={imgError ? productPlaceholder : (product.images?.[0]?.url || product.image || productPlaceholder)}
+                alt={product.images?.[0]?.alt || product.name}
+                onError={() => setImgError(true)}
+              />
               <FavoriteButtonWrapper>
                 <FavoriteButton productId={product.id} size="lg" />
               </FavoriteButtonWrapper>
