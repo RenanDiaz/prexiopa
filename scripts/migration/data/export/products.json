@@ -1,0 +1,8634 @@
+[{
+  "_id": {
+    "$oid": "64590497a31ac2adb8153ba6"
+  },
+  "description": "Maiz En Mazorca Cerro Punta",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "64590194a31ac2adb80b5669"
+  },
+  "description": "Alimento Para Gato Chunky",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "measurementValue": 1.5,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459bfc5a31ac2adb882ca23"
+  },
+  "description": "Zapallo",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c0b2a31ac2adb885eece"
+  },
+  "description": "Aji Criollo",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c0c7a31ac2adb8863992"
+  },
+  "description": "Cacao",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c0daa31ac2adb8867e27"
+  },
+  "description": "Cebolla",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c1eca31ac2adb88aa6dd"
+  },
+  "description": "Carne Molida Especial",
+  "__v": 2,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c1fba31ac2adb88ae3f0"
+  },
+  "description": "Carne Molida De Cerdo",
+  "__v": 2,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c274a31ac2adb88c9d3e"
+  },
+  "description": "Salchicha De Pollo Melo",
+  "__v": 2,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d63bc20429fa9ee2894"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c2eba31ac2adb88e3593"
+  },
+  "description": "Yogurt Bebible Natural",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 800,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c312a31ac2adb88eb76c"
+  },
+  "description": "Sopa Gallina Ajinomen",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 51,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c3bfa31ac2adb89161aa"
+  },
+  "description": "Sopa Marisco Fideos Arroz",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 105,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c3eea31ac2adb89207dc"
+  },
+  "description": "Leche Chocolac UHT Bonlac",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c507a31ac2adb895d595"
+  },
+  "description": "Leche Condensada Suced Bholandesa",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 397,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c537a31ac2adb8967dd4"
+  },
+  "description": "Rapidita Quinua Roja Chia Bimbo",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 250,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459ca8fa31ac2adb8ab1d52"
+  },
+  "description": "Rigatoni La Parmigiana",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 454,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459cac2a31ac2adb8abe122"
+  },
+  "description": "Frijol Negro Goya",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 15.5,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459cb62a31ac2adb8ae123a"
+  },
+  "description": "Porotos C/Adobo Casera Proluxsa",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 15,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459cde5a31ac2adb8b73070"
+  },
+  "description": "3pack Jabon Tocador Nutric Palmolive",
+  "__v": 2,
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "measurementValue": 100,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459cfd9a31ac2adb8be205b"
+  },
+  "description": "Lasana Roma",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 400,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459cfeca31ac2adb8be6134"
+  },
+  "description": "Toallas Sanit. Buenas Noches Saba 12'S",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d081a31ac2adb8c07e13"
+  },
+  "description": "Papel Diamond Foil Heavy Duty",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "measurementValue": 25,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "646ad289ca341cf3791853e5"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d0a2a31ac2adb8c0f474"
+  },
+  "description": "Cake Mix Chocolate Bcrocker",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 15.25,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d0c3a31ac2adb8c16040"
+  },
+  "description": "Spaguetti La Parmigiana",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 454,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d11ba31ac2adb8c28957"
+  },
+  "description": "Flat De Huevos Medianos Melo",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 30,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d16aa31ac2adb8c3a082"
+  },
+  "description": "Paprika La Dona",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 14,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d1d0a31ac2adb8c542b4"
+  },
+  "description": "Betun Practico Negro Bufalo",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d1e7a31ac2adb8c58e15"
+  },
+  "description": "Suavitel Fresca Primavera",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "measurementValue": 850,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d249a31ac2adb8c6da6a"
+  },
+  "description": "Chorizo Tipo Santeño Rancho Boor",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 400,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d42da31ac2adb8ce3aab"
+  },
+  "description": "Boli Yogurt Mati 2oz",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 22,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d45ea31ac2adb8cef15a"
+  },
+  "description": "Platano Maduro",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d475a31ac2adb8cf4315"
+  },
+  "description": "Bolsa El Fuerte Ancho44 X40largo+12cm",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "645f0dc7a31ac2adb8f7b79f"
+  },
+  "description": "Chicle Sandia Trident 18un",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 30.6,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "645f0ee0a31ac2adb8fbbd80"
+  },
+  "description": "Tomate 3x3 En Bandeja",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "645f0f22a31ac2adb8fcaf2e"
+  },
+  "description": "Uva Negra S/Semilla Empacada",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "645f0f45a31ac2adb8fd2330"
+  },
+  "description": "Maracuya",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "64618783a31ac2adb8555581"
+  },
+  "description": "Mandarina Importada",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "64618798a31ac2adb8559d9d"
+  },
+  "description": "Aji Pimenton Naranja",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "64618926a31ac2adb85abd66"
+  },
+  "description": "Yogurt Natural",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 475,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64618949a31ac2adb85b4381"
+  },
+  "description": "Yogurt Fresa Topping Bolita Est Azul",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 190,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64618a64a31ac2adb85ed6ef"
+  },
+  "description": "Tortitas De Maiz Nuevo Melo",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 454,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64618af8a31ac2adb8609a35"
+  },
+  "description": "Yogurt Bebible Natural",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "64618beca31ac2adb863b848"
+  },
+  "description": "Jamon Ahumado Rostizado Melo",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "646192d0a31ac2adb87aeba3"
+  },
+  "description": "Jarrete",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619465a31ac2adb8801729"
+  },
+  "description": "Sopa Camaron Chef Lee",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619a45a31ac2adb893bd76"
+  },
+  "description": "Pluma Tricolor Pasta La Parmigiana",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 454,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619c1ba31ac2adb8998ffc"
+  },
+  "description": "6pk Bebida Surtida Estrella Azul",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619d01a31ac2adb89cdb3b"
+  },
+  "description": "Tortilla Intregales Rapiditas Bimbo",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 10,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619e95a31ac2adb8a247d7"
+  },
+  "description": "Cepillo Dental Gum Monsterz Jr Single",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619ef1a31ac2adb8a37555"
+  },
+  "description": "Anis Estrella Keiko",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 9,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619f40a31ac2adb8a47251"
+  },
+  "description": "Galleta Clasica Chokis",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 57,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619f89a31ac2adb8a557eb"
+  },
+  "description": "Galleta Choco Moments Colombina",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 135,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461a10aa31ac2adb8aaf380"
+  },
+  "description": "Servilleta Delux Dispensador",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "measurementValue": 100,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461a125a31ac2adb8ab57da"
+  },
+  "description": "Cuchara Terrapack Natural",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "measurementValue": 20,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461a22ca31ac2adb8aea1ea"
+  },
+  "description": "Crema De Peinar Coco Bioland",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "measurementValue": 300,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461a29fa31ac2adb8b00713"
+  },
+  "description": "Colas De Cabello",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "measurementValue": 10,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6464ed7559bba314a9724c8a"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Nugget Regular Toledano",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6464f09659bba314a97bb63e"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Queso Crema Superior",
+  "measurementValue": 7.8,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6464f0ad59bba314a97bf926"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Tajin Clasico",
+  "measurementValue": 45,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6464f0d459bba314a97c6ef3"
+  },
+  "categories": [
+    {
+      "$oid": "6464ee96a7e3dffad6b9f32a"
+    }
+  ],
+  "description": "Happy Mix Bliss Vidrio",
+  "measurementValue": 350,
+  "tax": 0.1,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6465260d59bba314a9194621"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Carne Para Guisar De Primera",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6465269459bba314a91abaee"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Chuleta Ahumada Premium",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64658c0659bba314a93ff4df"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Jamon Del Diablo Underwood",
+  "measurementValue": 64,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64658cab59bba314a941b3f5"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "6pk Jugos Surtido V8",
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64658ee059bba314a94825e8"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Papel Toalla Delux Natural Plain",
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64658fb359bba314a94a5496"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Azucar Morena Santa Rosa",
+  "measurementValue": 1820,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6458fe6ba31ac2adb8005e24"
+  },
+  "description": "Deterg. En Polvo Maximo Poder",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "measurementValue": 4.5,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "64590c83a31ac2adb82f11e8"
+  },
+  "description": "Culantro",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "64590c98a31ac2adb82f63cb"
+  },
+  "description": "Brocoli",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c0a1a31ac2adb885b198"
+  },
+  "description": "Aguacate",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c301a31ac2adb88e7e20"
+  },
+  "description": "Aloe Y Mamon Chino Mogu Mogu",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 320,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c3cda31ac2adb89192bb"
+  },
+  "description": "Cereal Marsmelos Fantasia Flips",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 300,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c3dda31ac2adb891c9b5"
+  },
+  "description": "Cafe Molido Family Janson",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 320,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c3fea31ac2adb8923f72"
+  },
+  "description": "Atun En Agua Blue Pacific",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 140,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c869a31ac2adb8a31ba0"
+  },
+  "description": "Crema P/Cafe Coffee Mate Doy",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 210,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459caa7a31ac2adb8ab7bbc"
+  },
+  "description": "Macaronicheese Original Kraft",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 206,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459cb45a31ac2adb8ada58e"
+  },
+  "description": "Maiz Dulce Glorias",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 425,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459cdbca31ac2adb8b6a024"
+  },
+  "description": "Crema Dental Kids Ang&Fluffy Colgate",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 60,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459ce53a31ac2adb8b8b3b9"
+  },
+  "description": "Bolsa D/Basura Ecoflex Jard32×40-13 Gl",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "measurementValue": 8,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459ce86a31ac2adb8b95e5a"
+  },
+  "description": "Arroz Especial Arrossisimo",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 2,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459cf88a31ac2adb8bd0154"
+  },
+  "description": "Lavaplato Axion Lemon Liq Doy Pack",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "measurementValue": 400,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d1c0a31ac2adb8c50917"
+  },
+  "description": "Otoe",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d1f6a31ac2adb8c5bf13"
+  },
+  "description": "Gelatina Frambuesa Royal",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 80,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d28fa31ac2adb8c7c81c"
+  },
+  "description": "Sb 5 Paños Multiproposito 24 Bolsas",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d361a31ac2adb8ca95ac"
+  },
+  "description": "Garbanzo Goya",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 15.5,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d3eda31ac2adb8cd231b"
+  },
+  "description": "Boli Gelatina Vineika",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 24,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d6f2a31ac2adb8d7d0eb"
+  },
+  "description": "Uva Red Globe C/Semilla Empacada",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "64617e76a31ac2adb83666ac"
+  },
+  "description": "C/Gato Jelly Atun Y Sardina Whiskas",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64617e93a31ac2adb836c2c9"
+  },
+  "description": "Whiskas Pouch Atun",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64618800a31ac2adb8570f14"
+  },
+  "description": "Manzana Verde Mediana #100-125",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "64618871a31ac2adb8587e83"
+  },
+  "description": "Mostaza Blanca",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "64618894a31ac2adb858eb8c"
+  },
+  "description": "Mango Importado",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "646188d1a31ac2adb859b46c"
+  },
+  "description": "Yogurt Tuttifruti Estrella Azul",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 180,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64618992a31ac2adb85c57e5"
+  },
+  "description": "Picada Tipica Bollo+Chorizo Melo",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "64618c08a31ac2adb8640aff"
+  },
+  "description": "Queso Muenster Paisa",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "646191aea31ac2adb876d612"
+  },
+  "description": "Queso Nat. Ahumado Grand'Or",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "646193a4a31ac2adb87daf93"
+  },
+  "description": "Pepperoni Cerdo Importado Hormel",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "646193c6a31ac2adb87e2008"
+  },
+  "description": "Genoa Salami Pieza Fiorucci F.",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619a5aa31ac2adb893fca7"
+  },
+  "description": "Atun Ahumado Light Blue Pacific",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 140,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619c30a31ac2adb899dbcc"
+  },
+  "description": "Pudin Chocolate Kent",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 154,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619e11a31ac2adb8a04564"
+  },
+  "description": "Desod. Secret Adv Solid Light Fresh",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "measurementValue": 1.6,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461a07aa31ac2adb8a888d6"
+  },
+  "description": "Mani Gragea Pasas Granuts",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 50,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461a149a31ac2adb8abd2a4"
+  },
+  "description": "Shampoo Extra Suave Huggies",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "measurementValue": 200,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461a293a31ac2adb8afdf89"
+  },
+  "description": "Correas P/Perros",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6462576359bba314a923549e"
+  },
+  "description": "Tomate De Palo",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "646257a359bba314a9248f6f"
+  },
+  "description": "Uva Verde S/Semilla",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6464e38e59bba314a95431e3"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Salchichas Tune Con Queso Toledano",
+  "unit": {
+    "$oid": "64629d63bc20429fa9ee2894"
+  },
+  "__v": 1,
+  "tax": 0,
+  "measurementValue": 1
+},
+{
+  "_id": {
+    "$oid": "6464e5f959bba314a95b7a56"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Queso Americano Nestle",
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 1,
+  "tax": 0,
+  "measurementValue": 832
+},
+{
+  "_id": {
+    "$oid": "6464e67559bba314a95cd52e"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Bolis Medianos Deyka",
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 1,
+  "tax": 0,
+  "measurementValue": 24
+},
+{
+  "_id": {
+    "$oid": "6464ed9859bba314a972b116"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Moras Enteras Congeladas",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6464f16359bba314a97e4c7f"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Bistec Al Minuto",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6465238359bba314a911e538"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Mantequilla Grove",
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6465276659bba314a91d2794"
+  },
+  "categories": [
+    {
+      "$oid": "6464ee96a7e3dffad6b9f32a"
+    }
+  ],
+  "description": "12pk Cerveza Panama Lata",
+  "measurementValue": 355,
+  "tax": 0.1,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64658b4a59bba314a93d96f0"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Popcorn Mixto Vaso Act II",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64658e6759bba314a946e6d2"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Sazonador Completo Maggi",
+  "measurementValue": 40,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64658ec259bba314a947d782"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Gelatina Melocoton Gelhada",
+  "measurementValue": 6,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64658fcb59bba314a94a92cd"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Salsa Teriyaki McCormick",
+  "measurementValue": 148,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646591c559bba314a950ea55"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Pasta Dental Kids Mickey Oral-B",
+  "measurementValue": 37,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6465941c59bba314a957e95e"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Cocoa Pozuelo",
+  "measurementValue": 150,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466289059bba314a9389b40"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Pulpa Negra",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646628ec59bba314a939f3ca"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Jamon Cocido D/Cerdo Berard 4x4",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466326859bba314a9596df7"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Bolsa De Basura Zesta Gigante 32x40",
+  "measurementValue": 6,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6465909859bba314a94d190a"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Blanqueador Clorox Pureza Citrica",
+  "measurementValue": 32,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "__v": 2
+},
+{
+  "_id": {
+    "$oid": "6465912559bba314a94edd65"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Galleta Wafer Chocolate Bridge Colombina",
+  "measurementValue": 336,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6465915659bba314a94f886b"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Jabon Liquido Natural Dalan",
+  "measurementValue": 400,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646594ef59bba314a95a8c32"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "3pack Jabon Avocad&Banana Palmolive",
+  "measurementValue": 100,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64660d5659bba314a9e2076b"
+  },
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "description": "Alimento Para Gato Chunky",
+  "measurementValue": 500,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "6466254959bba314a92e53c1"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Limon Mandarina",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466257e59bba314a92ef47c"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Huevos Medianos Toledano Flat",
+  "measurementValue": 30,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6458fbf47ba5b004b84436e8"
+  },
+  "description": "Leche Deslactosada Estrella Azul",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 946,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "64590159a31ac2adb80aa46d"
+  },
+  "description": "Papel Higiénico Rosal 3p 275h",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "measurementValue": 4,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "64590205a31ac2adb80cadac"
+  },
+  "description": "Cebollina Cerro Punta",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "645904e0a31ac2adb816264d"
+  },
+  "description": "Puerro",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "645904fba31ac2adb81676e0"
+  },
+  "description": "Zanahoria Empacada",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c0fea31ac2adb887141c"
+  },
+  "description": "Platano Verde",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c176a31ac2adb888e97a"
+  },
+  "description": "Mondongo De Res",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c1a4a31ac2adb889961c"
+  },
+  "description": "Jengibre",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c1baa31ac2adb889e7f7"
+  },
+  "description": "Tocino",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c1d8a31ac2adb88a5804"
+  },
+  "description": "Chuleta Ahumada",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c2d7a31ac2adb88dee67"
+  },
+  "description": "Nugget Regular Melo",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c337a31ac2adb88f35e6"
+  },
+  "description": "Sopa Pollo Fideos Arroz Tio Chan",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 105,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c34ea31ac2adb88f8d8a"
+  },
+  "description": "Sopa Pollo La Dona",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c397a31ac2adb890c6cc"
+  },
+  "description": "Sopa Carne Fideos Arroz Tio Chan",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 105,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c477a31ac2adb893dec9"
+  },
+  "description": "Te Frutas Surtidos Duran 20un",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 30,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c4f3a31ac2adb8958aca"
+  },
+  "description": "Galleta Choco Sponch Smore Marinela",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 90,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c527a31ac2adb89646f4"
+  },
+  "description": "Harina Blanca Donarepa",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1000,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c9fda31ac2adb8a8f1c6"
+  },
+  "description": "Concha Shells La Parmigiana",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 454,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459ca43a31ac2adb8a9eee9"
+  },
+  "description": "Sopa Carne La Dona",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459cdfca31ac2adb8b781bc"
+  },
+  "description": "Melocoton Mitades Lata Glorias",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 425,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459ce29a31ac2adb8b81fb2"
+  },
+  "description": "Esponja Natural Scrub Ecofri Corazzi",
+  "__v": 2,
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "measurementValue": 2,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459cf1aa31ac2adb8bb6caa"
+  },
+  "description": "Colonia Mennen Baby Magic Niño",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629b22bc20429fa9ee288c"
+    },
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "measurementValue": 100,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459cfc9a31ac2adb8bde7e6"
+  },
+  "description": "Mayonesa Deli Cremosa McCormick",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 350,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d032a31ac2adb8bf5d10"
+  },
+  "description": "Pouch Pescado Blanco Salsa Felix",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d0b3a31ac2adb8c12b2f"
+  },
+  "description": "Jabon P/Manos Aval Frutos Rojos",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "measurementValue": 400,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d0d6a31ac2adb8c19f41"
+  },
+  "description": "Salsa Tomate Bolognesa Maggi",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 380,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d0e8a31ac2adb8c1dbc5"
+  },
+  "description": "Salsa Tomate Tres Queso Maggi",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 350,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d0f7a31ac2adb8c209fc"
+  },
+  "description": "Mafa Medianas Carinitos",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 50,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d155a31ac2adb8c352ee"
+  },
+  "description": "Gelatina Naranja Wacam Royal",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 80,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d19da31ac2adb8c47bfd"
+  },
+  "description": "Azucar Morena Doradita",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 2,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d1b4a31ac2adb8c4d7da"
+  },
+  "description": "Oregano La Dona",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 8,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d229a31ac2adb8c66bad"
+  },
+  "description": "6pk Dulce De Leche Alpina",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 50,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d40fa31ac2adb8cdba25"
+  },
+  "description": "Queso Parmesano Schreiber",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d44ca31ac2adb8ceb15d"
+  },
+  "description": "Manzana Verde Mediana",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 6,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "64617ea6a31ac2adb836fe02"
+  },
+  "description": "Jabon De Perro Super Perro",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461924aa31ac2adb878d59b"
+  },
+  "description": "Jamon Picnic Rebanado",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "646193eca31ac2adb87e955f"
+  },
+  "description": "Cereal Froot Loops Kelloggs",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 290,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619414a31ac2adb87f1844"
+  },
+  "description": "Cereal Zucaritas Kelloggs",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 390,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "646194d0a31ac2adb8816785"
+  },
+  "description": "Sopa Gallina Ajinomen",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 80,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619b86a31ac2adb897899d"
+  },
+  "description": "Macaronicheese Spirals Kraft",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 156,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619cada31ac2adb89b9b1d"
+  },
+  "description": "Pan De Mantequilla Bimbo",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 580,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619cc9a31ac2adb89c0865"
+  },
+  "description": "Gelatina Cereza Royal",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 80,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619e3ca31ac2adb8a0dc24"
+  },
+  "description": "Harina De Maiz Maseca",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 454,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619e57a31ac2adb8a149b3"
+  },
+  "description": "Maiz Entero Goya",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 8.75,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461a064a31ac2adb8a83356"
+  },
+  "description": "Sazonador Naturisimo Maggi",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 225,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461a0d3a31ac2adb8aa0c42"
+  },
+  "description": "C/Gato Jelly Pollo Y Pavo Whiskas",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461a138a31ac2adb8ab9b4d"
+  },
+  "description": "Galleta Maria La Parmigiana",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461a20ea31ac2adb8ae41fd"
+  },
+  "description": "Galleta Barquillo Chocolate Piazza",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 44,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461a247a31ac2adb8aef081"
+  },
+  "description": "Pan Blanco Bimbo",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 560,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461a285a31ac2adb8afaf3c"
+  },
+  "description": "S/B Esponja De Acero Inoxidable",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461b46fa31ac2adb8efba3a"
+  },
+  "description": "Tomate Perita Empacado",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6462572659bba314a92220c8"
+  },
+  "description": "Manzana Gala Chica",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 6,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6462577959bba314a923c465"
+  },
+  "description": "Papaya Tainu",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "646527db59bba314a91e9177"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Cereal Kellogs",
+  "measurementValue": 500,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6465285b59bba314a91ff4e5"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Tortilla Enrollada Original Takis",
+  "measurementValue": 90,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64658b6a59bba314a93df348"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Chicharron Natural Frito Lay",
+  "measurementValue": 95,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64658cc559bba314a941feba"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Harina Para Hojaldre Gold Mills",
+  "measurementValue": 350,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64658f6059bba314a94979a8"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Avena Hojuela La Dona",
+  "measurementValue": 320,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646593fd59bba314a9578f8b"
+  },
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "description": "C/ Gato Jelly Res Whiskas",
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646594c459bba314a959dce6"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Raid Accion Total 2pk",
+  "measurementValue": 400,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646625a659bba314a92f747a"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Fetuccine La Suprema",
+  "measurementValue": 454,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466269759bba314a93295d5"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Rayadola Suprema",
+  "measurementValue": 454,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466295759bba314a93b2fe1"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Milanesa De Res Premium",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466324659bba314a958f330"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Toallas Humed Huggies Pepin&Aloe",
+  "measurementValue": 80,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646632cb59bba314a95ab92a"
+  },
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "description": "Whiskas Pouch Pollo",
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6459c03ea31ac2adb8845963"
+  },
+  "description": "Tomate Perita",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c15ca31ac2adb8888bf1"
+  },
+  "description": "Papa",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c189a31ac2adb8892c27"
+  },
+  "description": "Pechuga De Pollo",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c1c6a31ac2adb88a17c9"
+  },
+  "description": "Rincon",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c24da31ac2adb88c1307"
+  },
+  "description": "Yogurt Guanabana Estrella Azul",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 180,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c410a31ac2adb8927780"
+  },
+  "description": "Mantequilla Blue River",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c437a31ac2adb892f86b"
+  },
+  "description": "Galleta Chocolate Oreo",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 432,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c44aa31ac2adb89337bf"
+  },
+  "description": "Aceite Girasol Yo Soy",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1.5,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d6ebc20429fa9ee2896"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c4d2a31ac2adb895191d"
+  },
+  "description": "Helado Napolitano Estrella Azul",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 900,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459c4e4a31ac2adb89556e8"
+  },
+  "description": "Cereal Dulce Leche Flips Bolsa",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 120,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459cd69a31ac2adb8b57e22"
+  },
+  "description": "Sazonador Liq Completo McCormick",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 148,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459cd8ca31ac2adb8b5fb89"
+  },
+  "description": "Salsa Ajo Cebolla McCormick",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 148,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459cda4a31ac2adb8b64d3d"
+  },
+  "description": "Pouch Pollo Salsa Felix",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459cf9fa31ac2adb8bd5322"
+  },
+  "description": "Leche Evaporada Suceda Spring Farm",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 354,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d003a31ac2adb8beaf1f"
+  },
+  "description": "Raid Accion Total",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "measurementValue": 400,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d04ba31ac2adb8bfbc77"
+  },
+  "description": "Pouches Gatitos Carne Salsa Felix",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d06aa31ac2adb8c02cd2"
+  },
+  "description": "Crema Dental Colgate Maxfresh 2pk",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "measurementValue": 90,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d12da31ac2adb8c2c3a1"
+  },
+  "description": "Mani C/Miel Granuts",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 40,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d207a31ac2adb8c5f556"
+  },
+  "description": "Bongurt Bonlac Manzana",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d216a31ac2adb8c62913"
+  },
+  "description": "Galleta Sponch Fresa Marinela",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 90,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d237a31ac2adb8c69fe1"
+  },
+  "description": "Atun Agua Blue Pacific",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 140,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d276a31ac2adb8c77771"
+  },
+  "description": "Boli Snackitos Ice Pops Hielitos",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 10,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d324a31ac2adb8c9b98a"
+  },
+  "description": "Antiflu-Des Jr Jarabe",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "measurementValue": 60,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d388a31ac2adb8cb4756"
+  },
+  "description": "Respuesto Divine Venus Gillette",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "measurementValue": 2,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6459d70aa31ac2adb8d8282f"
+  },
+  "description": "Apio",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "645f0eb1a31ac2adb8fb0cde"
+  },
+  "description": "Duraznos",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "645f0ec9a31ac2adb8fb63e2"
+  },
+  "description": "Yuca Parafinada",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "64617ebfa31ac2adb8374ce7"
+  },
+  "description": "Pan De Mantequilla Tasty Choice",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 580,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461897ba31ac2adb85c00ab"
+  },
+  "description": "Queso Crema Bonlac",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "646191ffa31ac2adb877d9e8"
+  },
+  "description": "Bolis De Gelatina Deyka",
+  "__v": 2,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 24,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461921ca31ac2adb8782f85"
+  },
+  "description": "Muslo De Pollo",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461937aa31ac2adb87d27f0"
+  },
+  "description": "Puerco Liso C-20.27",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461963da31ac2adb8867acd"
+  },
+  "description": "Pluma La Suprema",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 454,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619a80a31ac2adb894699e"
+  },
+  "description": "Harina Amarilla Donarepa",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1000,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619bd7a31ac2adb898938c"
+  },
+  "description": "Salsa Ajomix McCormick",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 148,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619cdca31ac2adb89c510d"
+  },
+  "description": "Gelatina De Uva Royal",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 80,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "64619da5a31ac2adb89ef3b7"
+  },
+  "description": "6pk Bebida Izada Shaka Laka",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461a1bfa31ac2adb8ad4bfc"
+  },
+  "description": "Toallit Humed Huggies Aceit Coco",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "measurementValue": 80,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461a1e8a31ac2adb8adce1f"
+  },
+  "description": "Lysol Wipes Citrus Flat Pack",
+  "__v": 0,
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "measurementValue": 72,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  }
+},
+{
+  "_id": {
+    "$oid": "6461a1fba31ac2adb8ae0756"
+  },
+  "description": "Platano Maduro Natuchips",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 130,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  }
+},
+{
+  "_id": {
+    "$oid": "6462548959bba314a918c24f"
+  },
+  "description": "Aji Pimenton Rojo",
+  "__v": 1,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  }
+},
+{
+  "_id": {
+    "$oid": "6464eee759bba314a976a48c"
+  },
+  "categories": [
+    {
+      "$oid": "6464ee96a7e3dffad6b9f32a"
+    }
+  ],
+  "description": "Mojito Mix Bliss Vidrio",
+  "measurementValue": 350,
+  "tax": 0.1,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "646526ab59bba314a91af5f3"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Bistec Picado",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6465292159bba314a922305f"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "8pk Snack Surtido",
+  "measurementValue": 206,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64658be859bba314a93f9815"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Galleta Queso Nabisco Ritz",
+  "measurementValue": 408,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64658c2859bba314a9404f56"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Galleta Integral Club Social",
+  "measurementValue": 24,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64658d1c59bba314a942ebb4"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Tortilla Rapiditas Bimbo",
+  "measurementValue": 300,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64658ef659bba314a9485e7f"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Canela Raja La Dona",
+  "measurementValue": 15,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6465908159bba314a94ccac1"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Te Frio Limon Lipton",
+  "measurementValue": 250,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6465944b59bba314a9587253"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Leche Evaporada Sucedanea Bella Holan",
+  "measurementValue": 405,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6465947459bba314a958e8df"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Pastillas Para Inodoro Tergo Pino",
+  "measurementValue": 2,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6465950959bba314a95b0120"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Palitos Grissini",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6465951a59bba314a95b4b38"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Salsa Inglesa McCormick",
+  "measurementValue": 148,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64660dec59bba314a9e3ba3c"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Mascarillas",
+  "measurementValue": 10,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64660fb759bba314a9e95bf9"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Apio Cerro Punta",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466113259bba314a9ee069d"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Cebollina",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646636db59bba314a967fcae"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "3pack Jabon Palmolive Naturals Tono Perf",
+  "measurementValue": 100,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64664ea259bba314a9b1a168"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Pasta Dental Kids Minnie Oral-B",
+  "measurementValue": 50,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646651a059bba314a9ba8a5b"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Desinfectante Vainilla Citrica Sip",
+  "measurementValue": 800,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646651b759bba314a9baca8f"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Pastelitos Chocolate Merendina",
+  "measurementValue": 396,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64664c5059bba314a9ab0f24"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Crema Peinar Optims Victc Palmolive",
+  "measurementValue": 150,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466500159bba314a9b5b560"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Pastilla Terror Limon",
+  "measurementValue": 50,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466530059bba314a9be9a4c"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Sweet Peas Monarch",
+  "measurementValue": 8,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646651f459bba314a9bb7328"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Tergo Limpia Inodoro Pino",
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646658f259bba314a9cf9f67"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "6pk Bebida Surtida Disfruta Nevada",
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64665f8559bba314a9e2b539"
+  },
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "description": "Arena Tidy Cats Purina",
+  "measurementValue": 4.5,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64665fdf59bba314a9e39ccf"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Cavendish Hash Brown Patties",
+  "measurementValue": 60,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466610b59bba314a9e70a52"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Filete De Cerdo Ahumado American Star",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64675e1559bba314a9e7a563"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Fresas Hidroponicas Cerro Punta",
+  "measurementValue": 175,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6467cbe059bba314a9351485"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Leche De Coco Tropidali",
+  "measurementValue": 454,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646a97ff59bba314a97043a5"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Maiz Don Camilo",
+  "measurementValue": 15,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646abad459bba314a9d29693"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Maicena Original Gold Mills",
+  "measurementValue": 75,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ac39b59bba314a9ecf3a7"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Kids Smoothie Fresa 2 En 1",
+  "measurementValue": 265,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ac51c59bba314a9f18f51"
+  },
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "description": "Arena Gatos 100%Natural Gattino",
+  "measurementValue": 4,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ad8fa59bba314a92d1f5f"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Nectar Del Monte Melocoton",
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae33459bba314a94d6451"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Manzana Mix Chica",
+  "measurementValue": 6,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646655813d39a3d80a2e50a1"
+  },
+  "description": "Mezcla Ajomix McCormick",
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "measurementValue": 36,
+  "tax": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466578e59bba314a9cbbb4f"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Nugget De Animalitos",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64675df259bba314a9e72051"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Espinaca En Mazo Bolsa",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6467879459bba314a96997ef"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Repollo",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6467cb7059bba314a933f0a4"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Bacon En Plancha American Star",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64696ae259bba314a9f8bc5a"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Mantequilla En Pote Blue River",
+  "measurementValue": 300,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64696be259bba314a9fbacf9"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Leche Condensada Sucedanea Marigold",
+  "measurementValue": 380,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aa50a59bba314a9948013"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Cereal Zucaritas Kelloggs",
+  "measurementValue": 800,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aaa7759bba314a9a423fa"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Gelatina Pura Gelhada",
+  "measurementValue": 32,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646abc0359bba314a9d5c299"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Vinagre Blanco Proluxsa",
+  "measurementValue": 473,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646abc2859bba314a9d636a9"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Paprika Keiko",
+  "measurementValue": 14,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ac48059bba314a9efe7e9"
+  },
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "description": "Mex. Whiskas Receta De Marisco 1.5g",
+  "measurementValue": 12,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ad93059bba314a92dd38a"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Mascarillas Para Ninos 3 Capas",
+  "measurementValue": 50,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae18c59bba314a9481943"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Macaronicheese La Suprema",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae1ce59bba314a948de68"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Gomitas Skittles Wild",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae20e59bba314a949b2eb"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Agua Value 507",
+  "measurementValue": 500,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae28e59bba314a94b794e"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Salchichas De Pavo Gwaltney",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d63bc20429fa9ee2894"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646657543d39a3d80a2e5100"
+  },
+  "description": "Ciruelas Negras",
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "measurementValue": 1,
+  "tax": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466580b59bba314a9cd44c0"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Party Mix Granuts",
+  "measurementValue": 45,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466586759bba314a9ce33e8"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Malanga Otoe En Hojuelas Soldanza",
+  "measurementValue": 45,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646658cf59bba314a9cf41b6"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Lavaplatos Limon Axion",
+  "measurementValue": 1000,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64665f4159bba314a9e20565"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Jabon Intimo Manzanilla Bacterion",
+  "measurementValue": 250,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64665f5859bba314a9e23f0e"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Mani Crema Cebolla Krunchitos",
+  "measurementValue": 120,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64675f1259bba314a9eaf07d"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Manzana Gala Chica 175-198",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6467ca3059bba314a9304cbf"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Pechuga De Pavo Campo Fino",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aa71e59bba314a99aa837"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "3pk Cereal Gran Dia",
+  "measurementValue": 670,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646adbce59bba314a93672cb"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Pam Butter Spray",
+  "measurementValue": 141,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae35f59bba314a94de347"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Mango",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae3fe59bba314a94fbe1d"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Esse Coco",
+  "measurementValue": 140,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466520e59bba314a9bbbd2a"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Galleta Original Club Social",
+  "measurementValue": 234,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466532e59bba314a9bf3423"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Te Frio Limon Hi C A",
+  "measurementValue": 300,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466534d59bba314a9bf8c91"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Sal Yodada Panasal",
+  "measurementValue": 454,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466547d59bba314a9c2abfe"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Bongurt Fresa Bonlac",
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646657cc59bba314a9cc8d53"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Sirope Original Gold Mills",
+  "measurementValue": 6,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646657dd59bba314a9ccc4ce"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Te Frio Inst Limon Zuko",
+  "measurementValue": 315,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466585059bba314a9cdf614"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Pan Extra Grande Bimbo",
+  "measurementValue": 720,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646658ab59bba314a9cee7a4"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Papas Mx Chz Crisps Pringles",
+  "measurementValue": 124,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6466600259bba314a9e3f6d2"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "3pk Popcorn Butter Lover Act II",
+  "measurementValue": 2.75,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6467c8fb59bba314a92cca31"
+  },
+  "categories": [
+    {
+      "$oid": "6467c885e05822785cdab53b"
+    }
+  ],
+  "description": "Bateria Maxell Alkalina AAA Blister",
+  "measurementValue": 2,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "6467c99159bba314a92e5713"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Nugget Saurio Melo",
+  "measurementValue": 12,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6467cbb659bba314a934a923"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Coco Rayado La Palmita",
+  "measurementValue": 453.5,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646a2b1459bba314a932450b"
+  },
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "description": "Whiskas Carne Original",
+  "measurementValue": 500,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aa8c959bba314a99f691f"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Azucar Refinada Santa Rosa",
+  "measurementValue": 400,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aa8f059bba314a99fc955"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Mayonesa Pura McCormick",
+  "measurementValue": 4000,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aaaaf59bba314a9a4b5c5"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Platanito Maduritos Turbana",
+  "measurementValue": 95,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ac1e659bba314a9e7e0b5"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Desod. Stay Fresh Rexona",
+  "measurementValue": 45,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ac23159bba314a9e8a97a"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Secret Outlast Inv Sld 12/2 Compl Cleanx",
+  "measurementValue": 6,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646adb2f59bba314a934223f"
+  },
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "description": "Whiskas Pollo Y Leche",
+  "measurementValue": 1.5,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646adc0659bba314a9371bfa"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Chicle Sandia Trident 5un",
+  "measurementValue": 8.5,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae10c59bba314a946a9b5"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Guineo",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae52959bba314a9539c09"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Colombina Millows",
+  "measurementValue": 145,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae50e59bba314a9534afa"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "S/B Esponja De Acero Inoxidable",
+  "measurementValue": 2,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae7bd59bba314a95be6f2"
+  },
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "description": "Master Cat Trocitos De Carne",
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae92b59bba314a9608c8b"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Pulpo Al Ajillo Orbe",
+  "measurementValue": 111,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aea1159bba314a963d627"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Sopa Fideos Camaron Rika",
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aead759bba314a965ff1f"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Habas Mix Miel Y Mostaza Granuts",
+  "measurementValue": 35,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aeba759bba314a9686e54"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Linaza Molida Sasson",
+  "measurementValue": 220,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aebf359bba314a9697124"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Cereal Cookie Crisp Nestle",
+  "measurementValue": 310,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646af00859bba314a9760fbc"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Barquillos Rellenos De Chocolate Y Avellana Pirucream",
+  "measurementValue": 24,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646af03b59bba314a976c1af"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Pan De Huevo Bolita",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646af14a59bba314a97a024f"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Deterg. En Polvo Maximo Poder",
+  "measurementValue": 2.5,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cacbe59bba314a9e5903d"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Ciruelas Rojas",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cc81759bba314a937bce4"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Mixto Popular",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cca2259bba314a93dbb0c"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Mezcla Para Pancake Waffle Mix Betty Crocker",
+  "measurementValue": 6.75,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ccb9559bba314a941c629"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Limpiador Inodoro Pino Tergo",
+  "measurementValue": 48,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ccbc559bba314a9425a29"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Platanito Natural Turbana",
+  "measurementValue": 95,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df43d59bba314a9d00474"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Toallitas Humedas Strawberry",
+  "measurementValue": 64,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae48059bba314a9514ff5"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Yogurt Natural Estrella Azul",
+  "measurementValue": 80,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae6d259bba314a958defe"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Cup Noodles Sopa Camaron",
+  "measurementValue": 64,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae7d059bba314a95c1a80"
+  },
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "description": "Master Cat Trocitos De Salmon",
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae8c159bba314a95ed8af"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Crema Dental Colgate Zero",
+  "measurementValue": 135,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aea5e59bba314a964ab6e"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    },
+    {
+      "$oid": "64629b22bc20429fa9ee288c"
+    }
+  ],
+  "description": "Colado De Melocoton Heinz",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aee3459bba314a970a934"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Te Verde Surtidos Duran 20u",
+  "measurementValue": 30,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646af12a59bba314a979a551"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Huevos Medianos Value507",
+  "measurementValue": 12,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cac6f59bba314a9e4c15d"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Kiwi",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cc9e759bba314a93cfa32"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Leche Chocorico Nevada",
+  "measurementValue": 236,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ccaef59bba314a93fff80"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Anis La Dona",
+  "measurementValue": 14,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ccb1759bba314a9406346"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Gomita Sharks Fini Marsh",
+  "measurementValue": 100,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ccb2a59bba314a94095f8"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Gomita Candy Crush Fini",
+  "measurementValue": 90,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ccb7b59bba314a94175a7"
+  },
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "description": "Whiskas Pouch Res",
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ccc6459bba314a944a233"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Papel Higiénico Único Ultra Rendimiento",
+  "measurementValue": 2,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ccc9659bba314a94530cd"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Crema Dental Kids Princess Oral-B",
+  "measurementValue": 37,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cd21459bba314a954ee72"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Salchicha De Pollo Con Queso Melo",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d63bc20429fa9ee2894"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cd3e459bba314a95a927b"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Cereal Hoopies Rey",
+  "measurementValue": 347,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cd60359bba314a9613800"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Palito Queso",
+  "measurementValue": 2,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cd6e759bba314a963a3fb"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Jamon Pechuga De Pollo Toledano",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae58359bba314a954bd0f"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "C O Noodles Chicken",
+  "measurementValue": 64,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae62659bba314a9569984"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Maiz Entero Tierno Goya",
+  "measurementValue": 15.25,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae89b59bba314a95e64c7"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Galleta Wafer Hersheys Cookies N Cream",
+  "measurementValue": 102,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aec9c59bba314a96b7cdd"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Jugo DelMonte Good Living Mango Naranja Piña",
+  "measurementValue": 960,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aedb059bba314a96eb6b1"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Baby Corn Roland Cut",
+  "measurementValue": 15,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aef8059bba314a97473f5"
+  },
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "description": "Arena Gatos Fresh Steps",
+  "measurementValue": 14,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d63bc20429fa9ee2894"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cc75259bba314a9352d9b"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Ajo Empacado",
+  "measurementValue": 454,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cc79159bba314a9361c11"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Pulpa Blanca ",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cc7d259bba314a9370222"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Filete De Pescado",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cc93c59bba314a93aeef0"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Sopa Camaron La Dona",
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cc98059bba314a93bab80"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Chocolate Tradicional Corona",
+  "measurementValue": 250,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ccb5759bba314a9410c40"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Canela Molido Frasco Keiko",
+  "measurementValue": 42,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cd44759bba314a95b9a4b"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Cereal Komplete Chocolate Kelloggs",
+  "measurementValue": 370,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae88559bba314a95e20ce"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Galleta Wafer Hersheys Chocolate",
+  "measurementValue": 102,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aea2b59bba314a9641e8f"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Gelatina Limon Royal",
+  "measurementValue": 80,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aee6959bba314a9715d31"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Papel Higiénico Único Ultra Rendimiento",
+  "measurementValue": 6,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aef2759bba314a9737770"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Lavaplatos Limon Axion",
+  "measurementValue": 850,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aef6659bba314a9742bdb"
+  },
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "description": "Whiskas Carne Original",
+  "measurementValue": 1.5,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646aef9759bba314a974b1d7"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Sopa De Letras La Parmesana",
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646af10759bba314a979464e"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Maicena Levapan",
+  "measurementValue": 80,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ba3bb59bba314a9b6431a"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Azucar Morena Doradita",
+  "measurementValue": 800,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cc76759bba314a9357c67"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Carne Molida De Primera",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cc7b959bba314a936af5c"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Alas De Pollo",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ccab859bba314a93f601b"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Sal Yodada Panasal",
+  "measurementValue": 2,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d63bc20429fa9ee2894"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ccad359bba314a93faea3"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Tinte Castano Claro Revlon 51",
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ccbec59bba314a942e3c3"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Chocoleche Estrella Azul Tt",
+  "measurementValue": 473,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cd34859bba314a958ca72"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Bongurt Bonlac Natural",
+  "measurementValue": 800,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df3e652416119bc43f4f5"
+  },
+  "description": "Queso Muenster Viejo Cantaro",
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "measurementValue": 1,
+  "tax": 0,
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df6e559bba314a9d85c23"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Mix Garbanzos & Quinoa Manitoba",
+  "measurementValue": 150,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df47659bba314a9d0a8b9"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Te Negro Cafe Y Chocolate Hindu",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df6fa59bba314a9d893fa"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Confituras Colores Cocoa Dulce",
+  "measurementValue": 100,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df85059bba314a9dc9f33"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Gel Antibacterial 2x2 Lucky",
+  "measurementValue": 118,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f4d3359bba314a929493c"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Ketchup Heinz",
+  "measurementValue": 192,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f4dbe59bba314a92b0828"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Salsa Honey Mustard McCormick",
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f4e0559bba314a92bcdf0"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Sopa Ramen Maruchan",
+  "measurementValue": 85,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f4e8c59bba314a92d51cc"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Ajo Molido McCormick",
+  "measurementValue": 33,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f52af59bba314a93a3a73"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Caracol La Suprema",
+  "measurementValue": 454,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f534259bba314a93c2005"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Mayonesa McCormick",
+  "measurementValue": 400,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f567959bba314a94676c7"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Quita Grasa Cocina Mr Musculo",
+  "measurementValue": 500,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f5c5159bba314a95994f4"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Pudin De Vainilla Instantaneo Gefen",
+  "measurementValue": 99,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f641b59bba314a97163a0"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Queso Muenster Hill Valley",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f6ca559bba314a98c5b4d"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Jamon Pechuga De Pollo A Las Finas Hierbas Toledano",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df76c59bba314a9d9da49"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Tornillo La Parmigiana",
+  "measurementValue": 454,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f3bab59bba314a9f171d7"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Manzana Verde",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f3d6c59bba314a9f79266"
+  },
+  "categories": [
+    {
+      "$oid": "64629b22bc20429fa9ee288c"
+    }
+  ],
+  "description": "Pediasure Plus Chocolate",
+  "measurementValue": 400,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f4a4a59bba314a91f927c"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Aceite Girasol Ideal",
+  "measurementValue": 450,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f4b8b59bba314a923dea8"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Takis Original",
+  "measurementValue": 56,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f4f4b59bba314a92fd2b6"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "3pk Atun Agua Blue Pacific",
+  "measurementValue": 190,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f55dd59bba314a94431be"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Pastilla Para Inodoro Lavanda Sani Odor",
+  "measurementValue": 60,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f575759bba314a948f1e0"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Carne Molida Super Especial",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f5ea059bba314a9606cbd"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Cuchara Desechable Value507",
+  "measurementValue": 25,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f603e59bba314a9658e9c"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Obleas La Original",
+  "measurementValue": 24,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f653f59bba314a975132a"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Nor-Cetin Forte",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f659c59bba314a9761d25"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Vitaminas Masticables Mini Cebion",
+  "measurementValue": 48,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f65ef59bba314a97710af"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Pastilla Drops Cereza Vicks",
+  "measurementValue": 5,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f660259bba314a977449a"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Pastilla Drops Menthol Vicks",
+  "measurementValue": 5,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df45c59bba314a9d05cae"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Toallitas Humedas Watermelon",
+  "measurementValue": 64,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df68959bba314a9d74e1c"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Hand Sanitizer 70%",
+  "measurementValue": 60,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df5cb59bba314a9d4dc84"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "6pk Nectar Frutiva",
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df61059bba314a9d5d78a"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Panos Humedos Familia Antibacterial",
+  "measurementValue": 10,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df64559bba314a9d684af"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "6pk Nectares Surtidos Nevada",
+  "measurementValue": 180,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df7da59bba314a9db110d"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Tenedor Desechable Centinel Oxo Pq",
+  "measurementValue": 24,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df7fa59bba314a9db77fd"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Galleta Wafer Vainilla Molsa",
+  "measurementValue": 20,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f3f5359bba314a9fd7cde"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Cereal Dulciaritos Gran Dia",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f3f8d59bba314a9fe2939"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "12pk Nectar Del Valle",
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f473659bba314a915e36a"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Chocolate En Polvo Nucita",
+  "measurementValue": 220,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f4b6659bba314a92364d7"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Doritos Nacho Cheese",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f53d959bba314a93e14de"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Frijol Negro La Costena",
+  "measurementValue": 560,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f55fa59bba314a9449e2a"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Pastilla Para Inodoro Bouquet Sani Odor",
+  "measurementValue": 60,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f59b359bba314a95174a7"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Tomate Empacado",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f5d2f59bba314a95c3ce7"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Bebida Lactea La N",
+  "measurementValue": 946,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f61de59bba314a96a9cc0"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Coca Cola Lata",
+  "measurementValue": 354,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f643c59bba314a971da7e"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Jamon First Choice",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f657b59bba314a975c02b"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Vitaminas Masticables Sabor Naranja Cebion",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f65bd59bba314a9767ecb"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Aleve Extra Fuerte",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df74259bba314a9d95ac3"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Mortadela De Res Tubo American Star",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df79e59bba314a9da6b47"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Nectar Mango Del Monte",
+  "measurementValue": 946,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646df99e59bba314a9e08f7e"
+  },
+  "categories": [
+    {
+      "$oid": "646dff3752416119bc43f6e3"
+    }
+  ],
+  "description": "Velas Para Cumpleaños",
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646dfeb359bba314a9f0ce03"
+  },
+  "categories": [
+    {
+      "$oid": "646dff3752416119bc43f6e3"
+    }
+  ],
+  "description": "Globos Varios",
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f3c2959bba314a9f32a98"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Salchichas De Pavo Gwaltney",
+  "measurementValue": 3,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d63bc20429fa9ee2894"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f3cdd59bba314a9f5cd6d"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Jugo Del Valle Fresh",
+  "measurementValue": 250,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f3e0159bba314a9f958cf"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Pan De Hot Dog Premium Ideal",
+  "measurementValue": 8,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f4f0359bba314a92edc8f"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "3pack Jabon Avena Y Azucar Palmolive",
+  "measurementValue": 100,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f52d059bba314a93aa970"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Tornillo La Suprema",
+  "measurementValue": 454,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f543359bba314a93f41ce"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Maiz Dulce Flor De California",
+  "measurementValue": 432,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f551359bba314a941cc44"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Crema Dental Colgate Triple Accion",
+  "measurementValue": 75,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f56c059bba314a9473f0a"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Pan De Mantequilla Panama Bakery",
+  "measurementValue": 670,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f571f59bba314a94855ce"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Queso Gouda Vonk",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f601259bba314a964fabb"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Queso Parmesano Zanetti",
+  "measurementValue": 50,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f607359bba314a96631f4"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Bacon Ahumado American Star",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f620959bba314a96b3262"
+  },
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "description": "Whiskas Mariscos",
+  "measurementValue": 1.5,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f674359bba314a97bfe9b"
+  },
+  "categories": [
+    {
+      "$oid": "64629afdbc20429fa9ee288a"
+    }
+  ],
+  "description": "Arena P/Gato Pet Spa",
+  "measurementValue": 4.5,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f6e6759bba314a991e607"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Sertal",
+  "measurementValue": 125,
+  "tax": 0,
+  "unit": {
+    "$oid": "647f6e04ad8f798c32ef4474"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f6f4b59bba314a9946f98"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "6pk Nectar Del Monte",
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f712c59bba314a999f888"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Mezcla Para Pancake Rey",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d63bc20429fa9ee2894"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6487b70559bba314a90a8307"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Burritos De Pollo Delicias Mexicanas",
+  "measurementValue": 10,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64943644ff20863ee5ba9ecb"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Bongurt Bonlac Fresa",
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "649462aeff20863ee55159c9"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Cereal Komplete Almendras Kellogs",
+  "measurementValue": 390,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "649464c3ff20863ee5581f26"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Spaguetti La Suprema",
+  "measurementValue": 454,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64946822ff20863ee563f710"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Pasas Con Chocolate Pro",
+  "measurementValue": 70,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "649468fdff20863ee566a3e1"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Salsa China McCormick",
+  "measurementValue": 148,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64947562ff20863ee5916266"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Aceite Girasol Value507",
+  "measurementValue": 1.5,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d6ebc20429fa9ee2896"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495be0e4e0109aa72e8fff2"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Cepillo De Limpieza Multiplastic",
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495be9c4e0109aa72eab269"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Desodorante Deopies Xtrem Spray",
+  "measurementValue": 260,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495c41d4e0109aa72fcebc4"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Pan Integral Panama Bakery",
+  "measurementValue": 650,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495ca954e0109aa721482d7"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Cepillo Corporal",
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f70a159bba314a998689e"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Arequipe Alpina",
+  "measurementValue": 250,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f716159bba314a99a874d"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Nuggets Toledano",
+  "measurementValue": 170,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6487c42459bba314a933b4df"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Dulce De Coco Copelia",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64946440ff20863ee55672b2"
+  },
+  "categories": [],
+  "description": "M Criollo Jumbo",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "649466fdff20863ee55fb9ad"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Sopa Costilla De Res Ajinomen",
+  "measurementValue": 80,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64947826ff20863ee59afae6"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Papel Aluminio Diamond Foil",
+  "measurementValue": 25,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "646abcfbca341cf379185233"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "649478f7ff20863ee59f891b"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Kit De Shampoo Y Acondicionador Coconut Oil Activeé",
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495c6054e0109aa7203711c"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Kinder Sorpresa NiñA",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495c69b4e0109aa72056897"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Pimenton Mini",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495c7424e0109aa7207ce26"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Habichuelas",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495c7a84e0109aa72091a72"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Bologna De Pollo Melo",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495c8574e0109aa720b23a7"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Jamon Ahumado American Star",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495cab04e0109aa72152c93"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Esponja De BañO",
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495cfb94e0109aa7228af47"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Margarina No Colesterol Pabo",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495cffd4e0109aa7229f852"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Salchicha De Pollo Gwaltney",
+  "measurementValue": 3,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d63bc20429fa9ee2894"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495d0504e0109aa722b9f6b"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Crema De Leche President",
+  "measurementValue": 500,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495d0b44e0109aa722d843d"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Galleta María Gullón",
+  "measurementValue": 200,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64a97feb4e0109aa72d5e5b4"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Jarabe Virogrip Gripe Y Tos",
+  "measurementValue": 120,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64a981134e0109aa72d9c424"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Gomitas De Vitamina C Fini",
+  "measurementValue": 18,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f6e3d59bba314a9915a75"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Naproxemo",
+  "measurementValue": 500,
+  "tax": 0,
+  "unit": {
+    "$oid": "647f6e04ad8f798c32ef4474"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f6e8059bba314a9923330"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Espasmo-Digestomen",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f721059bba314a99c5fe5"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Arroz Especial Arrossisimo",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f900559bba314a9f3bbd8"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Melatonina Liquida Life Extension",
+  "measurementValue": 59,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6487b5f359bba314a9072eb0"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Desodorante Adidas",
+  "measurementValue": 200,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6487b75759bba314a90b8bc9"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Nuggets Muslinuggets Toledano",
+  "measurementValue": 340,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6487babc59bba314a9160ae7"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Galleta Mantequilla Muuu Colombina",
+  "measurementValue": 12,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6487bd5859bba314a91df998"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Queso Gouda Superior",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64945e8cff20863ee5433eca"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Yogurt De Vainilla Yocrunch",
+  "measurementValue": 113,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64946795ff20863ee5620f4f"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Habas Mix Miel Y Mostaza Granuts",
+  "measurementValue": 150,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64946ad0ff20863ee56cdbb8"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Maiz Entero S&W",
+  "measurementValue": 15.25,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "649475f5ff20863ee5939218"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Azucar Morena La Estrella",
+  "measurementValue": 5,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d63bc20429fa9ee2894"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495bcfd4e0109aa72e5533e"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Crema De Peinar Coconut Oil Activeé",
+  "measurementValue": 266,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495c5f14e0109aa72033301"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Kinder Sorpresa NiñO",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495c6774e0109aa7204e7fd"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Lechuga Romana",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495cae24e0109aa7215ef9a"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Tabla De Picar Plastica",
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495cd684e0109aa721eba52"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Toallitas Desinfectantes Limon Value507",
+  "measurementValue": 80,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f6fae59bba314a99587cc"
+  },
+  "categories": [
+    {
+      "$oid": "6467c885e05822785cdab53b"
+    }
+  ],
+  "description": "Bateria Duracel 2032",
+  "measurementValue": 2,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f71e459bba314a99bd923"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Gelatina Fresa Royal",
+  "measurementValue": 80,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64942d87ff20863ee59cff17"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Ñame Diamante",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6494610bff20863ee54bb309"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Tortilla De Maiz Melo",
+  "measurementValue": 1,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6494626fff20863ee5505a7e"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Cereal Marshmallow Chocostars Honey Monster Quaker",
+  "measurementValue": 690,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6494792dff20863ee5a085f9"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Papel Higiénico Único Ultra Rendimiento",
+  "measurementValue": 4,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495bda54e0109aa72e79157"
+  },
+  "categories": [
+    {
+      "$oid": "64629b41bc20429fa9ee288e"
+    }
+  ],
+  "description": "Blanqueador Blancox Lima Limon",
+  "measurementValue": 1,
+  "tax": 0.07,
+  "unit": {
+    "$oid": "64629d6ebc20429fa9ee2896"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495c3cd4e0109aa72fbf7a4"
+  },
+  "categories": [
+    {
+      "$oid": "64629a4cbc20429fa9ee2886"
+    }
+  ],
+  "description": "Pan Blanco Panama Bakery",
+  "measurementValue": 670,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64a97fa04e0109aa72d4e0de"
+  },
+  "categories": [
+    {
+      "$oid": "64629a83bc20429fa9ee2888"
+    }
+  ],
+  "description": "Panadol Para Nino",
+  "measurementValue": 20,
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6924a07a7c72a12aaf9f130d"
+  },
+  "description": "Suavitel Fresca Primavera",
+  "tax": 0,
+  "unit": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "measurementValue": 800,
+  "categories": [],
+  "__v": 0
+}]

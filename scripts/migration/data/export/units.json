@@ -1,0 +1,90 @@
+[{
+  "_id": {
+    "$oid": "64629d32bc20429fa9ee2890"
+  },
+  "name": "Units",
+  "abbreviation": "u",
+  "type": "count",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64629d57bc20429fa9ee2892"
+  },
+  "name": "Kilograms",
+  "abbreviation": "kg",
+  "type": "weight",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64629d63bc20429fa9ee2894"
+  },
+  "name": "Pounds",
+  "abbreviation": "lb",
+  "type": "weight",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f6e04ad8f798c32ef4474"
+  },
+  "name": "Milligrams",
+  "abbreviation": "mg",
+  "type": "weight",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64629d6ebc20429fa9ee2896"
+  },
+  "name": "Liters",
+  "abbreviation": "L",
+  "type": "volume",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64629d91bc20429fa9ee289a"
+  },
+  "name": "Grams",
+  "abbreviation": "g",
+  "type": "weight",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646abcfbca341cf379185233"
+  },
+  "name": "Squared Inch",
+  "abbreviation": "sq. in",
+  "type": "area",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ad289ca341cf3791853e5"
+  },
+  "name": "Squared Feet",
+  "abbreviation": "sq. ft",
+  "type": "area",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64629d86bc20429fa9ee2898"
+  },
+  "name": "Milliliters",
+  "abbreviation": "mL",
+  "type": "volume",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64629da9bc20429fa9ee289c"
+  },
+  "name": "Ounces",
+  "abbreviation": "oz",
+  "type": "volume",
+  "__v": 0
+}]

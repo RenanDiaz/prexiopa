@@ -1,0 +1,540 @@
+[{
+  "_id": {
+    "$oid": "64590205a31ac2adb80cacce"
+  },
+  "purchaseDate": {
+    "$date": "2023-02-18T19:50:00.000Z"
+  },
+  "store": {
+    "$oid": "64587471a31ac2adb8188176"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646adc8459bba314a93883a4"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-13T16:33:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646adfab59bba314a9422b53"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-03T02:25:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ba3ba59bba314a9b64151"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-22T17:09:00.000Z"
+  },
+  "store": {
+    "$oid": "646ba3ba59bba314a9b64097"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f5f0359bba314a961741d"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-29T01:14:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f653e59bba314a9751119"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-28T12:24:00.000Z"
+  },
+  "store": {
+    "$oid": "647f653e59bba314a9750f8f"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f6fad59bba314a99585a1"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-24T02:14:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6492f24866aab9c3bc4d8005"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "purchaseDate": {
+    "$date": "2023-06-21T14:56:00.000Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64a97eb84e0109aa72d152a1"
+  },
+  "purchaseDate": {
+    "$date": "2023-06-28T20:00:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6459d324a31ac2adb8c9b7e5"
+  },
+  "purchaseDate": {
+    "$date": "2023-02-18T20:00:00.000Z"
+  },
+  "store": {
+    "$oid": "64587471a31ac2adb8188176"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6459d360a31ac2adb8ca93ae"
+  },
+  "purchaseDate": {
+    "$date": "2023-02-18T20:12:00.000Z"
+  },
+  "store": {
+    "$oid": "64587471a31ac2adb8188176"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64675cc3e05822785cdab39b"
+  },
+  "store": {
+    "$oid": "64587471a31ac2adb8188176"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-04T00:36:00.000Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ad8f959bba314a92d1d90"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-03T03:22:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ade4b59bba314a93df086"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-16T12:46:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646cd06859bba314a9500687"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-23T14:39:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f3a4559bba314a9ed7aa3"
+  },
+  "purchaseDate": {
+    "$date": "2023-06-06T03:24:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f5c5059bba314a9599271"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-29T18:05:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f5f4459bba314a9624c2a"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-31T02:31:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f61a959bba314a969e12f"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-27T02:49:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f6e3d59bba314a9915800"
+  },
+  "purchaseDate": {
+    "$date": "2023-04-25T00:08:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f706b59bba314a997d330"
+  },
+  "purchaseDate": {
+    "$date": "2023-06-02T21:21:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6458fcfaa31ac2adb8fb6dbd"
+  },
+  "purchaseDate": {
+    "$date": "2023-02-17T15:07:00.000Z"
+  },
+  "store": {
+    "$oid": "64587471a31ac2adb8188176"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6459d3d2a31ac2adb8cca21c"
+  },
+  "purchaseDate": {
+    "$date": "2023-02-22T21:19:00.000Z"
+  },
+  "store": {
+    "$oid": "64587471a31ac2adb8188176"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6461751f9a87e5211d0db5f5"
+  },
+  "store": {
+    "$oid": "64587471a31ac2adb8188176"
+  },
+  "purchaseDate": {
+    "$date": "2023-03-13T01:54:00.000Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6461b46fa31ac2adb8efb989"
+  },
+  "purchaseDate": {
+    "$date": "2023-04-02T23:31:00.000Z"
+  },
+  "store": {
+    "$oid": "64587471a31ac2adb8188176"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64660d234afb8fb4043d0f4e"
+  },
+  "store": {
+    "$oid": "64587471a31ac2adb8188176"
+  },
+  "purchaseDate": {
+    "$date": "2023-04-19T01:54:00.000Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ad9e959bba314a92ff620"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-13T13:45:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646af0e259bba314a978dcad"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-20T16:55:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f674259bba314a97bfbf2"
+  },
+  "purchaseDate": {
+    "$date": "2023-06-04T16:03:00.000Z"
+  },
+  "store": {
+    "$oid": "647f674259bba314a97bfa8c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f6bfd59bba314a98a8db7"
+  },
+  "purchaseDate": {
+    "$date": "2023-06-04T01:25:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f701e59bba314a996f96a"
+  },
+  "purchaseDate": {
+    "$date": "2023-04-25T00:24:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f900459bba314a9f3b9ed"
+  },
+  "purchaseDate": {
+    "$date": "2023-06-06T19:15:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6487b5a6ecc8dfd75159a4e8"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "purchaseDate": {
+    "$date": "2023-06-13T01:03:00.000Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495ca754e0109aa7213cb60"
+  },
+  "purchaseDate": {
+    "$date": "2023-06-21T14:46:00.000Z"
+  },
+  "store": {
+    "$oid": "647f674259bba314a97bfa8c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495cf484e0109aa7226d1b4"
+  },
+  "purchaseDate": {
+    "$date": "2023-06-18T01:57:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64a97f9f4e0109aa72d4dec6"
+  },
+  "purchaseDate": {
+    "$date": "2023-06-29T03:00:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6459d76fa31ac2adb8d994be"
+  },
+  "purchaseDate": {
+    "$date": "2023-02-24T20:59:00.000Z"
+  },
+  "store": {
+    "$oid": "64587471a31ac2adb8188176"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "645f0dc6a31ac2adb8f7b6a9"
+  },
+  "purchaseDate": {
+    "$date": "2023-03-03T02:48:00.000Z"
+  },
+  "store": {
+    "$oid": "64587471a31ac2adb8188176"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646186cda31ac2adb8529ad2"
+  },
+  "purchaseDate": {
+    "$date": "2023-03-21T01:52:00.000Z"
+  },
+  "store": {
+    "$oid": "64587471a31ac2adb8188176"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ae05359bba314a9449084"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-17T03:23:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f649f59bba314a97335fb"
+  },
+  "purchaseDate": {
+    "$date": "2023-05-25T12:28:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f66bc59bba314a97a2705"
+  },
+  "purchaseDate": {
+    "$date": "2023-06-04T16:06:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6495cd684e0109aa721eb851"
+  },
+  "purchaseDate": {
+    "$date": "2023-06-21T19:36:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6924a0797c72a12aaf9f130c"
+  },
+  "purchaseDate": {
+    "$date": "2023-06-28T22:00:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6924a1507c72a12aaf9f1314"
+  },
+  "purchaseDate": {
+    "$date": "2025-11-24T13:17:00.000Z"
+  },
+  "store": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "__v": 0
+}]

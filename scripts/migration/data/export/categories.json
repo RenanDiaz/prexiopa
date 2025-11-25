@@ -1,0 +1,56 @@
+[{
+  "_id": {
+    "$oid": "646dff3752416119bc43f6e3"
+  },
+  "name": "Toys and Games",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64629a83bc20429fa9ee2888"
+  },
+  "name": "Health and beauty",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64629b22bc20429fa9ee288c"
+  },
+  "name": "Baby and kids",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6464ee96a7e3dffad6b9f32a"
+  },
+  "name": "Alcohol",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6467c885e05822785cdab53b"
+  },
+  "name": "Electronics",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64629a4cbc20429fa9ee2886"
+  },
+  "name": "Food and groceries",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64629afdbc20429fa9ee288a"
+  },
+  "name": "Pet supplies",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64629b41bc20429fa9ee288e"
+  },
+  "name": "Home and kitchen",
+  "__v": 0
+}]

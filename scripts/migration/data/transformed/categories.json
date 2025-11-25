@@ -1,0 +1,74 @@
+[
+  {
+    "id": "26597c68-b8d3-4fb6-a94b-e879c58a4fe0",
+    "name": "Toys and Games",
+    "parent_id": null,
+    "icon": null,
+    "is_active": true,
+    "created_at": "2025-11-25T06:30:28.414Z",
+    "_mongo_id": "646dff3752416119bc43f6e3"
+  },
+  {
+    "id": "ee81ee9f-1a39-4f92-926d-5e41791b7a4e",
+    "name": "Health and beauty",
+    "parent_id": null,
+    "icon": null,
+    "is_active": true,
+    "created_at": "2025-11-25T06:30:28.417Z",
+    "_mongo_id": "64629a83bc20429fa9ee2888"
+  },
+  {
+    "id": "1e4bbdf6-4471-416f-80a4-5aef8ffc53cf",
+    "name": "Baby and kids",
+    "parent_id": null,
+    "icon": null,
+    "is_active": true,
+    "created_at": "2025-11-25T06:30:28.417Z",
+    "_mongo_id": "64629b22bc20429fa9ee288c"
+  },
+  {
+    "id": "ac82015e-3158-4698-b189-a0606e4938db",
+    "name": "Alcohol",
+    "parent_id": null,
+    "icon": null,
+    "is_active": true,
+    "created_at": "2025-11-25T06:30:28.417Z",
+    "_mongo_id": "6464ee96a7e3dffad6b9f32a"
+  },
+  {
+    "id": "95c5cb5d-2993-408a-95c7-c2ea43d2c2ce",
+    "name": "Electronics",
+    "parent_id": null,
+    "icon": null,
+    "is_active": true,
+    "created_at": "2025-11-25T06:30:28.417Z",
+    "_mongo_id": "6467c885e05822785cdab53b"
+  },
+  {
+    "id": "4b6be6e9-5a35-4533-802a-9ef1eff97590",
+    "name": "Food and groceries",
+    "parent_id": null,
+    "icon": null,
+    "is_active": true,
+    "created_at": "2025-11-25T06:30:28.417Z",
+    "_mongo_id": "64629a4cbc20429fa9ee2886"
+  },
+  {
+    "id": "8009b85c-46e7-40a5-b43c-5babae6f7785",
+    "name": "Pet supplies",
+    "parent_id": null,
+    "icon": null,
+    "is_active": true,
+    "created_at": "2025-11-25T06:30:28.417Z",
+    "_mongo_id": "64629afdbc20429fa9ee288a"
+  },
+  {
+    "id": "1025b66c-be7f-46b4-8885-e08a718ea8cc",
+    "name": "Home and kitchen",
+    "parent_id": null,
+    "icon": null,
+    "is_active": true,
+    "created_at": "2025-11-25T06:30:28.417Z",
+    "_mongo_id": "64629b41bc20429fa9ee288e"
+  }
+]

@@ -1,0 +1,35 @@
+[{
+  "_id": {
+    "$oid": "64587471a31ac2adb8188176"
+  },
+  "name": "El Fuerte Federal Mall",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ba3ba59bba314a9b64097"
+  },
+  "name": "M/S Meygui",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f653e59bba314a9750f8f"
+  },
+  "name": "Farmacia El Terronal",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "646ad8f959bba314a92d1c6c"
+  },
+  "name": "El Rey Plaza Terronal",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "647f674259bba314a97bfa8c"
+  },
+  "name": "Doit Center El Terronal",
+  "__v": 0
+}]
