@@ -9,8 +9,9 @@
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
-import { createClient } from "@supabase/supabase-js";
-import * as dotenv from "dotenv";
+import pkg from "@supabase/supabase-js";
+const { createClient } = pkg;
+import dotenv from "dotenv";
 
 // ES Module compatibility for __dirname
 const __filename = fileURLToPath(import.meta.url);
