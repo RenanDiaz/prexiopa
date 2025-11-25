@@ -18,7 +18,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { FiExternalLink, FiAlertCircle } from 'react-icons/fi';
+import { FiExternalLink, FiAlertCircle, FiTag, FiPercent } from 'react-icons/fi';
 import type { Price } from '@/types/product';
 import { EmptyState } from '@/components/common/EmptyState';
 import {
@@ -34,6 +34,9 @@ import {
   PriceAmount,
   BestPriceBadge,
   OutOfStockBadge,
+  PromotionBadge,
+  DealLabel,
+  EffectivePrice,
   ViewOfferButton,
 } from './PriceComparison.styles';
 
@@ -99,13 +102,47 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
   }, [prices]);
 
   /**
-   * Find the lowest price (only among in-stock items)
+   * Get the effective unit price for a price entry
+   */
+  const getEffectivePrice = (price: Price): number => {
+    if (price.quantity && price.quantity > 1 && price.total_price) {
+      return price.total_price / price.quantity;
+    }
+    return price.price;
+  };
+
+  /**
+   * Find the lowest effective price (only among in-stock items)
    */
   const lowestPrice = useMemo(() => {
     const inStockPrices = sortedPrices.filter(p => p.in_stock);
     if (inStockPrices.length === 0) return null;
-    return Math.min(...inStockPrices.map(p => p.price));
+    return Math.min(...inStockPrices.map(p => getEffectivePrice(p)));
   }, [sortedPrices]);
+
+  /**
+   * Get deal label for display
+   */
+  const getDealLabel = (price: Price): string | null => {
+    if (price.notes) return price.notes;
+    if (price.quantity && price.quantity > 1) {
+      return `${price.quantity} por $${(price.total_price || price.price * price.quantity).toFixed(2)}`;
+    }
+    if (price.discount && price.discount > 0) {
+      return `$${price.discount.toFixed(2)} de descuento`;
+    }
+    return null;
+  };
+
+  /**
+   * Calculate savings percentage
+   */
+  const getSavingsPercentage = (price: Price): number => {
+    if (!price.discount || !price.quantity) return 0;
+    const regularTotal = price.price * price.quantity;
+    if (regularTotal <= 0) return 0;
+    return Math.round((price.discount / regularTotal) * 100);
+  };
 
   /**
    * Format price for display
@@ -148,14 +185,20 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
       {/* Price List */}
       <PriceList>
         {sortedPrices.map((price) => {
-          const isLowestPrice = price.in_stock && price.price === lowestPrice;
+          const effectivePrice = getEffectivePrice(price);
+          const isLowestPrice = price.in_stock && effectivePrice === lowestPrice;
           const storeName = price.stores?.name || 'Tienda desconocida';
           const storeHasWebsite = !!price.stores?.website;
+          const dealLabel = getDealLabel(price);
+          const savingsPercentage = getSavingsPercentage(price);
+          const isPromotion = price.is_promotion || !!dealLabel;
+          const showEffectivePrice = price.quantity && price.quantity > 1;
 
           return (
             <PriceItem
               key={price.id}
               $isOutOfStock={!price.in_stock}
+              $isPromotion={isPromotion && price.in_stock}
               data-testid={`price-item-${price.id}`}
             >
               {/* Store Logo */}
@@ -190,7 +233,7 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
 
                 <PriceRow>
                   <PriceAmount $isLowest={isLowestPrice}>
-                    ${formatPrice(price.price)}
+                    ${formatPrice(showEffectivePrice ? effectivePrice : price.price)}
                   </PriceAmount>
 
                   {/* Best Price Badge */}
@@ -200,6 +243,14 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
                     </BestPriceBadge>
                   )}
 
+                  {/* Promotion Badge */}
+                  {isPromotion && price.in_stock && !isLowestPrice && (
+                    <PromotionBadge>
+                      <FiTag size={12} />
+                      Oferta
+                    </PromotionBadge>
+                  )}
+
                   {/* Out of Stock Badge */}
                   {!price.in_stock && (
                     <OutOfStockBadge>
@@ -207,6 +258,26 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
                     </OutOfStockBadge>
                   )}
                 </PriceRow>
+
+                {/* Deal Label */}
+                {dealLabel && price.in_stock && (
+                  <DealLabel>
+                    <FiTag size={14} />
+                    {dealLabel}
+                    {savingsPercentage > 0 && (
+                      <span style={{ marginLeft: '8px', display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                        <FiPercent size={12} /> {savingsPercentage}% ahorro
+                      </span>
+                    )}
+                  </DealLabel>
+                )}
+
+                {/* Effective Price for multi-quantity deals */}
+                {showEffectivePrice && price.in_stock && (
+                  <EffectivePrice>
+                    Precio unitario: ${formatPrice(price.price)} × {price.quantity} = ${formatPrice(price.total_price || price.price * price.quantity)}
+                  </EffectivePrice>
+                )}
               </PriceInfo>
 
               {/* View Offer Button */}

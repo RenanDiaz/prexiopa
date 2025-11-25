@@ -36,9 +36,9 @@ export interface Price {
   productId: string;
   /** ID de la tienda */
   storeId: string;
-  /** Precio regular */
+  /** Precio regular (precio unitario) */
   price: number;
-  /** Precio con descuento (si aplica) */
+  /** Precio con descuento (si aplica) - deprecated, use discount instead */
   discountPrice?: number;
   /** Moneda */
   currency: Currency;
@@ -54,6 +54,128 @@ export interface Price {
   source?: string;
   /** Notas adicionales */
   notes?: string;
+}
+
+/**
+ * Registro de precio extendido con soporte para deals y promociones
+ * (Fase 5.2 - Enhanced Price Tracking)
+ */
+export interface PriceEntry {
+  /** ID único del registro de precio */
+  id: string;
+  /** ID del producto */
+  product_id: string;
+  /** ID de la tienda */
+  store_id: string;
+  /** Precio unitario */
+  price: number;
+  /** Cantidad (para deals como "2 por $5") */
+  quantity: number;
+  /** Descuento aplicado (ej: $1 de descuento) */
+  discount: number;
+  /** Precio total pagado (price * quantity - discount) */
+  total_price: number;
+  /** ¿Es precio promocional? */
+  is_promotion: boolean;
+  /** Notas sobre el deal (ej: "2x1", "3 por $10") */
+  notes?: string;
+  /** Fecha del precio */
+  date: string;
+  /** Usuario que reportó el precio */
+  reported_by?: string;
+  /** ¿Está en stock? */
+  in_stock: boolean;
+  /** Fecha de creación */
+  created_at?: string;
+  /** Información de la tienda */
+  store?: {
+    id: string;
+    name: string;
+    logo: string;
+  };
+  /** Información del producto */
+  product?: {
+    id: string;
+    name: string;
+    unit?: string;
+    measurement_value?: number;
+  };
+}
+
+/**
+ * Entrada para crear un nuevo precio
+ */
+export interface CreatePriceEntry {
+  product_id: string;
+  store_id: string;
+  price: number;
+  quantity?: number;
+  discount?: number;
+  total_price?: number;
+  is_promotion?: boolean;
+  notes?: string;
+  date?: string;
+  in_stock?: boolean;
+}
+
+/**
+ * Precio con información de deal calculada
+ */
+export interface PriceWithDeal extends PriceEntry {
+  /** Precio efectivo por unidad (total_price / quantity) */
+  effective_unit_price: number;
+  /** Porcentaje de ahorro */
+  savings_percentage: number;
+  /** Etiqueta del deal para mostrar */
+  deal_label?: string;
+}
+
+/**
+ * Formatea el label de un deal para mostrar
+ */
+export function formatDealLabel(priceEntry: PriceEntry): string | null {
+  if (!priceEntry.is_promotion && priceEntry.quantity === 1 && priceEntry.discount === 0) {
+    return null;
+  }
+
+  if (priceEntry.notes) {
+    return priceEntry.notes;
+  }
+
+  if (priceEntry.quantity > 1) {
+    return `${priceEntry.quantity} por $${priceEntry.total_price.toFixed(2)}`;
+  }
+
+  if (priceEntry.discount > 0) {
+    return `$${priceEntry.discount.toFixed(2)} de descuento`;
+  }
+
+  if (priceEntry.is_promotion) {
+    return 'Oferta';
+  }
+
+  return null;
+}
+
+/**
+ * Calcula el precio efectivo por unidad
+ */
+export function calculateEffectiveUnitPrice(priceEntry: PriceEntry): number {
+  if (priceEntry.quantity <= 0) {
+    return priceEntry.price;
+  }
+  return Math.round((priceEntry.total_price / priceEntry.quantity) * 100) / 100;
+}
+
+/**
+ * Calcula el porcentaje de ahorro
+ */
+export function calculateSavingsPercentage(priceEntry: PriceEntry): number {
+  const regularTotal = priceEntry.price * priceEntry.quantity;
+  if (regularTotal <= 0 || priceEntry.discount <= 0) {
+    return 0;
+  }
+  return Math.round((priceEntry.discount / regularTotal) * 100 * 10) / 10;
 }
 
 /**

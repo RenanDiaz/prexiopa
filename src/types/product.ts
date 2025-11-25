@@ -18,6 +18,13 @@ export interface Price {
   date: string;
   in_stock: boolean;
   stores?: Store;
+  // Phase 5.2 - Enhanced Price Tracking
+  quantity?: number;
+  discount?: number;
+  total_price?: number;
+  is_promotion?: boolean;
+  notes?: string;
+  reported_by?: string;
 }
 
 export interface Product {

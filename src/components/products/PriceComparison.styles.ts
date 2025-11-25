@@ -37,14 +37,16 @@ export const PriceList = styled.div`
 /**
  * Individual price item
  */
-export const PriceItem = styled.div<{ $isOutOfStock?: boolean }>`
+export const PriceItem = styled.div<{ $isOutOfStock?: boolean; $isPromotion?: boolean }>`
   display: grid;
   grid-template-columns: 56px 1fr auto;
   gap: ${({ theme }) => theme.spacing[4]};
   align-items: center;
   padding: ${({ theme }) => theme.spacing[4]};
-  background: ${({ theme }) => theme.colors.background.default};
-  border: 1px solid ${({ theme }) => theme.colors.border.light};
+  background: ${({ theme, $isPromotion }) =>
+    $isPromotion ? theme.colors.semantic.warning.light : theme.colors.background.default};
+  border: 1px solid ${({ theme, $isPromotion }) =>
+    $isPromotion ? theme.colors.semantic.warning.main : theme.colors.border.light};
   border-radius: ${({ theme }) => theme.borderRadius.base};
   transition: all 0.2s ease;
   opacity: ${({ $isOutOfStock }) => ($isOutOfStock ? 0.6 : 1)};
@@ -214,4 +216,59 @@ export const ViewOfferButton = styled.button<{ $isOutOfStock?: boolean }>`
     width: 100%;
     justify-content: center;
   }
+`;
+
+/**
+ * Promotion badge - Phase 5.2
+ */
+export const PromotionBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing[1]};
+  padding: ${({ theme }) => `${theme.spacing[1]} ${theme.spacing[2]}`};
+  background: ${({ theme }) => theme.colors.semantic.warning.main};
+  color: ${({ theme }) => theme.colors.semantic.warning.dark};
+  border-radius: ${({ theme }) => theme.borderRadius.badge};
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  text-transform: uppercase;
+  letter-spacing: ${({ theme }) => theme.typography.letterSpacing.wide};
+
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+`;
+
+/**
+ * Deal label showing promotion details - Phase 5.2
+ */
+export const DealLabel = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing[2]};
+  padding: ${({ theme }) => `${theme.spacing[2]} ${theme.spacing[3]}`};
+  background: ${({ theme }) => theme.colors.semantic.warning.light};
+  border: 1px solid ${({ theme }) => theme.colors.semantic.warning.main};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.colors.semantic.warning.dark};
+  margin-top: ${({ theme }) => theme.spacing[1]};
+
+  svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+`;
+
+/**
+ * Effective price display for multi-quantity deals - Phase 5.2
+ */
+export const EffectivePrice = styled.span`
+  display: block;
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  color: ${({ theme }) => theme.colors.text.secondary};
+  margin-top: ${({ theme }) => theme.spacing[1]};
 `;
