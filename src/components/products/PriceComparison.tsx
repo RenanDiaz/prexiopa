@@ -17,10 +17,11 @@
  * ```
  */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { FiExternalLink, FiAlertCircle, FiTag, FiPercent } from 'react-icons/fi';
 import type { Price } from '@/types/product';
 import { EmptyState } from '@/components/common/EmptyState';
+import storePlaceholder from '@/assets/images/store-placeholder.svg';
 import {
   ComparisonContainer,
   ComparisonTitle,
@@ -80,6 +81,12 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
   className,
   testId = 'price-comparison',
 }) => {
+  // Track which store images have failed to load
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+
+  const handleImageError = useCallback((storeId: string) => {
+    setFailedImages(prev => new Set(prev).add(storeId));
+  }, []);
   /**
    * Sort prices by:
    * 1. In stock items first
@@ -203,28 +210,16 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
             >
               {/* Store Logo */}
               <StoreLogoWrapper>
-                {price.stores?.logo ? (
-                  <StoreLogo
-                    src={price.stores.logo}
-                    alt={storeName}
-                    loading="lazy"
-                  />
-                ) : (
-                  <StoreLogo
-                    as="div"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: '#f0f0f0',
-                      color: '#666',
-                      fontSize: '0.75rem',
-                      fontWeight: 600,
-                    }}
-                  >
-                    {storeName.charAt(0).toUpperCase()}
-                  </StoreLogo>
-                )}
+                <StoreLogo
+                  src={
+                    failedImages.has(price.store_id) || !price.stores?.logo
+                      ? storePlaceholder
+                      : price.stores.logo
+                  }
+                  alt={storeName}
+                  loading="lazy"
+                  onError={() => handleImageError(price.store_id)}
+                />
               </StoreLogoWrapper>
 
               {/* Price Information */}
