@@ -273,9 +273,9 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
                 )}
 
                 {/* Effective Price for multi-quantity deals */}
-                {showEffectivePrice && price.in_stock && (
+                {showEffectivePrice && price.in_stock && price.quantity != null && (
                   <EffectivePrice>
-                    Precio unitario: ${formatPrice(price.price)} × {price.quantity} = ${formatPrice(price.total_price || price.price * price.quantity)}
+                    Precio unitario: ${formatPrice(price.price)} × {price.quantity} = ${formatPrice(price.total_price ?? price.price * price.quantity)}
                   </EffectivePrice>
                 )}
               </PriceInfo>
