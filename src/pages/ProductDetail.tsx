@@ -170,6 +170,12 @@ const ProductDescription = styled.p`
   line-height: ${({ theme }) => theme.typography.lineHeight.relaxed};
 `;
 
+const ButtonGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing[3]};
+`;
+
 const MainContent = styled.div`
   display: flex;
   flex-direction: column;
@@ -376,25 +382,27 @@ const ProductDetail = () => {
 
             <Divider />
 
-            {/* Alert Button */}
-            <Button
-              variant={hasAlert ? 'outline' : 'secondary'}
-              fullWidth
-              iconLeft={<FiBell />}
-              onClick={() => setIsAlertModalOpen(true)}
-            >
-              {hasAlert ? 'Editar Alerta de Precio' : 'Crear Alerta de Precio'}
-            </Button>
+            <ButtonGroup>
+              {/* Alert Button */}
+              <Button
+                variant={hasAlert ? 'outline' : 'secondary'}
+                fullWidth
+                iconLeft={<FiBell />}
+                onClick={() => setIsAlertModalOpen(true)}
+              >
+                {hasAlert ? 'Editar Alerta de Precio' : 'Crear Alerta de Precio'}
+              </Button>
 
-            {/* Contribute Button */}
-            <Button
-              variant="outline"
-              fullWidth
-              iconLeft={<FiEdit />}
-              onClick={() => setIsContributeModalOpen(true)}
-            >
-              Contribuir con Datos
-            </Button>
+              {/* Contribute Button */}
+              <Button
+                variant="outline"
+                fullWidth
+                iconLeft={<FiEdit />}
+                onClick={() => setIsContributeModalOpen(true)}
+              >
+                Contribuir con Datos
+              </Button>
+            </ButtonGroup>
           </ImageSection>
 
           {/* Right Column - Price Comparison */}
