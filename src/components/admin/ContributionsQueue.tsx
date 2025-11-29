@@ -191,6 +191,7 @@ export const ContributionsQueue: React.FC = () => {
 
     const success = await approveContribution({
       contributionId: selectedContribution.id,
+      productId: selectedContribution.productId, // Pasar productId para invalidar cache
     });
 
     if (success) {

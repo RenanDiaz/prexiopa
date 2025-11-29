@@ -212,6 +212,7 @@ export interface PendingContributionForReview {
  */
 export interface ApproveContributionDTO {
   contributionId: string;
+  productId?: string; // Optional - para invalidar cache
 }
 
 /**

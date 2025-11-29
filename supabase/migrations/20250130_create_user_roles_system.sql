@@ -11,7 +11,7 @@
 -- =====================================================
 
 CREATE TABLE IF NOT EXISTS user_roles (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL UNIQUE REFERENCES auth.users(id) ON DELETE CASCADE,
   role TEXT NOT NULL CHECK (role IN ('user', 'moderator', 'admin')) DEFAULT 'user',
   assigned_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,

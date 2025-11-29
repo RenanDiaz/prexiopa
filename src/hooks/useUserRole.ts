@@ -4,6 +4,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../supabaseClient';
 import type {
   UserRole,
@@ -277,6 +278,7 @@ export const usePendingContributions = (limit: number = 50) => {
 export const useModerationActions = () => {
   const { isModeratorOrAdmin } = useUserRole();
   const { user } = useAuthStore();
+  const queryClient = useQueryClient();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -293,12 +295,21 @@ export const useModerationActions = () => {
     setError(null);
 
     try {
+      // Aprobar la contribución
       const { data, error: rpcError } = await supabase.rpc('approve_contribution', {
         contribution_id: dto.contributionId,
         reviewer_id: user.id,
       });
 
       if (rpcError) throw rpcError;
+
+      // Invalidar la cache del producto para que se refresque
+      // Si se pasó el productId, usarlo directamente para mejor performance
+      if (dto.productId) {
+        await queryClient.invalidateQueries({
+          queryKey: ['product', dto.productId],
+        });
+      }
 
       return data === true;
     } catch (err) {
