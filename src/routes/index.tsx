@@ -10,6 +10,7 @@ import styled from 'styled-components';
 
 // Layout
 import Layout from '../components/Layout';
+import { ProtectedRoute } from '../components/auth/ProtectedRoute';
 
 // Páginas con lazy loading para mejor performance
 const Dashboard = lazy(() => import('../pages/Dashboard'));
@@ -120,23 +121,25 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        // Favoritos del usuario
-        // TODO: Agregar autenticación - Esta ruta debe ser protegida
+        // Favoritos del usuario - Ruta protegida
         path: 'favorites',
         element: (
-          <SuspenseWrapper>
-            <Favorites />
-          </SuspenseWrapper>
+          <ProtectedRoute>
+            <SuspenseWrapper>
+              <Favorites />
+            </SuspenseWrapper>
+          </ProtectedRoute>
         ),
       },
       {
-        // Lista de compras
-        // TODO: Agregar autenticación - Esta ruta debe ser protegida
+        // Lista de compras - Ruta protegida
         path: 'shopping',
         element: (
-          <SuspenseWrapper>
-            <Shopping />
-          </SuspenseWrapper>
+          <ProtectedRoute>
+            <SuspenseWrapper>
+              <Shopping />
+            </SuspenseWrapper>
+          </ProtectedRoute>
         ),
       },
       {
@@ -149,13 +152,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        // Perfil de usuario
-        // TODO: Agregar autenticación - Esta ruta debe ser protegida
+        // Perfil de usuario - Ruta protegida
         path: 'profile',
         element: (
-          <SuspenseWrapper>
-            <Profile />
-          </SuspenseWrapper>
+          <ProtectedRoute>
+            <SuspenseWrapper>
+              <Profile />
+            </SuspenseWrapper>
+          </ProtectedRoute>
         ),
       },
       {
