@@ -1,7 +1,7 @@
 # 🚀 Prexiopá - Plan de Desarrollo Actualizado
 
 > **Última actualización:** 29 de Noviembre, 2025
-> **Estado actual:** MVP Funcional (91% completo) - Sprint 1 ✅ | Sprint 2: 3/6 tareas ✅
+> **Estado actual:** MVP Funcional (92% completo) - Sprint 1 ✅ | Sprint 2: 3/6 ✅ | Sprint 3: 1/5 ✅
 > **Objetivo:** Completar Fase 5 y preparar para producción
 
 ---
@@ -293,34 +293,29 @@ interface ProductContribution {
 ### 🔵 **SPRINT 3: Backoffice de Moderación** (1 semana)
 *Objetivo: Sistema de administración para moderar contribuciones de usuarios*
 
-#### Tarea 3.1: Sistema de Roles y Permisos
+#### ✅ Tarea 3.1: Sistema de Roles y Permisos
 **Prioridad:** Alta
-**Estimado:** 4 horas
+**Estimado:** 4 horas | **Invertido:** 4 horas
+**Estado:** ✅ Completada
 
 **Objetivo:** Implementar roles de usuario (user, moderator, admin) con Row Level Security en Supabase.
 
-- [ ] Crear tabla `user_roles` en Supabase:
-  ```sql
-  create table user_roles (
-    id uuid primary key default uuid_generate_v4(),
-    user_id uuid references auth.users(id) unique,
-    role text check (role in ('user', 'moderator', 'admin')) default 'user',
-    assigned_by uuid references auth.users(id),
-    assigned_at timestamp with time zone default now(),
-    created_at timestamp with time zone default now()
-  );
-  ```
-- [ ] Crear función helper `get_user_role(user_id uuid)` en Supabase
-- [ ] Actualizar RLS policies de `product_contributions`:
-  - Users: solo pueden ver sus propias contribuciones
-  - Moderators/Admins: pueden ver todas las contribuciones
-- [ ] Crear hook `useUserRole()` en frontend
-- [ ] Agregar tipos TypeScript para roles
+- [x] Crear tabla `user_roles` en Supabase
+- [x] Crear función helper `get_user_role(user_id uuid)` en Supabase
+- [x] Crear funciones helper adicionales: `is_moderator_or_admin()`, `is_admin()`
+- [x] Actualizar RLS policies de `product_contributions` para moderadores
+- [x] Crear funciones RPC para moderación: `get_moderation_stats()`, `get_pending_contributions()`
+- [x] Crear funciones RPC para acciones: `approve_contribution()`, `reject_contribution()`
+- [x] Crear tipos TypeScript completos con sistema de permisos
+- [x] Crear hook `useUserRole()` con auto-refresh
+- [x] Crear hooks adicionales: `useModerationStats()`, `usePendingContributions()`, `useModerationActions()`
 
-**Archivos a crear/modificar:**
-- `supabase/migrations/XXX_create_user_roles.sql` (nuevo)
-- `src/hooks/useUserRole.ts` (nuevo)
-- `src/types/user.ts` (agregar Role type)
+**Archivos creados:**
+- ✅ `supabase/migrations/20250129_create_user_roles_system.sql` (286 líneas)
+- ✅ `src/types/role.ts` (267 líneas)
+- ✅ `src/hooks/useUserRole.ts` (348 líneas)
+
+**Commit:** `36fe6ac` - feat: Implement user roles and permissions system
 
 #### Tarea 3.2: Admin Dashboard - Vista de Contribuciones Pendientes
 **Prioridad:** Alta
