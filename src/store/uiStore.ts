@@ -25,6 +25,7 @@ export type Theme = 'light' | 'dark';
 interface UIState {
   theme: Theme;
   sidebarOpen: boolean;
+  mobileMenuOpen: boolean;
   notifications: Notification[];
   isModalOpen: boolean;
   modalContent: React.ReactNode | null;
@@ -36,6 +37,8 @@ interface UIActions {
   setTheme: (theme: Theme) => void;
   toggleSidebar: () => void;
   setSidebarOpen: (open: boolean) => void;
+  toggleMobileMenu: () => void;
+  setMobileMenuOpen: (open: boolean) => void;
   addNotification: (notification: Omit<Notification, 'id' | 'timestamp'>) => string;
   removeNotification: (id: string) => void;
   clearNotifications: () => void;
@@ -63,6 +66,7 @@ export const useUIStore = create<UIStore>()(
       // Estado inicial
       theme: 'light',
       sidebarOpen: false,
+      mobileMenuOpen: false,
       notifications: [],
       isModalOpen: false,
       modalContent: null,
@@ -109,6 +113,31 @@ export const useUIStore = create<UIStore>()(
         set((state) => {
           state.sidebarOpen = open;
         });
+      },
+
+      /**
+       * Alternar mobile menu abierto/cerrado
+       */
+      toggleMobileMenu: () => {
+        set((state) => {
+          state.mobileMenuOpen = !state.mobileMenuOpen;
+        });
+      },
+
+      /**
+       * Establecer estado del mobile menu
+       */
+      setMobileMenuOpen: (open) => {
+        set((state) => {
+          state.mobileMenuOpen = open;
+        });
+
+        // Deshabilitar scroll del body cuando el menú está abierto
+        if (open) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
       },
 
       /**

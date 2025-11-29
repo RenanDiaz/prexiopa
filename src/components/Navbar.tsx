@@ -5,8 +5,11 @@
 
 import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
+import { HiMenu } from 'react-icons/hi';
 import { useAuthStore } from '@/store/authStore';
+import { useUIStore } from '@/store/uiStore';
 import { ThemeToggle } from './common/ThemeToggle';
+import { MobileMenu as MobileMenuComponent } from './common/MobileMenu';
 
 const Nav = styled.nav`
   position: sticky;
@@ -173,6 +176,35 @@ const LoginButton = styled(Link)`
   }
 `;
 
+const HamburgerButton = styled.button`
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSize['2xl']};
+  cursor: pointer;
+  border-radius: ${({ theme }) => theme.borderRadius.button};
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.neutral[100]};
+    color: ${({ theme }) => theme.colors.primary[500]};
+  }
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+`;
+
 const MobileMenu = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.spacing[2]};
@@ -218,6 +250,7 @@ const UserName = styled.span`
 const Navbar = () => {
   const location = useLocation();
   const user = useAuthStore((state) => state.user);
+  const { mobileMenuOpen, setMobileMenuOpen } = useUIStore();
 
   const isActive = (path: string) => {
     if (path === '/') {
@@ -226,13 +259,26 @@ const Navbar = () => {
     return location.pathname.startsWith(path);
   };
 
+  const handleToggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
   return (
-    <Nav>
-      <NavContainer>
-        <LogoSection to="/">
-          <LogoIcon>🛒</LogoIcon>
-          <LogoText>Prexiopá</LogoText>
-        </LogoSection>
+    <>
+      <Nav>
+        <NavContainer>
+          <HamburgerButton
+            onClick={handleToggleMobileMenu}
+            aria-label="Abrir menú"
+            title="Menú"
+          >
+            <HiMenu />
+          </HamburgerButton>
+
+          <LogoSection to="/">
+            <LogoIcon>🛒</LogoIcon>
+            <LogoText>Prexiopá</LogoText>
+          </LogoSection>
 
         <NavLinks>
           <NavLink to="/" $isActive={isActive('/')}>
@@ -286,6 +332,12 @@ const Navbar = () => {
         </NavActions>
       </NavContainer>
     </Nav>
+
+      <MobileMenuComponent
+        isOpen={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+      />
+    </>
   );
 };
 
