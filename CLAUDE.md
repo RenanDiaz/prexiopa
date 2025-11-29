@@ -1,7 +1,7 @@
 # 🚀 Prexiopá - Plan de Desarrollo Actualizado
 
 > **Última actualización:** 29 de Noviembre, 2025
-> **Estado actual:** MVP Funcional (92% completo) - Sprint 1 ✅ | Sprint 2: 3/6 ✅ | Sprint 3: 1/5 ✅
+> **Estado actual:** MVP Funcional (93% completo) - Sprint 1 ✅ | Sprint 2: 3/6 ✅ | Sprint 3: 2/5 ✅
 > **Objetivo:** Completar Fase 5 y preparar para producción
 
 ---
@@ -317,33 +317,40 @@ interface ProductContribution {
 
 **Commit:** `36fe6ac` - feat: Implement user roles and permissions system
 
-#### Tarea 3.2: Admin Dashboard - Vista de Contribuciones Pendientes
+#### ✅ Tarea 3.2: Admin Dashboard - Vista de Contribuciones Pendientes
 **Prioridad:** Alta
-**Estimado:** 5 horas
+**Estimado:** 5 horas | **Invertido:** 5 horas
+**Estado:** ✅ Completada
 
 **Objetivo:** Crear página de administración para revisar contribuciones pendientes.
 
-- [ ] Crear página `/admin` (ruta protegida por rol)
-- [ ] Crear componente `AdminLayout.tsx` (sidebar con navegación)
-- [ ] Crear componente `ContributionsQueue.tsx`:
-  - Lista de contribuciones pendientes
-  - Filtros por tipo (barcode, image, price, info)
-  - Ordenar por fecha (más recientes primero)
-  - Paginación
-- [ ] Crear componente `ContributionReviewCard.tsx`:
-  - Mostrar datos de la contribución
-  - Vista previa de imagen si aplica
-  - Info del producto y usuario contribuidor
-  - Botones: Aprobar / Rechazar / Ver detalles
-- [ ] Implementar modal de confirmación antes de aprobar/rechazar
-- [ ] Agregar razón de rechazo (textarea) para rechazos
+- [x] Crear página `/admin` con protección por rol interna
+- [x] Crear componente `AdminLayout.tsx` con sidebar y navegación
+- [x] Crear componente `ContributionsQueue.tsx`:
+  - [x] Lista de contribuciones pendientes
+  - [x] Filtros por tipo (barcode, image, price, info)
+  - [x] Auto-refresh cada 30 segundos
+  - [x] Empty states y manejo de errores
+- [x] Crear componente `ContributionReviewCard.tsx`:
+  - [x] Renderizado dinámico según tipo de contribución
+  - [x] Vista previa de imagen para tipo "image"
+  - [x] Información del producto y contribuidor
+  - [x] Botones de aprobar/rechazar
+- [x] Implementar modales de confirmación:
+  - [x] Modal de aprobar con nombre del producto
+  - [x] Modal de rechazar con textarea de razón obligatoria
+- [x] Integrar con hooks de moderación (useUserRole, useModerationActions)
+- [x] Agregar estadísticas en sidebar (pending/approved/rejected)
 
-**Archivos a crear/modificar:**
-- `src/pages/Admin.tsx` (nuevo)
-- `src/components/admin/AdminLayout.tsx` (nuevo)
-- `src/components/admin/ContributionsQueue.tsx` (nuevo)
-- `src/components/admin/ContributionReviewCard.tsx` (nuevo)
-- `src/routes/index.tsx` (agregar ruta /admin protegida)
+**Archivos creados:**
+- ✅ `src/pages/Admin.tsx` (107 líneas)
+- ✅ `src/components/admin/AdminLayout.tsx` (265 líneas)
+- ✅ `src/components/admin/ContributionsQueue.tsx` (412 líneas)
+- ✅ `src/components/admin/ContributionReviewCard.tsx` (302 líneas)
+- ✅ `src/components/admin/index.ts` (8 líneas)
+- ✅ `src/routes/index.tsx` (modificado - agregada ruta /admin)
+
+**Commit:** `87237a7` - feat: Implement admin dashboard for moderation
 
 #### Tarea 3.3: Lógica de Aprobación/Rechazo
 **Prioridad:** Alta
