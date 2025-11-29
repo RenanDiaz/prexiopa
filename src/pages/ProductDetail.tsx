@@ -6,7 +6,7 @@
 
 import styled from 'styled-components';
 import { useParams, Link } from 'react-router-dom';
-import { FiChevronRight, FiPackage, FiTag, FiHash, FiBell } from 'react-icons/fi';
+import { FiChevronRight, FiPackage, FiTag, FiHash, FiBell, FiEdit } from 'react-icons/fi';
 import { useState } from 'react';
 import productPlaceholder from '@/assets/images/product-placeholder.svg';
 
@@ -14,6 +14,7 @@ import productPlaceholder from '@/assets/images/product-placeholder.svg';
 import { PriceComparison } from '@/components/products';
 import { FavoriteButton } from '@/components/favorites';
 import { PriceAlert } from '@/components/alerts';
+import { ContributeDataModal } from '@/components/contributions';
 import { Button } from '@/components/common/Button';
 
 // Hooks
@@ -246,6 +247,7 @@ const BackButton = styled(Link)`
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [isContributeModalOpen, setIsContributeModalOpen] = useState(false);
   const [imgError, setImgError] = useState(false);
 
   // Fetch product and prices
@@ -379,6 +381,16 @@ const ProductDetail = () => {
             >
               {hasAlert ? 'Editar Alerta de Precio' : 'Crear Alerta de Precio'}
             </Button>
+
+            {/* Contribute Button */}
+            <Button
+              variant="outline"
+              fullWidth
+              iconLeft={<FiEdit />}
+              onClick={() => setIsContributeModalOpen(true)}
+            >
+              Contribuir con Datos
+            </Button>
           </ImageSection>
 
           {/* Right Column - Price Comparison */}
@@ -396,13 +408,23 @@ const ProductDetail = () => {
 
       {/* Price Alert Modal */}
       {product && (
-        <PriceAlert
-          open={isAlertModalOpen}
-          onClose={() => setIsAlertModalOpen(false)}
-          productId={product.id}
-          productName={product.name}
-          currentPrice={lowestPrice}
-        />
+        <>
+          <PriceAlert
+            open={isAlertModalOpen}
+            onClose={() => setIsAlertModalOpen(false)}
+            productId={product.id}
+            productName={product.name}
+            currentPrice={lowestPrice}
+          />
+
+          {/* Contribute Data Modal */}
+          <ContributeDataModal
+            open={isContributeModalOpen}
+            onClose={() => setIsContributeModalOpen(false)}
+            productId={product.id}
+            productName={product.name}
+          />
+        </>
       )}
     </ProductContainer>
   );
