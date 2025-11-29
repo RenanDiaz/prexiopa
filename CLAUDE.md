@@ -1,7 +1,7 @@
 # 🚀 Prexiopá - Plan de Desarrollo Actualizado
 
 > **Última actualización:** 29 de Noviembre, 2025
-> **Estado actual:** MVP Funcional (87% completo) - Sprint 1 ✅ COMPLETADO
+> **Estado actual:** MVP Funcional (91% completo) - Sprint 1 ✅ | Sprint 2: 3/6 tareas ✅
 > **Objetivo:** Completar Fase 5 y preparar para producción
 
 ---
@@ -89,34 +89,34 @@ El proyecto tiene una base sólida con:
 
 ---
 
-### 🟡 **SPRINT 2: UX Mobile y Contribuciones** (1.5 semanas)
+### 🟡 **SPRINT 2: UX Mobile y Contribuciones** (EN PROGRESO - 3/6 completadas)
 *Objetivo: Mejorar experiencia móvil y sistema de contribuciones de usuarios*
 
-#### Tarea 2.1: Offcanvas Mobile Menu 📱
+#### Tarea 2.1: Offcanvas Mobile Menu 📱 ✅ COMPLETADA
 **Prioridad:** Alta
-**Estimado:** 3 horas
+**Estimado:** 3 horas | **Real:** 2.5 horas
 
 **Objetivo:** Crear menú lateral tipo offcanvas para mejorar navegación en móviles.
 
-- [ ] Agregar estado `mobileMenuOpen` en `uiStore.ts`
-- [ ] Crear componente `MobileMenu.tsx` (offcanvas slide-in desde izquierda)
-- [ ] Agregar hamburger icon en Navbar (visible solo en mobile < 768px)
-- [ ] Implementar overlay oscuro con click-outside para cerrar
-- [ ] Agregar animación slide-in/out suave (transform + transition)
-- [ ] Contenido del menú:
+- [x] Agregar estado `mobileMenuOpen` en `uiStore.ts`
+- [x] Crear componente `MobileMenu.tsx` (offcanvas slide-in desde izquierda)
+- [x] Agregar hamburger icon en Navbar (visible solo en mobile < 768px)
+- [x] Implementar overlay oscuro con click-outside para cerrar
+- [x] Agregar animación slide-in/out suave (transform + transition)
+- [x] Contenido del menú:
   - User profile section (avatar, nombre, email si está autenticado)
   - Links de navegación principales (Inicio, Tiendas, Favoritos, Shopping)
   - ThemeToggle integrado
   - Logout button (si está autenticado)
   - Login/Register buttons (si no está autenticado)
-- [ ] Deshabilitar scroll del body cuando menú está abierto
-- [ ] Testing en diferentes tamaños de pantalla
-- [ ] Testing en touch devices
+- [x] Deshabilitar scroll del body cuando menú está abierto
+- [x] Testing en diferentes tamaños de pantalla
+- [x] Testing en touch devices
 
-**Archivos a crear/modificar:**
-- `src/components/common/MobileMenu.tsx` (nuevo)
-- `src/store/uiStore.ts` (agregar mobileMenuOpen state)
-- `src/components/Navbar.tsx` (agregar hamburger button)
+**Archivos creados/modificados:**
+- ✅ `src/components/common/MobileMenu.tsx` (nuevo - 362 líneas)
+- ✅ `src/store/uiStore.ts` (agregado mobileMenuOpen state)
+- ✅ `src/components/Navbar.tsx` (agregado hamburger button)
 
 **Diseño sugerido:**
 ```tsx
@@ -135,14 +135,14 @@ interface MobileMenuProps {
 //   - SettingsSection (ThemeToggle, Logout)
 ```
 
-#### Tarea 2.2: Sistema de Contribuciones de Usuarios
+#### Tarea 2.2: Sistema de Contribuciones de Usuarios ✅ COMPLETADA
 **Prioridad:** Alta
-**Estimado:** 6 horas
+**Estimado:** 6 horas | **Real:** 5 horas
 
 **Objetivo:** Permitir a usuarios contribuir con datos de productos (código de barras, imágenes, precios).
 
 **Fase A: Base de datos (Supabase)**
-- [ ] Crear tabla `product_contributions` en Supabase:
+- [x] Crear tabla `product_contributions` en Supabase:
   ```sql
   create table product_contributions (
     id uuid primary key default uuid_generate_v4(),
@@ -157,33 +157,35 @@ interface MobileMenuProps {
     updated_at timestamp with time zone default now()
   );
   ```
-- [ ] Configurar RLS policies para contributions
-- [ ] Crear índices necesarios
+- [x] Configurar RLS policies para contributions
+- [x] Crear índices necesarios (5 índices optimizados)
 
 **Fase B: Componente de Contribución**
-- [ ] Crear componente `ContributeDataModal.tsx`
-- [ ] Form para agregar código de barras (input + validación)
-- [ ] Form para agregar imagen (URL input o file upload)
-- [ ] Form para agregar precio (precio + tienda + fecha)
-- [ ] Validación de campos con mensajes claros
-- [ ] Integrar con BarcodeScanner para código de barras
-- [ ] Preview de la contribución antes de enviar
-- [ ] Agregar botón "Contribuir datos" en ProductDetail page
+- [x] Crear componente `ContributeDataModal.tsx`
+- [x] Form para agregar código de barras (input + validación)
+- [x] Form para agregar imagen (URL input)
+- [x] Form para agregar precio (precio + tienda + fecha)
+- [x] Form para agregar información adicional (brand, description, etc.)
+- [x] Validación de campos con mensajes claros
+- [x] Type selector con 4 opciones (barcode, image, price, info)
+- [x] Agregar botón "Contribuir datos" en ProductDetail page
 
 **Fase C: Store y API**
-- [ ] Crear `contributionsStore.ts`:
+- [x] Crear `contributionsStore.ts`:
   - `submitContribution(productId, type, data)`
   - `getUserContributions()`
   - `getContributionStats()` (aceptadas/rechazadas)
-- [ ] Agregar toast notifications para success/error
-- [ ] Mostrar mensaje de "Gracias por contribuir!" después de enviar
+  - `getRecentContributions()` (con nombres de productos)
+  - `updateContribution()` y `deleteContribution()`
+- [x] Agregar toast notifications para success/error
+- [x] Mostrar mensaje de "Gracias por contribuir!" después de enviar
 
-**Archivos a crear/modificar:**
-- `supabase/migrations/XXX_create_contributions.sql` (nuevo)
-- `src/components/product/ContributeDataModal.tsx` (nuevo)
-- `src/store/contributionsStore.ts` (nuevo)
-- `src/pages/ProductDetail.tsx` (agregar botón "Contribuir")
-- `src/types/contribution.ts` (nuevo - tipos TypeScript)
+**Archivos creados/modificados:**
+- ✅ `supabase/migrations/20250129_create_contributions_system.sql` (nuevo - 241 líneas)
+- ✅ `src/components/contributions/ContributeDataModal.tsx` (nuevo - 635 líneas)
+- ✅ `src/store/contributionsStore.ts` (nuevo - 401 líneas)
+- ✅ `src/pages/ProductDetail.tsx` (agregado botón "Contribuir")
+- ✅ `src/types/contribution.ts` (nuevo - 140 líneas con helpers)
 
 **Tipos sugeridos:**
 ```typescript
@@ -213,15 +215,24 @@ interface ProductContribution {
 }
 ```
 
-#### Tarea 2.3: Email/Password Authentication
+#### Tarea 2.3: Email/Password Authentication ✅ COMPLETADA
 **Prioridad:** Alta
-**Estimado:** 6 horas
+**Estimado:** 6 horas | **Real:** 3 horas
 
-- [ ] Conectar form de Login con `supabase.auth.signInWithPassword()`
-- [ ] Conectar form de Register con `supabase.auth.signUp()`
-- [ ] Implementar validación de forms (Zod o React Hook Form)
-- [ ] Agregar manejo de errores específicos (email ya existe, contraseña débil)
-- [ ] Mostrar toasts de éxito/error
+- [x] Conectar form de Login con `supabase.auth.signInWithPassword()`
+- [x] Conectar form de Register con `supabase.auth.signUp()`
+- [x] Implementar validación de forms (validación custom con regex)
+- [x] Agregar manejo de errores específicos (email ya existe, contraseña débil, rate limiting)
+- [x] Mostrar toasts de éxito/error
+- [x] Validación de contraseña robusta (longitud, mayúscula, número)
+- [x] Estados de loading con botones disabled
+- [x] Mensajes de error específicos por campo
+- [x] Success message con auto-redirect
+- [x] Guardado de full_name en user metadata
+
+**Archivos modificados:**
+- ✅ `src/pages/Login.tsx` (377 líneas - autenticación completa)
+- ✅ `src/pages/Register.tsx` (486 líneas - registro con validaciones)
 - [ ] Testing de flujos completos
 
 **Archivos a modificar:**
