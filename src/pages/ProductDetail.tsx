@@ -80,8 +80,12 @@ const ImageSection = styled.div`
   padding: ${({ theme }) => theme.spacing[6]};
   box-shadow: ${({ theme }) => theme.shadows.card};
   height: fit-content;
-  position: sticky;
-  top: 80px;
+
+  /* Solo sticky en desktop, en mobile se comporta normal */
+  @media (min-width: 768px) {
+    position: sticky;
+    top: 80px;
+  }
 `;
 
 const ProductImageWrapper = styled.div`
