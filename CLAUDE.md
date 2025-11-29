@@ -1,7 +1,7 @@
 # 🚀 Prexiopá - Plan de Desarrollo Actualizado
 
 > **Última actualización:** 29 de Noviembre, 2025
-> **Estado actual:** MVP Funcional (93% completo) - Sprint 1 ✅ | Sprint 2: 3/6 ✅ | Sprint 3: 2/5 ✅
+> **Estado actual:** MVP Funcional (94% completo) - Sprint 1 ✅ | Sprint 2: 3/6 ✅ | Sprint 3: 3/5 ✅
 > **Objetivo:** Completar Fase 5 y preparar para producción
 
 ---
@@ -352,33 +352,34 @@ interface ProductContribution {
 
 **Commit:** `87237a7` - feat: Implement admin dashboard for moderation
 
-#### Tarea 3.3: Lógica de Aprobación/Rechazo
+#### ✅ Tarea 3.3: Lógica de Aprobación/Rechazo
 **Prioridad:** Alta
-**Estimado:** 4 horas
+**Estimado:** 4 horas | **Invertido:** 2 horas
+**Estado:** ✅ Completada
 
 **Objetivo:** Implementar acciones de moderación y actualización de datos de productos.
 
-- [ ] Crear `moderationStore.ts`:
-  - `getPendingContributions()` - cargar contribuciones pendientes
-  - `approveContribution(id, productUpdates)` - aprobar y aplicar cambios
-  - `rejectContribution(id, reason)` - rechazar con razón
-  - `getContributionById(id)` - obtener detalles
-- [ ] Al aprobar una contribución:
-  - Actualizar tabla `products` con nuevos datos
-  - Marcar contribución como `approved`
-  - Guardar `reviewed_by` y `reviewed_at`
-  - Enviar notificación al usuario (opcional - toast)
-- [ ] Al rechazar:
-  - Marcar como `rejected`
-  - Guardar razón en campo `rejection_reason`
-  - Opcional: notificar al usuario
-- [ ] Agregar toast notifications para moderadores
-- [ ] Logging de acciones de moderación (audit trail)
+- [x] Actualizar función `approve_contribution()` para aplicar cambios:
+  - [x] BARCODE: Actualiza `products.barcode`
+  - [x] IMAGE: Inserta en `product_images` (con verificación de duplicados)
+  - [x] PRICE: Inserta en `prices` (con ON CONFLICT)
+  - [x] INFO: Actualiza campos del producto (brand, description, etc.)
+- [x] Marcar contribución como `approved` con reviewer y timestamp
+- [x] Implementar función `revert_contribution()` para admins
+- [x] Crear función `get_product_contribution_history()` para auditoría
+- [x] Agregar RLS policies para `product_images`
+- [x] Crear índices para optimización (product_images)
+- [x] Manejo de errores con logging detallado
+- [x] Toast notifications ya implementadas en frontend (Tarea 3.2)
 
-**Archivos a crear/modificar:**
-- `src/store/moderationStore.ts` (nuevo)
-- `supabase/migrations/XXX_add_rejection_reason.sql` (agregar campo)
-- `src/services/moderationService.ts` (nuevo - lógica de negocio)
+**NOTA:** No fue necesario crear moderationStore separado porque toda la lógica
+está implementada en las RPC functions de Supabase y los hooks ya existentes
+(useModerationActions) que fueron creados en la Tarea 3.1.
+
+**Archivos creados:**
+- ✅ `supabase/migrations/20250130_apply_contributions_to_products.sql` (285 líneas)
+
+**Commit:** `ba9698a` - feat: Apply contributions to products on approval
 
 #### Tarea 3.4: Sistema de Reputación de Usuarios (Opcional)
 **Prioridad:** Media
