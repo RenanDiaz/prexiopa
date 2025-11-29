@@ -25,6 +25,7 @@ const Shopping = lazy(() => import('../pages/Shopping'));
 const Stores = lazy(() => import('../pages/Stores'));
 const ScannerDemo = lazy(() => import('../pages/ScannerDemo'));
 // const ProductsDemo = lazy(() => import('../pages/ProductsDemo'));
+const Admin = lazy(() => import('../pages/Admin'));
 const AuthCallback = lazy(() => import('../pages/AuthCallback'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
@@ -169,6 +170,16 @@ export const router = createBrowserRouter([
         element: (
           <SuspenseWrapper>
             <ScannerDemo />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        // Panel de administración - Ruta protegida para moderadores/admins
+        // No usa ProtectedRoute porque Admin.tsx tiene su propia validación de roles
+        path: 'admin',
+        element: (
+          <SuspenseWrapper>
+            <Admin />
           </SuspenseWrapper>
         ),
       },

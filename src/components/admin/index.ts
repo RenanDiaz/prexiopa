@@ -1,0 +1,8 @@
+/**
+ * Admin Components - Barrel export
+ * Exporta todos los componentes del módulo de administración
+ */
+
+export { AdminLayout } from './AdminLayout';
+export { ContributionsQueue } from './ContributionsQueue';
+export { ContributionReviewCard } from './ContributionReviewCard';
