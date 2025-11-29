@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { toast } from 'react-toastify';
 import { supabase } from '../supabaseClient';
 import type { User } from '@supabase/supabase-js';
 
@@ -83,6 +84,10 @@ export const useAuthStore = create<AuthStore>()(
             isLoading: false,
             error: null,
           });
+
+          toast.success('¡Bienvenido de vuelta!', {
+            position: 'top-right',
+          });
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Error al iniciar sesión';
           set({
@@ -90,6 +95,10 @@ export const useAuthStore = create<AuthStore>()(
             isLoading: false,
             user: null,
             isAuthenticated: false,
+          });
+
+          toast.error(errorMessage, {
+            position: 'top-right',
           });
           throw error;
         }
@@ -118,6 +127,10 @@ export const useAuthStore = create<AuthStore>()(
             isLoading: false,
             error: null,
           });
+
+          toast.success('¡Cuenta creada exitosamente!', {
+            position: 'top-right',
+          });
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Error al registrarse';
           set({
@@ -125,6 +138,10 @@ export const useAuthStore = create<AuthStore>()(
             isLoading: false,
             user: null,
             isAuthenticated: false,
+          });
+
+          toast.error(errorMessage, {
+            position: 'top-right',
           });
           throw error;
         }
@@ -147,11 +164,19 @@ export const useAuthStore = create<AuthStore>()(
             isLoading: false,
             error: null,
           });
+
+          toast.info('Sesión cerrada correctamente', {
+            position: 'top-right',
+          });
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Error al cerrar sesión';
           set({
             error: errorMessage,
             isLoading: false,
+          });
+
+          toast.error(errorMessage, {
+            position: 'top-right',
           });
           throw error;
         }

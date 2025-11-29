@@ -6,6 +6,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
+import { toast } from 'react-toastify';
 
 export interface ShoppingItem {
   id: string;
@@ -127,6 +128,10 @@ export const useShoppingStore = create<ShoppingStore>()(
             state.currentSession = null;
           }
         });
+
+        toast.success('Sesión de compra finalizada', {
+          position: 'top-right',
+        });
       },
 
       /**
@@ -191,6 +196,10 @@ export const useShoppingStore = create<ShoppingStore>()(
 
           state.currentSession.items.push(newItem);
           state.currentSession.total = calculateSessionTotal(state.currentSession.items);
+        });
+
+        toast.success(`${itemData.productName} agregado a la lista`, {
+          position: 'top-right',
         });
       },
 

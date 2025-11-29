@@ -33,7 +33,7 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
           minHeight: '100vh',
         }}
       >
-        <LoadingSpinner size="large" />
+        <LoadingSpinner size="lg" />
       </div>
     );
   }

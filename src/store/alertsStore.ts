@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
+import { toast } from 'react-toastify';
 import { supabase } from '../supabaseClient';
 
 // Tipo para alertas de precio
@@ -102,6 +103,10 @@ export const useAlertsStore = create<AlertsStore>()(
           const { syncWithSupabase } = get();
           await syncWithSupabase();
 
+          toast.success('Alerta de precio creada', {
+            position: 'top-right',
+          });
+
           return alertId;
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Error al crear alerta';
@@ -109,6 +114,11 @@ export const useAlertsStore = create<AlertsStore>()(
             state.error = errorMessage;
             state.isLoading = false;
           });
+
+          toast.error(errorMessage, {
+            position: 'top-right',
+          });
+
           throw error;
         }
       },
@@ -131,12 +141,21 @@ export const useAlertsStore = create<AlertsStore>()(
           // Sincronizar con Supabase
           const { syncWithSupabase } = get();
           await syncWithSupabase();
+
+          toast.info('Alerta eliminada', {
+            position: 'top-right',
+          });
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Error al eliminar alerta';
           set((state) => {
             state.error = errorMessage;
             state.isLoading = false;
           });
+
+          toast.error(errorMessage, {
+            position: 'top-right',
+          });
+
           throw error;
         }
       },
@@ -284,6 +303,12 @@ export const useAlertsStore = create<AlertsStore>()(
             triggeredAt: new Date().toISOString(),
             currentPrice,
             notificationSent: true,
+          });
+
+          // Mostrar notificación toast
+          toast.success(`¡Alerta activada! ${alert.productName || 'Producto'} alcanzó el precio objetivo`, {
+            position: 'top-right',
+            autoClose: 7000,
           });
         });
 

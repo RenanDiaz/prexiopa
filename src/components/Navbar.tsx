@@ -6,6 +6,7 @@
 import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
+import { ThemeToggle } from './common/ThemeToggle';
 
 const Nav = styled.nav`
   position: sticky;
@@ -266,6 +267,7 @@ const Navbar = () => {
               ❤️
             </IconButton>
           </MobileMenu>
+          <ThemeToggle />
           {user ? (
             <UserMenu to="/profile" title={`Perfil de ${user.user_metadata?.full_name || user.email}`}>
               <UserAvatar

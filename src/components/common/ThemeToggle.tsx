@@ -10,7 +10,7 @@ const ToggleButton = styled.button`
   border: none;
   border-radius: ${({ theme }) => theme.borderRadius.full};
   cursor: pointer;
-  transition: all 0.3s ${({ theme }) => theme.transitions.easing.easeInOut};
+  transition: all 0.3s ease-in-out;
   display: flex;
   align-items: center;
   padding: 0 4px;
@@ -40,14 +40,14 @@ const IconWrapper = styled.div<{ $isActive: boolean }>`
   background: ${({ theme }) => theme.colors.background.paper};
   border-radius: ${({ theme }) => theme.borderRadius.full};
   box-shadow: ${({ theme }) => theme.shadows.sm};
-  transition: all 0.3s ${({ theme }) => theme.transitions.easing.easeInOut};
+  transition: all 0.3s ease-in-out;
   transform: translateX(${({ $isActive }) => ($isActive ? '24px' : '0')});
 
   svg {
     width: 16px;
     height: 16px;
     color: ${({ $isActive, theme }) =>
-      $isActive ? theme.colors.primary[500] : theme.colors.warning[500]};
+      $isActive ? theme.colors.primary[500] : theme.colors.semantic.warning.main};
     transition: color 0.2s ease;
   }
 `;

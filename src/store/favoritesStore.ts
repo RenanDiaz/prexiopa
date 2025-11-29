@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { toast } from 'react-toastify';
 import { supabase } from '../supabaseClient';
 
 // Tipos para el store de favoritos
@@ -77,12 +78,21 @@ export const useFavoritesStore = create<FavoritesStore>()(
           await syncWithSupabase();
 
           set({ isLoading: false });
+
+          toast.success('Producto agregado a favoritos', {
+            position: 'top-right',
+          });
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Error al agregar favorito';
           set({
             error: errorMessage,
             isLoading: false,
           });
+
+          toast.error(errorMessage, {
+            position: 'top-right',
+          });
+
           // Revertir cambio local si falla
           set({ favorites });
           throw error;
@@ -106,12 +116,21 @@ export const useFavoritesStore = create<FavoritesStore>()(
           await syncWithSupabase();
 
           set({ isLoading: false });
+
+          toast.info('Producto removido de favoritos', {
+            position: 'top-right',
+          });
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Error al remover favorito';
           set({
             error: errorMessage,
             isLoading: false,
           });
+
+          toast.error(errorMessage, {
+            position: 'top-right',
+          });
+
           // Revertir cambio local si falla
           set({ favorites });
           throw error;
