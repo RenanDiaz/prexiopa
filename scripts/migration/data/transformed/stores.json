@@ -1,47 +1,47 @@
 [
   {
-    "id": "56329fc6-3e5d-4f37-941a-161d65e374fe",
+    "id": "17407b51-afb2-4042-a7f6-dc7b9fc2a926",
     "name": "El Fuerte Federal Mall",
     "logo": "/images/stores/default.png",
     "website": null,
-    "created_at": "2025-11-25T06:39:32.902Z",
-    "updated_at": "2025-11-25T06:39:32.903Z",
+    "created_at": "2025-11-25T06:50:44.784Z",
+    "updated_at": "2025-11-25T06:50:44.785Z",
     "_mongo_id": "64587471a31ac2adb8188176"
   },
   {
-    "id": "ca8177b8-5c31-4b13-8d39-e6f4060f8523",
+    "id": "5540f4d3-17dd-4eb0-b031-1efe417d80fd",
     "name": "M/S Meygui",
     "logo": "/images/stores/default.png",
     "website": null,
-    "created_at": "2025-11-25T06:39:32.903Z",
-    "updated_at": "2025-11-25T06:39:32.903Z",
+    "created_at": "2025-11-25T06:50:44.785Z",
+    "updated_at": "2025-11-25T06:50:44.785Z",
     "_mongo_id": "646ba3ba59bba314a9b64097"
   },
   {
-    "id": "b6c0e343-0a62-4c62-b598-62f4d505504f",
+    "id": "59d770ac-d394-4b9b-8a1f-e1ca0c4b12c8",
     "name": "Farmacia El Terronal",
     "logo": "/images/stores/default.png",
     "website": null,
-    "created_at": "2025-11-25T06:39:32.903Z",
-    "updated_at": "2025-11-25T06:39:32.903Z",
+    "created_at": "2025-11-25T06:50:44.785Z",
+    "updated_at": "2025-11-25T06:50:44.785Z",
     "_mongo_id": "647f653e59bba314a9750f8f"
   },
   {
-    "id": "71a13e2b-7051-43d5-9c94-fb5fd40a4510",
+    "id": "bc2f7f54-9f92-4c0e-b4e8-52c4f2398835",
     "name": "El Rey Plaza Terronal",
     "logo": "/images/stores/default.png",
     "website": null,
-    "created_at": "2025-11-25T06:39:32.903Z",
-    "updated_at": "2025-11-25T06:39:32.903Z",
+    "created_at": "2025-11-25T06:50:44.785Z",
+    "updated_at": "2025-11-25T06:50:44.785Z",
     "_mongo_id": "646ad8f959bba314a92d1c6c"
   },
   {
-    "id": "ee21aa1d-fb86-4dc3-9a92-bf3ae2851b96",
+    "id": "c58c0d3d-3495-4ee1-bf7b-78a84641bdbf",
     "name": "Doit Center El Terronal",
     "logo": "/images/stores/default.png",
     "website": null,
-    "created_at": "2025-11-25T06:39:32.903Z",
-    "updated_at": "2025-11-25T06:39:32.903Z",
+    "created_at": "2025-11-25T06:50:44.785Z",
+    "updated_at": "2025-11-25T06:50:44.785Z",
     "_mongo_id": "647f674259bba314a97bfa8c"
   }
 ]

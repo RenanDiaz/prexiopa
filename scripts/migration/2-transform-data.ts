@@ -316,6 +316,14 @@ const transformPrices = (
       return;
     }
 
+    // Skip items with invalid prices (0, null, undefined, negative)
+    if (!item.unitPrice || item.unitPrice <= 0) {
+      skipped.push(
+        `Item ${getMongoId(item._id)}: invalid price (${item.unitPrice})`
+      );
+      return;
+    }
+
     // Check for duplicates (same product+store+date)
     const uniqueKey = `${productId}-${storeId}-${purchaseDate}`;
     if (seenKeys.has(uniqueKey)) {
