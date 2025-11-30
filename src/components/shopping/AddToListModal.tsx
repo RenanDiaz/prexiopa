@@ -11,6 +11,7 @@
 
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { NumericFormat } from 'react-number-format';
 import { FiShoppingCart, FiDollarSign, FiPackage, FiAlertCircle } from 'react-icons/fi';
 import { Modal } from '@/components/common/Modal';
 import { Input } from '@/components/common/Input';
@@ -202,6 +203,38 @@ const HelpText = styled.p`
   margin: ${({ theme }) => theme.spacing[1]} 0 0 0;
 `;
 
+const StyledNumericFormat = styled(NumericFormat)`
+  width: 100%;
+  height: 44px;
+  padding: 0 ${({ theme }) => theme.spacing[3]};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
+  color: ${({ theme }) => theme.colors.text.primary};
+  background: ${({ theme }) => theme.colors.background.default};
+  border: 2px solid ${({ theme }) => theme.colors.border.main};
+  border-radius: ${({ theme }) => theme.borderRadius.button};
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    border-color: ${({ theme }) => theme.colors.primary[400]};
+  }
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.primary[500]};
+    box-shadow: 0 0 0 3px ${({ theme }) => theme.colors.primary[100]};
+  }
+
+  &:disabled {
+    background: ${({ theme }) => theme.colors.neutral[100]};
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.text.tertiary};
+  }
+`;
+
 export interface Store {
   id: string;
   name: string;
@@ -358,15 +391,17 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
                     <FiDollarSign size={16} />
                     Precio <span style={{ color: 'red' }}>*</span>
                   </Label>
-                  <Input
+                  <StyledNumericFormat
                     id="price"
-                    type="number"
                     placeholder="0.00"
                     value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    min="0.01"
-                    step="0.01"
-                    required
+                    onValueChange={(values) => setPrice(values.value)}
+                    thousandSeparator=","
+                    decimalSeparator="."
+                    prefix="$"
+                    decimalScale={2}
+                    fixedDecimalScale={false}
+                    allowNegative={false}
                     disabled={isSubmitting}
                     autoFocus
                   />
