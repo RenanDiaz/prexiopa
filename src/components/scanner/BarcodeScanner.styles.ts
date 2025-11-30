@@ -240,6 +240,54 @@ export const ToggleCameraButton = styled.button`
   }
 `;
 
+/**
+ * Torch/Flashlight button (bottom-left)
+ */
+export const TorchButton = styled.button<{ $isActive?: boolean }>`
+  position: fixed;
+  bottom: ${theme.spacing[8]};
+  left: ${theme.spacing[4]};
+  z-index: ${theme.zIndex.modal + 5};
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${({ $isActive }) =>
+    $isActive ? '#f59e0b' : theme.colors.neutral[700]};
+  border: none;
+  border-radius: ${theme.borderRadius.full};
+  color: ${({ $isActive }) =>
+    $isActive ? theme.colors.neutral[900] : theme.colors.neutral[100]};
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: ${theme.shadows.lg};
+
+  &:hover {
+    background: ${({ $isActive }) =>
+      $isActive ? '#d97706' : theme.colors.neutral[600]};
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus {
+    outline: 2px solid ${({ $isActive }) =>
+      $isActive ? '#fbbf24' : theme.colors.neutral[400]};
+    outline-offset: 2px;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    bottom: ${theme.spacing[6]};
+    left: ${theme.spacing[3]};
+    width: 52px;
+    height: 52px;
+  }
+`;
+
 // ============================================
 // WEBCAM CONTAINER
 // ============================================

@@ -45,6 +45,7 @@ import { createPortal } from 'react-dom';
 import Webcam from 'react-webcam';
 import { BrowserMultiFormatReader } from '@zxing/browser';
 import { FiX, FiRotateCw, FiAlertCircle } from 'react-icons/fi';
+import { HiLightningBolt } from 'react-icons/hi';
 import * as S from './BarcodeScanner.styles';
 
 /**
@@ -120,6 +121,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
   const [error, setError] = useState<ScannerError | null>(null);
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>(initialFacingMode);
   const [detectedCode, setDetectedCode] = useState<string>('');
+  const [torchEnabled, setTorchEnabled] = useState<boolean>(false);
 
   // Refs
   const webcamRef = useRef<Webcam>(null);
@@ -248,6 +250,40 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
   }, []);
 
   /**
+   * Toggle flashlight/torch
+   */
+  const handleToggleTorch = useCallback(async () => {
+    try {
+      const video = webcamRef.current?.video;
+      if (!video) return;
+
+      const stream = video.srcObject as MediaStream;
+      if (!stream) return;
+
+      const track = stream.getVideoTracks()[0];
+      if (!track) return;
+
+      // Check if torch is supported
+      const capabilities = track.getCapabilities();
+      if (!('torch' in capabilities)) {
+        console.warn('Torch not supported on this device');
+        return;
+      }
+
+      // Toggle torch
+      const newTorchState = !torchEnabled;
+      await track.applyConstraints({
+        // @ts-ignore - torch is not in TypeScript types yet
+        advanced: [{ torch: newTorchState }],
+      });
+
+      setTorchEnabled(newTorchState);
+    } catch (error) {
+      console.error('Error toggling torch:', error);
+    }
+  }, [torchEnabled]);
+
+  /**
    * Toggle between front and back camera
    */
   const handleToggleCamera = useCallback(() => {
@@ -264,6 +300,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
     // Reset state
     setState('loading');
     setError(null);
+    setTorchEnabled(false); // Reset torch when switching cameras
 
     // Toggle facing mode
     setFacingMode((prev) => (prev === 'user' ? 'environment' : 'user'));
@@ -512,6 +549,14 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
         >
           <FiRotateCw size={24} />
         </S.ToggleCameraButton>
+
+        <S.TorchButton
+          onClick={handleToggleTorch}
+          aria-label={torchEnabled ? "Apagar flash" : "Encender flash"}
+          $isActive={torchEnabled}
+        >
+          <HiLightningBolt size={24} />
+        </S.TorchButton>
       </>
     );
   };
