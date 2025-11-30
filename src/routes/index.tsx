@@ -26,6 +26,7 @@ const Stores = lazy(() => import('../pages/Stores'));
 const ScannerDemo = lazy(() => import('../pages/ScannerDemo'));
 // const ProductsDemo = lazy(() => import('../pages/ProductsDemo'));
 const Admin = lazy(() => import('../pages/Admin'));
+const BarcodeTest = lazy(() => import('../pages/BarcodeTest'));
 const AuthCallback = lazy(() => import('../pages/AuthCallback'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
@@ -180,6 +181,15 @@ export const router = createBrowserRouter([
         element: (
           <SuspenseWrapper>
             <Admin />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        // Validador de códigos de barras - Herramienta de testing
+        path: 'barcode-test',
+        element: (
+          <SuspenseWrapper>
+            <BarcodeTest />
           </SuspenseWrapper>
         ),
       },
