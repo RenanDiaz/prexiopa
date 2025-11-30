@@ -13,6 +13,7 @@ import { FiFilter, FiX } from 'react-icons/fi';
 import { SearchBar, SearchFilters } from '@/components/search';
 import { BarcodeScanner } from '@/components/scanner';
 import { ProductList, CreateProductModal } from '@/components/products';
+import { AddToListModal } from '@/components/shopping';
 
 // Hooks
 import { useProductsQuery, useCategoriesQuery } from '@/hooks/useProducts';
@@ -27,6 +28,9 @@ import type { Product } from '@/types/product.types';
 // Services
 import { createProduct } from '@/services/supabase/products';
 import { toast } from 'react-toastify';
+
+// Store
+import { useShoppingStore } from '@/store/shoppingStore';
 
 const DashboardContainer = styled.div`
   min-height: 100vh;
@@ -228,6 +232,10 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width: 1023px)');
 
+  // Shopping store
+  const currentSession = useShoppingStore((state) => state.currentSession);
+  const addItem = useShoppingStore((state) => state.addItem);
+
   // Search & Filter State
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
@@ -239,6 +247,9 @@ const Dashboard = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [isCreateProductModalOpen, setIsCreateProductModalOpen] = useState(false);
   const [scannedBarcode, setScannedBarcode] = useState<string>('');
+  const [isAddToListModalOpen, setIsAddToListModalOpen] = useState(false);
+  const [newlyCreatedProduct, setNewlyCreatedProduct] = useState<Product | null>(null);
+  const [isAddingToList, setIsAddingToList] = useState(false);
 
   // Data Queries
   const { data: categories = [] } = useCategoriesQuery();
@@ -325,14 +336,21 @@ const Dashboard = () => {
       toast.success(`Producto "${newProduct.name}" creado exitosamente`);
       setIsCreateProductModalOpen(false);
       setScannedBarcode('');
-      // Refresh products
-      setSearchQuery('');
-      setTimeout(() => setSearchQuery(productData.barcode), 100);
+
+      // If there's an active shopping session, open AddToListModal
+      if (currentSession) {
+        setNewlyCreatedProduct(newProduct);
+        setIsAddToListModalOpen(true);
+      } else {
+        // Otherwise, just refresh products
+        setSearchQuery('');
+        setTimeout(() => setSearchQuery(productData.barcode), 100);
+      }
     } catch (error) {
       console.error('Error creating product:', error);
       toast.error('Error al crear el producto. Inténtalo de nuevo.');
     }
-  }, []);
+  }, [currentSession]);
 
   const handleFilterChange = useCallback((payload: FilterChangePayload) => {
     if (payload.category !== undefined) {
@@ -358,6 +376,67 @@ const Dashboard = () => {
     },
     [navigate]
   );
+
+  const handleAddToList = useCallback(
+    async (data: {
+      product_id: string;
+      product_name: string;
+      price: number;
+      quantity: number;
+      store_id: string;
+      store_name: string;
+      savePrice: boolean;
+    }) => {
+      setIsAddingToList(true);
+      try {
+        // Add to shopping list
+        addItem({
+          productId: data.product_id,
+          productName: data.product_name,
+          price: data.price,
+          quantity: data.quantity,
+          unit: 'unidad',
+        });
+
+        // If savePrice is true, save to database
+        if (data.savePrice) {
+          const { createPrice } = await import('@/services/supabase/prices');
+          await createPrice({
+            product_id: data.product_id,
+            store_id: data.store_id,
+            price: data.price,
+          });
+        }
+
+        // Close modal and reset
+        setIsAddToListModalOpen(false);
+        setNewlyCreatedProduct(null);
+
+        // Refresh products to show the new one
+        if (newlyCreatedProduct?.barcode) {
+          setSearchQuery('');
+          setTimeout(() => setSearchQuery(newlyCreatedProduct.barcode || ''), 100);
+        }
+      } catch (error) {
+        console.error('Error adding to list:', error);
+        toast.error('Error al agregar a la lista');
+      } finally {
+        setIsAddingToList(false);
+      }
+    },
+    [addItem, newlyCreatedProduct]
+  );
+
+  const handleCloseAddToListModal = useCallback(() => {
+    setIsAddToListModalOpen(false);
+    setNewlyCreatedProduct(null);
+
+    // Refresh products to show the new one
+    if (newlyCreatedProduct?.barcode) {
+      setSearchQuery('');
+      setTimeout(() => setSearchQuery(newlyCreatedProduct.barcode || ''), 100);
+    }
+  }, [newlyCreatedProduct]);
 
   return (
     <DashboardContainer>
@@ -467,6 +546,20 @@ const Dashboard = () => {
         }}
         onCreateProduct={handleCreateProduct}
       />
+
+      {/* Add to List Modal - Shown after creating a product when there's an active session */}
+      {newlyCreatedProduct && (
+        <AddToListModal
+          isOpen={isAddToListModalOpen}
+          product={newlyCreatedProduct}
+          stores={stores}
+          onClose={handleCloseAddToListModal}
+          onAdd={handleAddToList}
+          isSubmitting={isAddingToList}
+          sessionStoreId={currentSession?.storeId || null}
+          sessionStoreName={currentSession?.storeName || null}
+        />
+      )}
     </DashboardContainer>
   );
 };

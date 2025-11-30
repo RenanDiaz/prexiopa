@@ -416,7 +416,8 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
               {/* Store Selector */}
               <FormGroup>
                 <Label htmlFor="store">
-                  Tienda <span style={{ color: 'red' }}>*</span>
+                  Tienda {!sessionStoreId && <span style={{ color: 'red' }}>*</span>}
+                  {sessionStoreId && <span style={{ fontSize: '0.875rem', fontWeight: 'normal', color: '#6B7280' }}> (bloqueada por sesión activa)</span>}
                 </Label>
                 <Select
                   id="store"
@@ -432,16 +433,19 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
                       {sessionStoreName || 'Tienda de la sesión'}
                     </option>
                   ) : (
-                    stores.map((store) => (
-                      <option key={store.id} value={store.id}>
-                        {store.name}
-                      </option>
-                    ))
+                    <>
+                      <option value="">Selecciona una tienda</option>
+                      {stores.map((store) => (
+                        <option key={store.id} value={store.id}>
+                          {store.name}
+                        </option>
+                      ))}
+                    </>
                   )}
                 </Select>
                 {sessionStoreId && (
                   <HelpText>
-                    Usando la tienda de tu lista de compras actual
+                    ✓ Usando la tienda de tu lista de compras actual
                   </HelpText>
                 )}
               </FormGroup>
