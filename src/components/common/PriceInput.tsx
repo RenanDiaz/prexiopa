@@ -259,7 +259,6 @@ export const PriceInput = forwardRef<HTMLInputElement, PriceInputProps>(
           id={id}
           type="text"
           inputMode="numeric"
-          pattern="[0-9]*"
           value={formattedValue}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
