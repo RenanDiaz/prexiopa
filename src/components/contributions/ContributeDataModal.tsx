@@ -13,6 +13,7 @@ import styled from 'styled-components';
 import { HiX, HiCamera, HiInformationCircle, HiCash } from 'react-icons/hi';
 import { FiHash } from 'react-icons/fi';
 import { Button } from '@/components/common/Button';
+import { BarcodeScanner } from '@/components/common/BarcodeScanner';
 import { useContributionsStore } from '@/store/contributionsStore';
 import { useAuthStore } from '@/store/authStore';
 import type {
@@ -260,6 +261,42 @@ const InfoBox = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing[4]};
 `;
 
+const InputWithButton = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing[2]};
+`;
+
+const ScanButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing[2]};
+  padding: 0 ${({ theme }) => theme.spacing[4]};
+  height: 44px;
+  background: ${({ theme }) => theme.colors.primary[500]};
+  color: white;
+  border: none;
+  border-radius: ${({ theme }) => theme.borderRadius.button};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primary[600]};
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  svg {
+    font-size: 18px;
+  }
+`;
+
 export const ContributeDataModal: React.FC<ContributeDataModalProps> = ({
   open,
   onClose,
@@ -272,6 +309,7 @@ export const ContributeDataModal: React.FC<ContributeDataModalProps> = ({
   // State
   const [selectedType, setSelectedType] = useState<ContributionType>('barcode');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
 
   // Form state for each type
   const [barcodeData, setBarcodeData] = useState<BarcodeContributionData>({
@@ -297,6 +335,12 @@ export const ContributeDataModal: React.FC<ContributeDataModalProps> = ({
     volume: '',
   });
 
+  // Handle barcode scan
+  const handleBarcodeDetected = (code: string) => {
+    setBarcodeData({ barcode: code });
+    setIsScannerOpen(false);
+  };
+
   // Reset form when modal opens/closes
   const handleClose = () => {
     setBarcodeData({ barcode: '' });
@@ -311,6 +355,7 @@ export const ContributeDataModal: React.FC<ContributeDataModalProps> = ({
       volume: '',
     });
     setErrors({});
+    setIsScannerOpen(false);
     onClose();
   };
 
@@ -470,16 +515,26 @@ export const ContributeDataModal: React.FC<ContributeDataModalProps> = ({
             {selectedType === 'barcode' && (
               <FormField>
                 <Label htmlFor="barcode">Código de Barras *</Label>
-                <Input
-                  id="barcode"
-                  type="text"
-                  placeholder="7501234567890"
-                  value={barcodeData.barcode}
-                  onChange={(e) => setBarcodeData({ barcode: e.target.value })}
-                  $hasError={!!errors.barcode}
-                />
+                <InputWithButton>
+                  <Input
+                    id="barcode"
+                    type="text"
+                    placeholder="7501234567890"
+                    value={barcodeData.barcode}
+                    onChange={(e) => setBarcodeData({ barcode: e.target.value })}
+                    $hasError={!!errors.barcode}
+                  />
+                  <ScanButton
+                    type="button"
+                    onClick={() => setIsScannerOpen(true)}
+                    aria-label="Escanear código de barras"
+                  >
+                    <HiCamera />
+                    Escanear
+                  </ScanButton>
+                </InputWithButton>
                 {errors.barcode && <ErrorMessage>{errors.barcode}</ErrorMessage>}
-                <HelpText>Ingresa el código EAN-13, UPC u otro código de barras válido</HelpText>
+                <HelpText>Ingresa o escanea el código EAN-13, UPC u otro código de barras válido</HelpText>
               </FormField>
             )}
 
@@ -632,6 +687,14 @@ export const ContributeDataModal: React.FC<ContributeDataModalProps> = ({
           </Button>
         </ModalFooter>
       </ModalContainer>
+
+      {/* Barcode Scanner */}
+      {isScannerOpen && (
+        <BarcodeScanner
+          onDetected={handleBarcodeDetected}
+          onClose={() => setIsScannerOpen(false)}
+        />
+      )}
     </>
   );
 };
