@@ -342,13 +342,9 @@ const Dashboard = () => {
         // Create a complete Product object with all necessary fields for the modal
         const completeProduct: Product = {
           ...newProduct,
-          image: newProduct.image || null,
-          lowest_price: null, // No price yet since it's newly created
-          store_with_lowest_price: null,
-          average_price: null,
-          price_trend: 'stable',
-          last_price_update: null,
-          is_favorite: false,
+          image: newProduct.image || undefined,
+          lowest_price: undefined, // No price yet since it's newly created
+          store_with_lowest_price: undefined,
         };
         setNewlyCreatedProduct(completeProduct);
         setIsAddToListModalOpen(true);
