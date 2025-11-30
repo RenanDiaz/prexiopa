@@ -86,21 +86,28 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const [localValue, setLocalValue] = useState(value);
   const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const previousValueRef = useRef(value);
 
   // Debounced value that triggers the onChange callback
   const debouncedValue = useDebounce(localValue, debounceDelay);
 
-  // Update parent when debounced value changes
+  // Sync local value when external value changes
   useEffect(() => {
-    if (debouncedValue !== value) {
+    // Only update if the external value changed (not from our own onChange call)
+    if (value !== previousValueRef.current) {
+      previousValueRef.current = value;
+      setLocalValue(value);
+    }
+  }, [value]);
+
+  // Update parent when debounced value changes (only from user input)
+  useEffect(() => {
+    // Only call onChange if value actually changed and is different from external value
+    if (debouncedValue !== previousValueRef.current && debouncedValue !== value) {
+      previousValueRef.current = debouncedValue;
       onChange(debouncedValue);
     }
   }, [debouncedValue, onChange, value]);
-
-  // Sync local value when external value changes
-  useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
 
   /**
    * Handle input change
