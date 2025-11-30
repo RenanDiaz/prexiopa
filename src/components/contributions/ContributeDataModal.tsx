@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import { HiX, HiCamera, HiInformationCircle, HiCash } from 'react-icons/hi';
 import { FiHash } from 'react-icons/fi';
 import { Button } from '@/components/common/Button';
-import { BarcodeScanner } from '@/components/common/BarcodeScanner';
+import { BarcodeScanner } from '@/components/scanner/BarcodeScanner';
 import { useContributionsStore } from '@/store/contributionsStore';
 import { useAuthStore } from '@/store/authStore';
 import type {
@@ -689,12 +689,11 @@ export const ContributeDataModal: React.FC<ContributeDataModalProps> = ({
       </ModalContainer>
 
       {/* Barcode Scanner */}
-      {isScannerOpen && (
-        <BarcodeScanner
-          onDetected={handleBarcodeDetected}
-          onClose={() => setIsScannerOpen(false)}
-        />
-      )}
+      <BarcodeScanner
+        isOpen={isScannerOpen}
+        onScan={handleBarcodeDetected}
+        onClose={() => setIsScannerOpen(false)}
+      />
     </>
   );
 };
