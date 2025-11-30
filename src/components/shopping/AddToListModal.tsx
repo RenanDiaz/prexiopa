@@ -9,7 +9,7 @@
  * - Opcionalmente contribuir el precio para otros usuarios
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { NumericFormat } from 'react-number-format';
 import { FiShoppingCart, FiDollarSign, FiPackage, FiAlertCircle } from 'react-icons/fi';
@@ -278,6 +278,9 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
   const [quantity, setQuantity] = useState('1');
   const [savePrice, setSavePrice] = useState(true);
 
+  // Ref for price input
+  const priceInputRef = useRef<HTMLInputElement>(null);
+
   // Handle ATM-style price input (adds digits from right to left)
   const handlePriceKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const key = e.key;
@@ -341,6 +344,11 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
 
       // Check savePrice by default
       setSavePrice(true);
+
+      // Focus price input after modal opens
+      setTimeout(() => {
+        priceInputRef.current?.focus();
+      }, 100);
     }
   }, [isOpen, product, stores, sessionStoreId]);
 
@@ -440,9 +448,9 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
                     fixedDecimalScale={true}
                     allowNegative={false}
                     disabled={isSubmitting}
-                    autoFocus
                     onKeyDown={handlePriceKeyPress}
                     readOnly
+                    getInputRef={priceInputRef}
                   />
                   {product.lowest_price && (
                     <HelpText>Último precio: ${product.lowest_price.toFixed(2)}</HelpText>
