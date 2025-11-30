@@ -166,6 +166,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <SearchBarContainer className={className} data-testid={testId}>
+      <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
       <SearchInputWrapper>
         {/* Search Icon */}
         <SearchIcon aria-hidden="true">
@@ -191,6 +192,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck="false"
+          name="search-prexiopa"
+          id="search-input-prexiopa"
+          data-form-type="other"
         />
 
         {/* Clear Button (visible when text is present) */}
@@ -219,6 +223,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           </ScanButton>
         )}
       </SearchInputWrapper>
+      </form>
 
       {/* Screen reader hint */}
       <span id="search-hint" className="sr-only">
