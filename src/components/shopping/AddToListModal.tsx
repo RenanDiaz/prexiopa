@@ -213,6 +213,7 @@ const StyledNumericFormat = styled(NumericFormat)`
   border: 2px solid ${({ theme }) => theme.colors.border.main};
   border-radius: ${({ theme }) => theme.borderRadius.button};
   transition: all 0.2s ease;
+  cursor: text;
 
   &:hover:not(:disabled) {
     border-color: ${({ theme }) => theme.colors.primary[400]};
@@ -272,18 +273,54 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
 }) => {
   // Form state
   const [price, setPrice] = useState('');
+  const [priceInCents, setPriceInCents] = useState(0); // Store price in cents for ATM-style input
   const [selectedStoreId, setSelectedStoreId] = useState('');
   const [quantity, setQuantity] = useState('1');
   const [savePrice, setSavePrice] = useState(true);
+
+  // Handle ATM-style price input (adds digits from right to left)
+  const handlePriceKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const key = e.key;
+
+    // Allow backspace
+    if (key === 'Backspace') {
+      e.preventDefault();
+      const newCents = Math.floor(priceInCents / 10);
+      setPriceInCents(newCents);
+      setPrice((newCents / 100).toFixed(2));
+      return;
+    }
+
+    // Only allow digits
+    if (!/^\d$/.test(key)) {
+      e.preventDefault();
+      return;
+    }
+
+    e.preventDefault();
+    const digit = parseInt(key);
+    const newCents = priceInCents * 10 + digit;
+
+    // Limit to reasonable amount (999,999.99)
+    if (newCents > 99999999) {
+      return;
+    }
+
+    setPriceInCents(newCents);
+    setPrice((newCents / 100).toFixed(2));
+  };
 
   // Initialize form with product data
   useEffect(() => {
     if (isOpen) {
       // Pre-fill price if available
       if (product.lowest_price) {
-        setPrice(product.lowest_price.toString());
+        const cents = Math.round(product.lowest_price * 100);
+        setPriceInCents(cents);
+        setPrice(product.lowest_price.toFixed(2));
       } else {
-        setPrice('');
+        setPriceInCents(0);
+        setPrice('0.00');
       }
 
       // Pre-select store based on priority:
@@ -339,7 +376,8 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
 
   const handleClose = () => {
     if (!isSubmitting) {
-      setPrice('');
+      setPrice('0.00');
+      setPriceInCents(0);
       setSelectedStoreId('');
       setQuantity('1');
       setSavePrice(true);
@@ -395,15 +433,16 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
                     id="price"
                     placeholder="0.00"
                     value={price}
-                    onValueChange={(values) => setPrice(values.value)}
                     thousandSeparator=","
                     decimalSeparator="."
                     prefix="$"
                     decimalScale={2}
-                    fixedDecimalScale={false}
+                    fixedDecimalScale={true}
                     allowNegative={false}
                     disabled={isSubmitting}
                     autoFocus
+                    onKeyDown={handlePriceKeyPress}
+                    readOnly
                   />
                   {product.lowest_price && (
                     <HelpText>Último precio: ${product.lowest_price.toFixed(2)}</HelpText>
