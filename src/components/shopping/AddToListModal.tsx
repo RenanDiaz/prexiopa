@@ -495,5 +495,3 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
     </Modal>
   );
 };
-
-export default AddToListModal;
