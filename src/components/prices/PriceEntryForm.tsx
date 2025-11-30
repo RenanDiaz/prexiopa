@@ -7,8 +7,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { FiTag, FiPercent, FiInfo } from 'react-icons/fi';
-import { Input } from '@/components/common/Input';
-import { Button } from '@/components/common/Button';
+import { Input, PriceInput, Button } from '@/components/common';
 import type { CreatePriceEntry } from '@/types/price.types';
 
 const FormContainer = styled.form`
@@ -146,53 +145,51 @@ export const PriceEntryForm: React.FC<PriceEntryFormProps> = ({
   isLoading = false,
   initialPrice,
 }) => {
-  const [unitPrice, setUnitPrice] = useState<string>(initialPrice?.toString() || '');
+  const [unitPrice, setUnitPrice] = useState<number>(initialPrice || 0);
   const [quantity, setQuantity] = useState<string>('1');
-  const [discount, setDiscount] = useState<string>('0');
+  const [discount, setDiscount] = useState<number>(0);
   const [isPromotion, setIsPromotion] = useState(false);
   const [notes, setNotes] = useState('');
 
   // Calculate totals
-  const parsedPrice = parseFloat(unitPrice) || 0;
   const parsedQuantity = parseInt(quantity) || 1;
-  const parsedDiscount = parseFloat(discount) || 0;
 
-  const subtotal = parsedPrice * parsedQuantity;
-  const totalPrice = Math.max(0, subtotal - parsedDiscount);
-  const effectiveUnitPrice = parsedQuantity > 0 ? totalPrice / parsedQuantity : parsedPrice;
-  const savingsPercentage = subtotal > 0 && parsedDiscount > 0
-    ? Math.round((parsedDiscount / subtotal) * 100)
+  const subtotal = unitPrice * parsedQuantity;
+  const totalPrice = Math.max(0, subtotal - discount);
+  const effectiveUnitPrice = parsedQuantity > 0 ? totalPrice / parsedQuantity : unitPrice;
+  const savingsPercentage = subtotal > 0 && discount > 0
+    ? Math.round((discount / subtotal) * 100)
     : 0;
 
-  const isDeal = parsedQuantity > 1 || parsedDiscount > 0 || isPromotion;
+  const isDeal = parsedQuantity > 1 || discount > 0 || isPromotion;
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!parsedPrice || parsedPrice <= 0) {
+    if (!unitPrice || unitPrice <= 0) {
       return;
     }
 
     const data: CreatePriceEntry = {
       product_id: productId,
       store_id: storeId,
-      price: parsedPrice,
+      price: unitPrice,
       quantity: parsedQuantity,
-      discount: parsedDiscount,
+      discount: discount,
       total_price: totalPrice,
       is_promotion: isPromotion,
       notes: notes.trim() || undefined,
     };
 
     await onSubmit(data);
-  }, [productId, storeId, parsedPrice, parsedQuantity, parsedDiscount, totalPrice, isPromotion, notes, onSubmit]);
+  }, [productId, storeId, unitPrice, parsedQuantity, discount, totalPrice, isPromotion, notes, onSubmit]);
 
   // Auto-detect promotion based on discount or quantity
   useEffect(() => {
-    if (parsedQuantity > 1 || parsedDiscount > 0) {
+    if (parsedQuantity > 1 || discount > 0) {
       setIsPromotion(true);
     }
-  }, [parsedQuantity, parsedDiscount]);
+  }, [parsedQuantity, discount]);
 
   return (
     <FormContainer onSubmit={handleSubmit}>
@@ -206,17 +203,15 @@ export const PriceEntryForm: React.FC<PriceEntryFormProps> = ({
       <Row>
         <FormGroup style={{ flex: 2 }}>
           <Label htmlFor="unit-price">Precio unitario ($) *</Label>
-          <Input
+          <PriceInput
             id="unit-price"
-            type="number"
-            placeholder="0.00"
             value={unitPrice}
-            onChange={(e) => setUnitPrice(e.target.value)}
-            min="0.01"
-            step="0.01"
-            required
+            onChange={setUnitPrice}
+            placeholder="$0.00"
             disabled={isLoading}
             autoFocus
+            required
+            label="Precio unitario"
           />
           <HelpText>Precio por unidad del producto</HelpText>
         </FormGroup>
@@ -226,6 +221,8 @@ export const PriceEntryForm: React.FC<PriceEntryFormProps> = ({
           <Input
             id="quantity"
             type="number"
+            inputMode="numeric"
+            pattern="[0-9]*"
             placeholder="1"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
@@ -240,15 +237,13 @@ export const PriceEntryForm: React.FC<PriceEntryFormProps> = ({
       <Row>
         <FormGroup style={{ flex: 1 }}>
           <Label htmlFor="discount">Descuento ($)</Label>
-          <Input
+          <PriceInput
             id="discount"
-            type="number"
-            placeholder="0.00"
             value={discount}
-            onChange={(e) => setDiscount(e.target.value)}
-            min="0"
-            step="0.01"
+            onChange={setDiscount}
+            placeholder="$0.00"
             disabled={isLoading}
+            label="Descuento"
           />
           <HelpText>Descuento aplicado al total</HelpText>
         </FormGroup>
@@ -280,7 +275,7 @@ export const PriceEntryForm: React.FC<PriceEntryFormProps> = ({
         </CheckboxLabel>
       </FormGroup>
 
-      {parsedPrice > 0 && (
+      {unitPrice > 0 && (
         <TotalDisplay>
           <TotalLabel>Precio total</TotalLabel>
           <TotalAmount>${totalPrice.toFixed(2)}</TotalAmount>
@@ -305,7 +300,7 @@ export const PriceEntryForm: React.FC<PriceEntryFormProps> = ({
                   {savingsPercentage}% de ahorro
                 </DealBadge>
               )}
-              {isPromotion && !parsedDiscount && parsedQuantity === 1 && (
+              {isPromotion && !discount && parsedQuantity === 1 && (
                 <DealBadge>
                   <FiTag size={12} />
                   Oferta
@@ -331,7 +326,7 @@ export const PriceEntryForm: React.FC<PriceEntryFormProps> = ({
         <Button
           type="submit"
           variant="primary"
-          disabled={!parsedPrice || parsedPrice <= 0 || isLoading}
+          disabled={!unitPrice || unitPrice <= 0 || isLoading}
           loading={isLoading}
           fullWidth
         >

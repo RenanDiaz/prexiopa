@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import { HiX, HiCamera, HiInformationCircle, HiCash } from 'react-icons/hi';
 import { FiHash } from 'react-icons/fi';
 import { useQueryClient } from '@tanstack/react-query';
-import { Button } from '@/components/common/Button';
+import { Button, BarcodeInput, PriceInput } from '@/components/common';
 import { BarcodeScanner } from '@/components/scanner/BarcodeScanner';
 import { useContributionsStore } from '@/store/contributionsStore';
 import { useAuthStore } from '@/store/authStore';
@@ -262,41 +262,7 @@ const InfoBox = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing[4]};
 `;
 
-const InputWithButton = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing[2]};
-`;
-
-const ScanButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing[2]};
-  padding: 0 ${({ theme }) => theme.spacing[4]};
-  height: 44px;
-  background: ${({ theme }) => theme.colors.primary[500]};
-  color: white;
-  border: none;
-  border-radius: ${({ theme }) => theme.borderRadius.button};
-  font-size: ${({ theme }) => theme.typography.fontSize.sm};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  flex-shrink: 0;
-
-  &:hover {
-    background: ${({ theme }) => theme.colors.primary[600]};
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
-
-  svg {
-    font-size: 18px;
-  }
-`;
+// Removed InputWithButton and ScanButton styled components - now using BarcodeInput with built-in scanner button
 
 export const ContributeDataModal: React.FC<ContributeDataModalProps> = ({
   open,
@@ -523,25 +489,16 @@ export const ContributeDataModal: React.FC<ContributeDataModalProps> = ({
             {selectedType === 'barcode' && (
               <FormField>
                 <Label htmlFor="barcode">Código de Barras *</Label>
-                <InputWithButton>
-                  <Input
-                    id="barcode"
-                    type="text"
-                    placeholder="7501234567890"
-                    value={barcodeData.barcode}
-                    onChange={(e) => setBarcodeData({ barcode: e.target.value })}
-                    $hasError={!!errors.barcode}
-                  />
-                  <ScanButton
-                    type="button"
-                    onClick={() => setIsScannerOpen(true)}
-                    aria-label="Escanear código de barras"
-                  >
-                    <HiCamera />
-                    Escanear
-                  </ScanButton>
-                </InputWithButton>
-                {errors.barcode && <ErrorMessage>{errors.barcode}</ErrorMessage>}
+                <BarcodeInput
+                  id="barcode"
+                  value={barcodeData.barcode}
+                  onChange={(value) => setBarcodeData({ barcode: value })}
+                  showScanButton={true}
+                  onScanClick={() => setIsScannerOpen(true)}
+                  error={errors.barcode}
+                  label="Código de Barras"
+                  required
+                />
                 <HelpText>Ingresa o escanea el código EAN-13, UPC u otro código de barras válido</HelpText>
               </FormField>
             )}
@@ -583,17 +540,13 @@ export const ContributeDataModal: React.FC<ContributeDataModalProps> = ({
 
                 <FormField>
                   <Label htmlFor="price">Precio *</Label>
-                  <Input
+                  <PriceInput
                     id="price"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    placeholder="0.00"
-                    value={priceData.value || ''}
-                    onChange={(e) =>
-                      setPriceData({ ...priceData, value: parseFloat(e.target.value) || 0 })
-                    }
-                    $hasError={!!errors.value}
+                    value={priceData.value || 0}
+                    onChange={(value) => setPriceData({ ...priceData, value })}
+                    placeholder="$0.00"
+                    label="Precio"
+                    required
                   />
                   {errors.value && <ErrorMessage>{errors.value}</ErrorMessage>}
                   <HelpText>Ingresa el precio exacto que viste en la tienda</HelpText>

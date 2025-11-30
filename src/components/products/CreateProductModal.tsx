@@ -354,6 +354,8 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
                     <Input
                       id="measurement-value"
                       type="number"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       placeholder="Ej: 500"
                       value={measurementValue}
                       onChange={(e) => setMeasurementValue(e.target.value)}

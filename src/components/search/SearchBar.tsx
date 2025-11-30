@@ -176,6 +176,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         <SearchInput
           ref={inputRef}
           type="text"
+          inputMode="search"
           value={localValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
