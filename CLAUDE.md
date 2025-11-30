@@ -399,7 +399,57 @@ está implementada en las RPC functions de Supabase y los hooks ya existentes
 - `src/components/user/ReputationBadge.tsx` (nuevo)
 - `src/pages/TopContributors.tsx` (nuevo - opcional)
 
-#### Tarea 3.5: Admin Analytics Dashboard
+#### Tarea 3.5: Vista de Productos Incompletos
+**Prioridad:** Media
+**Estimado:** 4 horas
+
+**Objetivo:** Permitir a moderadores/admins identificar y completar productos con datos faltantes.
+
+**Fase A: Backend (Supabase)**
+- [ ] Crear función RPC `get_incomplete_products()`:
+  - Filtrar productos sin código de barras
+  - Filtrar productos sin imagen
+  - Filtrar productos sin precios recientes (últimos 7 días)
+  - Filtrar productos sin descripción o brand
+  - Opciones de ordenamiento (más incompletos primero)
+  - Paginación (limit, offset)
+- [ ] Retornar datos agregados:
+  - Información del producto
+  - Campos faltantes (array de strings)
+  - Score de completitud (0-100%)
+  - Última actualización
+
+**Fase B: Frontend**
+- [ ] Crear componente `IncompleteProductsList.tsx`:
+  - Tabla/Lista de productos incompletos
+  - Mostrar score de completitud con barra de progreso
+  - Badges para indicar qué campos faltan
+  - Filtros: por tipo de incompletitud, por categoría
+  - Ordenar por score, última actualización, nombre
+- [ ] Agregar botón "Completar" que abre el modal de contribución
+- [ ] Integrar en sidebar del admin panel
+- [ ] Paginación o infinite scroll
+
+**Archivos a crear/modificar:**
+- `supabase/migrations/XXX_incomplete_products_view.sql` (nuevo)
+- `src/components/admin/IncompleteProductsList.tsx` (nuevo)
+- `src/components/admin/AdminLayout.tsx` (modificar - agregar link en sidebar)
+- `src/hooks/useIncompleteProducts.ts` (nuevo)
+- `src/types/incomplete-product.ts` (nuevo)
+
+**Tipos sugeridos:**
+```typescript
+interface IncompleteProduct {
+  id: string;
+  name: string;
+  category: string;
+  completenessScore: number; // 0-100
+  missingFields: ('barcode' | 'image' | 'price' | 'description' | 'brand')[];
+  lastUpdated: string;
+}
+```
+
+#### Tarea 3.6: Admin Analytics Dashboard (Opcional)
 **Prioridad:** Baja
 **Estimado:** 3 horas
 
