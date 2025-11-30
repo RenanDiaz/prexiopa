@@ -116,6 +116,11 @@ const ModalRoot: React.FC<ModalProps> = ({
     }
   };
 
+  // Prevent click propagation from modal content
+  const handleModalClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  };
+
   // Manage focus and body scroll
   useEffect(() => {
     if (open) {
@@ -164,6 +169,7 @@ const ModalRoot: React.FC<ModalProps> = ({
         role="dialog"
         aria-modal="true"
         tabIndex={-1}
+        onClick={handleModalClick}
       >
         {showCloseButton && (
           <S.CloseButton
