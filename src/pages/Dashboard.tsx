@@ -19,6 +19,7 @@ import { AddToListModal } from '@/components/shopping';
 import { useProductsQuery, useCategoriesQuery } from '@/hooks/useProducts';
 import { useStoresQuery } from '@/hooks/useStores';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useActiveSessionQuery, useAddItemMutation } from '@/hooks/useShoppingLists';
 
 // Types
 import type { PriceRange, FilterChangePayload } from '@/components/search/SearchFilters';
@@ -28,9 +29,6 @@ import type { Product } from '@/types/product.types';
 // Services
 import { createProduct } from '@/services/supabase/products';
 import { toast } from 'react-toastify';
-
-// Store
-import { useShoppingStore } from '@/store/shoppingStore';
 
 const DashboardContainer = styled.div`
   min-height: 100vh;
@@ -232,9 +230,9 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width: 1023px)');
 
-  // Shopping store
-  const currentSession = useShoppingStore((state) => state.currentSession);
-  const addItem = useShoppingStore((state) => state.addItem);
+  // Active shopping session (React Query)
+  const { data: activeSession } = useActiveSessionQuery();
+  const addItemMutation = useAddItemMutation();
 
   // Search & Filter State
   const [searchQuery, setSearchQuery] = useState('');
@@ -338,7 +336,7 @@ const Dashboard = () => {
       setScannedBarcode('');
 
       // If there's an active shopping session, open AddToListModal
-      if (currentSession) {
+      if (activeSession) {
         // Create a complete Product object with all necessary fields for the modal
         const completeProduct: Product = {
           ...newProduct,
@@ -357,7 +355,7 @@ const Dashboard = () => {
       console.error('Error creating product:', error);
       toast.error('Error al crear el producto. Inténtalo de nuevo.');
     }
-  }, [currentSession]);
+  }, [activeSession]);
 
   const handleFilterChange = useCallback((payload: FilterChangePayload) => {
     if (payload.category !== undefined) {
@@ -394,15 +392,20 @@ const Dashboard = () => {
       store_name: string;
       savePrice: boolean;
     }) => {
+      if (!activeSession) {
+        toast.error('No hay una sesión activa');
+        return;
+      }
+
       setIsAddingToList(true);
       try {
-        // Add to shopping list
-        addItem({
-          productId: data.product_id,
-          productName: data.product_name,
+        // Add to shopping list using React Query mutation
+        await addItemMutation.mutateAsync({
+          session_id: activeSession.id,
+          product_id: data.product_id,
+          product_name: data.product_name,
           price: data.price,
           quantity: data.quantity,
-          unit: 'unidad',
         });
 
         // If savePrice is true, save to database
@@ -431,7 +434,7 @@ const Dashboard = () => {
         setIsAddingToList(false);
       }
     },
-    [addItem, newlyCreatedProduct]
+    [activeSession, addItemMutation, newlyCreatedProduct]
   );
 
   const handleCloseAddToListModal = useCallback(() => {
@@ -563,8 +566,8 @@ const Dashboard = () => {
           onClose={handleCloseAddToListModal}
           onAdd={handleAddToList}
           isSubmitting={isAddingToList}
-          sessionStoreId={currentSession?.storeId || null}
-          sessionStoreName={currentSession?.storeName || null}
+          sessionStoreId={activeSession?.store_id || null}
+          sessionStoreName={activeSession?.store_name || null}
         />
       )}
     </DashboardContainer>
