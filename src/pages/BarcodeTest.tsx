@@ -6,9 +6,11 @@
 
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { FiCamera } from 'react-icons/fi';
 import { validateBarcode, formatBarcodeDisplay, isScannable } from '@/utils/barcodeValidator';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Input';
+import { BarcodeScanner } from '@/components/scanner/BarcodeScanner';
 
 const PageContainer = styled.div`
   max-width: 800px;
@@ -38,6 +40,29 @@ const TestSection = styled.div`
 
 const InputGroup = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing[6]};
+`;
+
+const InputWithButton = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing[2]};
+  align-items: stretch;
+
+  > *:first-child {
+    flex: 1;
+  }
+`;
+
+const ScanButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: ${({ theme }) => `${theme.spacing[2]} ${theme.spacing[4]}`};
+  gap: ${({ theme }) => theme.spacing[2]};
+  white-space: nowrap;
+
+  svg {
+    font-size: 1.25rem;
+  }
 `;
 
 const Label = styled.label`
@@ -158,6 +183,7 @@ export const BarcodeTest: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   const [result, setResult] = useState<ReturnType<typeof validateBarcode> | null>(null);
   const [scanResult, setScanResult] = useState<ReturnType<typeof isScannable> | null>(null);
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
 
   const handleTest = () => {
     if (!inputValue.trim()) {
@@ -169,6 +195,17 @@ export const BarcodeTest: React.FC = () => {
     const validation = validateBarcode(inputValue);
     const scannable = isScannable(inputValue);
 
+    setResult(validation);
+    setScanResult(scannable);
+  };
+
+  const handleScan = (barcode: string) => {
+    setInputValue(barcode);
+    setIsScannerOpen(false);
+
+    // Auto-validar después de escanear
+    const validation = validateBarcode(barcode);
+    const scannable = isScannable(barcode);
     setResult(validation);
     setScanResult(scannable);
   };
@@ -189,21 +226,27 @@ export const BarcodeTest: React.FC = () => {
       <Title>🔍 Validador de Códigos de Barras</Title>
       <Description>
         Herramienta para verificar la validez de códigos de barras EAN-8, EAN-13 y UPC-A.
-        Ingresa un código para ver si es válido y escaneable.
+        Escanea con tu cámara o ingresa manualmente un código para validarlo en tiempo real.
       </Description>
 
       <TestSection>
         <InputGroup>
           <Label htmlFor="barcode-input">Código de Barras</Label>
-          <Input
-            id="barcode-input"
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleTest()}
-            placeholder="Ej: 022000159335"
-            autoFocus
-          />
+          <InputWithButton>
+            <Input
+              id="barcode-input"
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleTest()}
+              placeholder="Ej: 022000159335"
+              autoFocus
+            />
+            <ScanButton variant="outline" onClick={() => setIsScannerOpen(true)}>
+              <FiCamera />
+              Escanear
+            </ScanButton>
+          </InputWithButton>
         </InputGroup>
 
         <Button onClick={handleTest} disabled={!inputValue.trim()}>
@@ -307,6 +350,13 @@ export const BarcodeTest: React.FC = () => {
           </InfoItem>
         </InfoList>
       </InfoBox>
+
+      {/* Barcode Scanner Modal */}
+      <BarcodeScanner
+        isOpen={isScannerOpen}
+        onClose={() => setIsScannerOpen(false)}
+        onScan={handleScan}
+      />
     </PageContainer>
   );
 };
