@@ -84,7 +84,7 @@ export const StyledInput = styled.input<{
   flex: 1;
   width: 100%;
   height: 100%;
-  padding: 0 ${({ theme }) => theme.components.input.padding};
+  padding: ${({ theme }) => theme.components.input.padding};
   font-family: ${({ theme }) => theme.typography.fontFamily.primary};
   font-size: inherit;
   color: ${({ theme }) => theme.colors.text.primary};
@@ -92,12 +92,12 @@ export const StyledInput = styled.input<{
   border: none;
   outline: none;
 
-  ${({ hasIconLeft }) => hasIconLeft && css`
-    padding-left: 0;
+  ${({ hasIconLeft, theme }) => hasIconLeft && css`
+    padding-left: ${theme.spacing[2]};
   `}
 
-  ${({ hasIconRight }) => hasIconRight && css`
-    padding-right: 0;
+  ${({ hasIconRight, theme }) => hasIconRight && css`
+    padding-right: ${theme.spacing[2]};
   `}
 
   &::placeholder {

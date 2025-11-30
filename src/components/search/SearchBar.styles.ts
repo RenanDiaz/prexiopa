@@ -69,7 +69,7 @@ export const SearchInput = styled.input`
   flex: 1;
   width: 100%;
   height: ${({ theme }) => theme.components.input.height.medium};
-  padding: 0 ${({ theme }) => theme.spacing[4]};
+  padding: 12px ${({ theme }) => theme.spacing[4]};
   padding-left: 44px; /* Space for search icon */
   padding-right: 88px; /* Space for clear + scan buttons */
   font-family: ${({ theme }) => theme.typography.fontFamily.primary};

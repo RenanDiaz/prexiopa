@@ -231,7 +231,7 @@ const StyledNumericFormat = styled(NumericFormat)`
   }
 
   &::placeholder {
-    color: ${({ theme }) => theme.colors.text.tertiary};
+    color: ${({ theme }) => theme.colors.text.hint};
   }
 `;
 

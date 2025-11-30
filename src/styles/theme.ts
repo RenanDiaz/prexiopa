@@ -555,7 +555,7 @@ export const components = {
       medium: '44px',
       large: '52px',
     },
-    padding: '0 12px',
+    padding: '12px 16px',
     fontSize: '1rem',
   },
 
