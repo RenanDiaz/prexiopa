@@ -158,7 +158,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     savePrice: boolean;
   }) => {
     try {
-      // If no active session, create one automatically
+      // If no active session, create one automatically with the selected store
       let sessionId = activeSession?.id;
       if (!sessionId) {
         const newSession = await createSessionMutation.mutateAsync({
@@ -169,6 +169,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         sessionId = newSession.id;
       }
 
+      // Use session's store if it exists, otherwise use the selected store from modal
+      const finalStoreId = activeSession?.store_id || data.store_id;
+      const finalStoreName = activeSession?.store_name || data.store_name;
+
       // Add item to shopping list
       await addItemMutation.mutateAsync({
         session_id: sessionId,
@@ -176,8 +180,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         product_name: data.product_name,
         price: data.price,
         quantity: data.quantity,
-        store_id: data.store_id,
-        store_name: data.store_name,
+        store_id: finalStoreId,
+        store_name: finalStoreName,
       });
 
       // If savePrice is true, save to prices table
@@ -333,6 +337,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         onClose={() => setIsAddToListModalOpen(false)}
         onAdd={handleAddFromModal}
         isSubmitting={addItemMutation.isPending || createSessionMutation.isPending}
+        sessionStoreId={activeSession?.store_id}
+        sessionStoreName={activeSession?.store_name}
       />
     </CardContainer>
   );

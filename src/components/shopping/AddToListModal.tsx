@@ -222,6 +222,9 @@ export interface AddToListModalProps {
     savePrice: boolean;
   }) => void;
   isSubmitting?: boolean;
+  /** If provided, the store selector will be locked to this store (from active session) */
+  sessionStoreId?: string | null;
+  sessionStoreName?: string | null;
 }
 
 export const AddToListModal: React.FC<AddToListModalProps> = ({
@@ -231,6 +234,8 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
   onClose,
   onAdd,
   isSubmitting = false,
+  sessionStoreId = null,
+  sessionStoreName = null,
 }) => {
   // Form state
   const [price, setPrice] = useState('');
@@ -248,8 +253,14 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
         setPrice('');
       }
 
-      // Pre-select store if available
-      if (product.store_with_lowest_price?.id) {
+      // Pre-select store based on priority:
+      // 1. Session store (from active shopping session)
+      // 2. Product's lowest price store
+      // 3. First available store
+      if (sessionStoreId) {
+        // Lock to session's store
+        setSelectedStoreId(sessionStoreId);
+      } else if (product.store_with_lowest_price?.id) {
         setSelectedStoreId(product.store_with_lowest_price.id);
       } else if (stores.length > 0) {
         setSelectedStoreId(stores[0].id);
@@ -261,7 +272,7 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
       // Check savePrice by default
       setSavePrice(true);
     }
-  }, [isOpen, product, stores]);
+  }, [isOpen, product, stores, sessionStoreId]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -406,10 +417,14 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
                   value={selectedStoreId}
                   onChange={(e) => setSelectedStoreId(e.target.value)}
                   required
-                  disabled={isSubmitting || stores.length === 0}
+                  disabled={isSubmitting || stores.length === 0 || !!sessionStoreId}
                 >
                   {stores.length === 0 ? (
                     <option value="">No hay tiendas disponibles</option>
+                  ) : sessionStoreId ? (
+                    <option value={sessionStoreId}>
+                      {sessionStoreName || 'Tienda de la sesión'}
+                    </option>
                   ) : (
                     stores.map((store) => (
                       <option key={store.id} value={store.id}>
@@ -418,6 +433,11 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
                     ))
                   )}
                 </Select>
+                {sessionStoreId && (
+                  <HelpText>
+                    Usando la tienda de tu lista de compras actual
+                  </HelpText>
+                )}
               </FormGroup>
 
               {/* Save Price Checkbox */}
