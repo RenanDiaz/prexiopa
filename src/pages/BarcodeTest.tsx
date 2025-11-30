@@ -17,8 +17,8 @@ const PageContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: ${({ theme }) => theme.fontSizes['3xl']};
-  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  font-size: ${({ theme }) => theme.fontSize['3xl']};
+  font-weight: ${({ theme }) => theme.fontWeight.bold};
   color: ${({ theme }) => theme.colors.text.primary};
   margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
@@ -42,7 +42,7 @@ const InputGroup = styled.div`
 
 const Label = styled.label`
   display: block;
-  font-weight: ${({ theme }) => theme.fontWeights.medium};
+  font-weight: ${({ theme }) => theme.fontWeight.medium};
   color: ${({ theme }) => theme.colors.text.primary};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
@@ -79,7 +79,7 @@ const ResultRow = styled.div`
 `;
 
 const ResultLabel = styled.span`
-  font-weight: ${({ theme }) => theme.fontWeights.medium};
+  font-weight: ${({ theme }) => theme.fontWeight.medium};
   color: ${({ theme }) => theme.colors.text.secondary};
 `;
 
@@ -94,7 +94,7 @@ const Message = styled.p<{ $type: 'success' | 'error' | 'warning' }>`
   margin-top: ${({ theme }) => theme.spacing.md};
   padding: ${({ theme }) => theme.spacing.md};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
-  font-weight: ${({ theme }) => theme.fontWeights.medium};
+  font-weight: ${({ theme }) => theme.fontWeight.medium};
   background: ${({ $type }) =>
     $type === 'success'
       ? 'rgba(34, 197, 94, 0.1)'
@@ -113,7 +113,7 @@ const PresetButtons = styled.div`
 `;
 
 const PresetButton = styled(Button)`
-  font-size: ${({ theme }) => theme.fontSizes.sm};
+  font-size: ${({ theme }) => theme.fontSize.sm};
   padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.md}`};
 `;
 
@@ -126,8 +126,8 @@ const InfoBox = styled.div`
 `;
 
 const InfoTitle = styled.h3`
-  font-size: ${({ theme }) => theme.fontSizes.lg};
-  font-weight: ${({ theme }) => theme.fontWeights.semibold};
+  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-weight: ${({ theme }) => theme.fontWeight.semibold};
   color: ${({ theme }) => theme.colors.text.primary};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
