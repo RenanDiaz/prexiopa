@@ -279,19 +279,28 @@ const Dashboard = () => {
     setIsScannerOpen(false);
   }, []);
 
-  const handleScanSuccess = useCallback(async (barcode: string) => {
-    setIsScannerOpen(false);
-    setScannedBarcode(barcode);
+  const handleBarcodeSearch = useCallback(async (barcode: string) => {
+    // Validate that it looks like a barcode (numeric and reasonable length)
+    const trimmedBarcode = barcode.trim();
+    const isNumeric = /^\d+$/.test(trimmedBarcode);
+
+    if (!isNumeric || trimmedBarcode.length < 8) {
+      // Not a barcode format, just do normal search
+      return;
+    }
+
+    // Store barcode for potential product creation
+    setScannedBarcode(trimmedBarcode);
 
     // First, try to find the product by barcode
     try {
       const { getProductByBarcode } = await import('@/services/supabase/products');
-      const product = await getProductByBarcode(barcode);
+      const product = await getProductByBarcode(trimmedBarcode);
 
       if (product) {
         // Product exists - show it in search results
         toast.success(`¡Producto encontrado! ${product.name}`);
-        setSearchQuery(barcode);
+        setSearchQuery(trimmedBarcode);
       } else {
         // Product doesn't exist - show creation modal
         toast.info('Producto no encontrado. ¿Deseas agregarlo?');
@@ -304,6 +313,11 @@ const Dashboard = () => {
       setIsCreateProductModalOpen(true);
     }
   }, []);
+
+  const handleScanSuccess = useCallback(async (barcode: string) => {
+    setIsScannerOpen(false);
+    await handleBarcodeSearch(barcode);
+  }, [handleBarcodeSearch]);
 
   const handleCreateProduct = useCallback(async (productData: CreateProductInput) => {
     try {
@@ -355,6 +369,7 @@ const Dashboard = () => {
             value={searchQuery}
             onChange={handleSearch}
             onScanClick={handleScannerOpen}
+            onEnterPress={handleBarcodeSearch}
             placeholder="Buscar productos por nombre o código de barras..."
           />
         </HeaderContent>

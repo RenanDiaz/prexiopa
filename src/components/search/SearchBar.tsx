@@ -40,6 +40,8 @@ export interface SearchBarProps {
   onChange: (value: string) => void;
   /** Callback when scan button is clicked */
   onScanClick?: () => void;
+  /** Callback when Enter key is pressed (useful for barcode search) */
+  onEnterPress?: (value: string) => void;
   /** Input placeholder text */
   placeholder?: string;
   /** Disable the input */
@@ -74,6 +76,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   value,
   onChange,
   onScanClick,
+  onEnterPress,
   placeholder = 'Buscar productos, marcas...',
   disabled = false,
   debounceDelay = 300,
@@ -144,6 +147,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Escape') {
       handleClear();
+    } else if (e.key === 'Enter' && onEnterPress) {
+      // Close autocomplete when Enter is pressed
+      setIsAutocompleteOpen(false);
+      // Trigger the Enter callback with current value
+      onEnterPress(localValue);
     }
   };
 
