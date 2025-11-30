@@ -71,6 +71,13 @@ export const useContributionsStore = create<ContributionsStore>()(
           throw new Error('Usuario no autenticado');
         }
 
+        // Verificar si el usuario es moderador o admin
+        const { data: roleData } = await supabase.rpc('get_user_role', {
+          user_id: user.id,
+        });
+
+        const isModOrAdmin = roleData === 'moderator' || roleData === 'admin';
+
         // Insertar la contribución
         const { data, error } = await supabase
           .from('product_contributions')
@@ -85,6 +92,24 @@ export const useContributionsStore = create<ContributionsStore>()(
           .single();
 
         if (error) throw error;
+
+        // Si es moderador/admin, auto-aprobar la contribución inmediatamente
+        if (isModOrAdmin) {
+          const { error: approveError } = await supabase.rpc('approve_contribution', {
+            contribution_id: data.id,
+            reviewer_id: user.id,
+          });
+
+          if (approveError) {
+            console.error('Error auto-aprobando contribución:', approveError);
+            // No lanzar error, la contribución quedará pendiente
+          } else {
+            // Actualizar el status en el objeto local
+            data.status = 'approved';
+            data.reviewed_by = user.id;
+            data.reviewed_at = new Date().toISOString();
+          }
+        }
 
         // Transformar a nuestro tipo
         const contribution: ProductContribution = {
@@ -110,10 +135,18 @@ export const useContributionsStore = create<ContributionsStore>()(
         // Actualizar estadísticas
         get().getContributionStats();
 
-        showSuccessNotification(
-          'Tu contribución ha sido enviada y está pendiente de revisión',
-          '¡Contribución enviada!'
-        );
+        // Mensaje diferente si es auto-aprobada
+        if (isModOrAdmin && data.status === 'approved') {
+          showSuccessNotification(
+            'Tu contribución ha sido aplicada automáticamente',
+            '¡Contribución aprobada!'
+          );
+        } else {
+          showSuccessNotification(
+            'Tu contribución ha sido enviada y está pendiente de revisión',
+            '¡Contribución enviada!'
+          );
+        }
 
         return contribution;
       } catch (error) {

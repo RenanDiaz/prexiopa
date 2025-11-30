@@ -12,6 +12,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { HiX, HiCamera, HiInformationCircle, HiCash } from 'react-icons/hi';
 import { FiHash } from 'react-icons/fi';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/common/Button';
 import { BarcodeScanner } from '@/components/scanner/BarcodeScanner';
 import { useContributionsStore } from '@/store/contributionsStore';
@@ -305,6 +306,7 @@ export const ContributeDataModal: React.FC<ContributeDataModalProps> = ({
 }) => {
   const { user } = useAuthStore();
   const { submitContribution, isLoading } = useContributionsStore();
+  const queryClient = useQueryClient();
 
   // State
   const [selectedType, setSelectedType] = useState<ContributionType>('barcode');
@@ -445,6 +447,12 @@ export const ContributeDataModal: React.FC<ContributeDataModalProps> = ({
     });
 
     if (result) {
+      // Si la contribución fue auto-aprobada (moderadores/admins), invalidar cache
+      if (result.status === 'approved') {
+        await queryClient.invalidateQueries({
+          queryKey: ['product', productId],
+        });
+      }
       handleClose();
     }
   };
