@@ -339,7 +339,18 @@ const Dashboard = () => {
 
       // If there's an active shopping session, open AddToListModal
       if (currentSession) {
-        setNewlyCreatedProduct(newProduct);
+        // Create a complete Product object with all necessary fields for the modal
+        const completeProduct: Product = {
+          ...newProduct,
+          image: newProduct.image || null,
+          lowest_price: null, // No price yet since it's newly created
+          store_with_lowest_price: null,
+          average_price: null,
+          price_trend: 'stable',
+          last_price_update: null,
+          is_favorite: false,
+        };
+        setNewlyCreatedProduct(completeProduct);
         setIsAddToListModalOpen(true);
       } else {
         // Otherwise, just refresh products
