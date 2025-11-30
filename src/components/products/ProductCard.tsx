@@ -25,7 +25,9 @@ import {
 import { useIsFavorite, useToggleFavoriteMutation } from '@/hooks/useFavorites';
 import { useAuthStore } from '@/store/authStore';
 import { useActiveSessionQuery, useAddItemMutation, useCreateSessionMutation } from '@/hooks/useShoppingLists';
+import { useStoresQuery } from '@/hooks/useStores';
 import { showWarningNotification } from '@/store/uiStore';
+import { AddToListModal } from '@/components/shopping';
 import {
   CardContainer,
   CardImageWrapper,
@@ -83,6 +85,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const [imgSrc, setImgSrc] = useState(product.image || productPlaceholder);
   const [imgError, setImgError] = useState(false);
+  const [isAddToListModalOpen, setIsAddToListModalOpen] = useState(false);
+
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isFavorite = useIsFavorite(product.id);
   const { toggleFavorite, isLoading: isTogglingFavorite } = useToggleFavoriteMutation();
@@ -92,15 +96,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const addItemMutation = useAddItemMutation();
   const createSessionMutation = useCreateSessionMutation();
 
-  // Debug: log when component renders
-  console.log('ProductCard render:', {
-    productName: product.name,
-    isAuthenticated,
-    hasActiveSession: !!activeSession,
-    isLoadingSession,
-    activeSessionId: activeSession?.id,
-    buttonWillRender: isAuthenticated,
-  });
+  // Stores query for modal
+  const { data: stores = [] } = useStoresQuery();
 
   /**
    * Handle favorite button click
@@ -134,65 +131,77 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   };
 
   /**
-   * Handle add to shopping cart
+   * Handle add to shopping cart - opens modal
    */
-  const handleAddToCart = async (e: React.MouseEvent) => {
+  const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    console.log('🛒 Add to cart clicked', {
-      isAuthenticated,
-      activeSession,
-      product: {
-        id: product.id,
-        name: product.name,
-        lowest_price: product.lowest_price,
-        store_with_lowest_price: product.store_with_lowest_price,
-      },
-    });
-
     if (!isAuthenticated) {
-      console.log('❌ Not authenticated');
       showWarningNotification('Debes iniciar sesión para agregar productos a tu lista');
       return;
     }
 
-    if (!product.lowest_price || !product.store_with_lowest_price) {
-      console.log('❌ No price or store info');
-      showWarningNotification('No hay información de precio disponible');
-      return;
-    }
+    setIsAddToListModalOpen(true);
+  };
 
-    // If no active session, create one automatically
-    let sessionId = activeSession?.id;
-    if (!sessionId) {
-      console.log('📝 No active session, creating one...');
-      try {
+  /**
+   * Handle add from modal - actual add logic with price
+   */
+  const handleAddFromModal = async (data: {
+    product_id: string;
+    product_name: string;
+    price: number;
+    quantity: number;
+    store_id: string;
+    store_name: string;
+    savePrice: boolean;
+  }) => {
+    try {
+      // If no active session, create one automatically
+      let sessionId = activeSession?.id;
+      if (!sessionId) {
         const newSession = await createSessionMutation.mutateAsync({
           mode: 'planning',
-          store_id: product.store_with_lowest_price.id,
-          store_name: product.store_with_lowest_price.name,
+          store_id: data.store_id,
+          store_name: data.store_name,
         });
         sessionId = newSession.id;
-        console.log('✅ Session created:', sessionId);
-      } catch (error) {
-        console.error('❌ Failed to create session:', error);
-        showWarningNotification('No se pudo crear la sesión de compras');
-        return;
       }
-    }
 
-    console.log('✅ All checks passed, adding item to session:', sessionId);
-    // The mutation already handles success/error notifications
-    addItemMutation.mutate({
-      session_id: sessionId,
-      product_id: product.id,
-      product_name: product.name,
-      price: product.lowest_price,
-      quantity: 1,
-      store_id: product.store_with_lowest_price.id,
-      store_name: product.store_with_lowest_price.name,
-    });
+      // Add item to shopping list
+      await addItemMutation.mutateAsync({
+        session_id: sessionId,
+        product_id: data.product_id,
+        product_name: data.product_name,
+        price: data.price,
+        quantity: data.quantity,
+        store_id: data.store_id,
+        store_name: data.store_name,
+      });
+
+      // If savePrice is true, save to prices table
+      if (data.savePrice) {
+        try {
+          const { saveProductPrice } = await import('@/services/supabase/products');
+          await saveProductPrice({
+            product_id: data.product_id,
+            store_id: data.store_id,
+            price: data.price,
+            in_stock: true,
+          });
+        } catch (error) {
+          console.error('Error saving price:', error);
+          // Don't block the flow if price save fails
+        }
+      }
+
+      // Close modal
+      setIsAddToListModalOpen(false);
+    } catch (error) {
+      console.error('Error adding item:', error);
+      // Error notifications are already handled by mutations
+    }
   };
 
   /**
@@ -305,20 +314,26 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           {isAuthenticated && (
             <AddToCartButton
               onClick={handleAddToCart}
-              disabled={addItemMutation.isPending || createSessionMutation.isPending || isLoadingSession}
+              disabled={isLoadingSession}
               type="button"
               aria-label="Agregar a lista de compras"
             >
               <FiShoppingCart />
-              {createSessionMutation.isPending
-                ? 'Creando lista...'
-                : addItemMutation.isPending
-                ? 'Agregando...'
-                : 'Agregar a lista'}
+              Agregar a lista
             </AddToCartButton>
           )}
         </CardContent>
       </Link>
+
+      {/* Add to List Modal */}
+      <AddToListModal
+        isOpen={isAddToListModalOpen}
+        product={product}
+        stores={stores}
+        onClose={() => setIsAddToListModalOpen(false)}
+        onAdd={handleAddFromModal}
+        isSubmitting={addItemMutation.isPending || createSessionMutation.isPending}
+      />
     </CardContainer>
   );
 };

@@ -295,3 +295,41 @@ export const createProduct = async (input: CreateProductInput): Promise<Product>
     throw error;
   }
 };
+
+/**
+ * Save or update a product price
+ * Users can contribute prices to help the community
+ */
+export interface SavePriceInput {
+  product_id: string;
+  store_id: string;
+  price: number;
+  in_stock?: boolean;
+}
+
+export const saveProductPrice = async (input: SavePriceInput): Promise<void> => {
+  try {
+    const { error } = await supabase
+      .from('prices')
+      .upsert(
+        {
+          product_id: input.product_id,
+          store_id: input.store_id,
+          price: input.price,
+          in_stock: input.in_stock ?? true,
+          date: new Date().toISOString(),
+        },
+        {
+          onConflict: 'product_id,store_id',
+        }
+      );
+
+    if (error) {
+      console.error('[Products Service] Error saving price:', error);
+      throw error;
+    }
+  } catch (error) {
+    console.error('[Products Service] Unexpected error saving price:', error);
+    throw error;
+  }
+};
