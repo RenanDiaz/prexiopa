@@ -53,9 +53,15 @@ export const getProducts = async (filters: ProductFilters = {}): Promise<Product
         )
       `);
 
-    // Aplicar filtro de búsqueda por nombre
+    // Aplicar filtro de búsqueda por nombre o código de barras
     if (filters.query) {
-      query = query.ilike('name', `%${filters.query}%`);
+      // Si el query parece un código de barras (solo números), buscar primero por barcode
+      const isNumeric = /^\d+$/.test(filters.query);
+      if (isNumeric) {
+        query = query.or(`name.ilike.%${filters.query}%,barcode.eq.${filters.query}`);
+      } else {
+        query = query.ilike('name', `%${filters.query}%`);
+      }
     }
 
     // Aplicar filtro de categoría

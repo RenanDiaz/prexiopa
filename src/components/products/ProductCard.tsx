@@ -144,19 +144,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       return;
     }
 
-    try {
-      await addItemMutation.mutateAsync({
-        session_id: activeSession.id,
-        product_id: product.id,
-        product_name: product.name,
-        price: product.lowest_price,
-        quantity: 1,
-        store_id: product.store_with_lowest_price.id,
-        store_name: product.store_with_lowest_price.name,
-      });
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-    }
+    // The mutation already handles success/error notifications
+    addItemMutation.mutate({
+      session_id: activeSession.id,
+      product_id: product.id,
+      product_name: product.name,
+      price: product.lowest_price,
+      quantity: 1,
+      store_id: product.store_with_lowest_price.id,
+      store_name: product.store_with_lowest_price.name,
+    });
   };
 
   /**
@@ -274,7 +271,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               aria-label="Agregar a lista de compras"
             >
               <FiShoppingCart />
-              Agregar a lista
+              {addItemMutation.isPending ? 'Agregando...' : 'Agregar a lista'}
             </AddToCartButton>
           )}
         </CardContent>

@@ -279,12 +279,30 @@ const Dashboard = () => {
     setIsScannerOpen(false);
   }, []);
 
-  const handleScanSuccess = useCallback((barcode: string) => {
+  const handleScanSuccess = useCallback(async (barcode: string) => {
     setIsScannerOpen(false);
     setScannedBarcode(barcode);
-    // Always show the modal when a barcode is scanned
-    // The modal can check if the product exists and show appropriate UI
-    setIsCreateProductModalOpen(true);
+
+    // First, try to find the product by barcode
+    try {
+      const { getProductByBarcode } = await import('@/services/supabase/products');
+      const product = await getProductByBarcode(barcode);
+
+      if (product) {
+        // Product exists - show it in search results
+        toast.success(`¡Producto encontrado! ${product.name}`);
+        setSearchQuery(barcode);
+      } else {
+        // Product doesn't exist - show creation modal
+        toast.info('Producto no encontrado. ¿Deseas agregarlo?');
+        setIsCreateProductModalOpen(true);
+      }
+    } catch (error) {
+      console.error('Error searching product by barcode:', error);
+      // On error, show creation modal as fallback
+      toast.warning('No se pudo verificar el producto. Intenta crearlo.');
+      setIsCreateProductModalOpen(true);
+    }
   }, []);
 
   const handleCreateProduct = useCallback(async (productData: CreateProductInput) => {
