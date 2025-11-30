@@ -24,7 +24,7 @@ import {
 } from '@/types/product.types';
 import { useIsFavorite, useToggleFavoriteMutation } from '@/hooks/useFavorites';
 import { useAuthStore } from '@/store/authStore';
-import { useActiveSessionQuery, useAddItemMutation } from '@/hooks/useShoppingLists';
+import { useActiveSessionQuery, useAddItemMutation, useCreateSessionMutation } from '@/hooks/useShoppingLists';
 import { showWarningNotification } from '@/store/uiStore';
 import {
   CardContainer,
@@ -88,8 +88,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const { toggleFavorite, isLoading: isTogglingFavorite } = useToggleFavoriteMutation();
 
   // Shopping list hooks
-  const { data: activeSession } = useActiveSessionQuery({ enabled: isAuthenticated });
+  const { data: activeSession, isLoading: isLoadingSession } = useActiveSessionQuery({ enabled: isAuthenticated });
   const addItemMutation = useAddItemMutation();
+  const createSessionMutation = useCreateSessionMutation();
+
+  // Debug: log when component renders
+  console.log('ProductCard render:', {
+    productName: product.name,
+    isAuthenticated,
+    hasActiveSession: !!activeSession,
+    isLoadingSession,
+    activeSessionId: activeSession?.id,
+    buttonWillRender: isAuthenticated,
+  });
 
   /**
    * Handle favorite button click
@@ -129,24 +140,52 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     e.preventDefault();
     e.stopPropagation();
 
+    console.log('🛒 Add to cart clicked', {
+      isAuthenticated,
+      activeSession,
+      product: {
+        id: product.id,
+        name: product.name,
+        lowest_price: product.lowest_price,
+        store_with_lowest_price: product.store_with_lowest_price,
+      },
+    });
+
     if (!isAuthenticated) {
+      console.log('❌ Not authenticated');
       showWarningNotification('Debes iniciar sesión para agregar productos a tu lista');
       return;
     }
 
-    if (!activeSession) {
-      showWarningNotification('Debes iniciar una sesión de compras primero');
-      return;
-    }
-
     if (!product.lowest_price || !product.store_with_lowest_price) {
+      console.log('❌ No price or store info');
       showWarningNotification('No hay información de precio disponible');
       return;
     }
 
+    // If no active session, create one automatically
+    let sessionId = activeSession?.id;
+    if (!sessionId) {
+      console.log('📝 No active session, creating one...');
+      try {
+        const newSession = await createSessionMutation.mutateAsync({
+          mode: 'planning',
+          store_id: product.store_with_lowest_price.id,
+          store_name: product.store_with_lowest_price.name,
+        });
+        sessionId = newSession.id;
+        console.log('✅ Session created:', sessionId);
+      } catch (error) {
+        console.error('❌ Failed to create session:', error);
+        showWarningNotification('No se pudo crear la sesión de compras');
+        return;
+      }
+    }
+
+    console.log('✅ All checks passed, adding item to session:', sessionId);
     // The mutation already handles success/error notifications
     addItemMutation.mutate({
-      session_id: activeSession.id,
+      session_id: sessionId,
       product_id: product.id,
       product_name: product.name,
       price: product.lowest_price,
@@ -263,15 +302,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </PriceSection>
 
           {/* Add to Cart Button */}
-          {isAuthenticated && activeSession && (
+          {isAuthenticated && (
             <AddToCartButton
               onClick={handleAddToCart}
-              disabled={addItemMutation.isPending}
+              disabled={addItemMutation.isPending || createSessionMutation.isPending || isLoadingSession}
               type="button"
               aria-label="Agregar a lista de compras"
             >
               <FiShoppingCart />
-              {addItemMutation.isPending ? 'Agregando...' : 'Agregar a lista'}
+              {createSessionMutation.isPending
+                ? 'Creando lista...'
+                : addItemMutation.isPending
+                ? 'Agregando...'
+                : 'Agregar a lista'}
             </AddToCartButton>
           )}
         </CardContent>
