@@ -1,40 +1,60 @@
-# 🔧 Aplicar Migración de Columnas Faltantes en `prices`
+# 🔧 Aplicar Migraciones de la Tabla `prices`
 
-## 🐛 Problema
+## 🐛 Problemas
 
-La aplicación está fallando con el error:
+### 1. Columnas Faltantes
 ```
 HTTP 400: Could not find the 'discount' column of 'prices' in the schema cache
 ```
 
-Esto ocurre porque la tabla `prices` en Supabase no tiene las columnas necesarias para el sistema de precios mejorado (quantity, discount, total_price, is_promotion, notes, reported_by).
+### 2. Políticas RLS Faltantes
+```
+HTTP 400: new row violates row-level security policy for table "prices"
+```
+
+Esto ocurre porque:
+1. La tabla `prices` no tiene las columnas necesarias (quantity, discount, total_price, etc.)
+2. Las políticas RLS no permiten a usuarios autenticados insertar precios
 
 ## ✅ Solución
 
-Aplicar la migración `20250130000007_ensure_prices_columns.sql` que agrega todas las columnas faltantes de forma idempotente (no falla si ya existen).
+Aplicar **DOS migraciones** en orden:
+1. `20250130000007_ensure_prices_columns.sql` - Agrega columnas faltantes
+2. `20250130000008_fix_prices_rls_policies.sql` - Configura políticas RLS
 
 ## 📝 Instrucciones
 
 ### **Opción 1: Usando Supabase Dashboard (RECOMENDADO)**
 
-1. **Ir a Supabase Dashboard:**
-   - https://supabase.com/dashboard/project/ycfiblaugmbdjyxhctpb
+#### **Paso 1: Aplicar Migración de Columnas**
 
-2. **Abrir SQL Editor:**
-   - En el menú lateral izquierdo, clic en "SQL Editor"
+1. **Ir a Supabase Dashboard:**
+   - https://supabase.com/dashboard/project/ycfiblaugmbdjyxhctpb/sql/new
+
+2. **Copiar y pegar el SQL de la primera migración:**
+   ```bash
+   cat supabase/migrations/20250130000007_ensure_prices_columns.sql
+   ```
+
+3. **Ejecutar:**
+   - Clic en el botón "Run" (▶)
+   - Esperar confirmación de éxito
+
+#### **Paso 2: Aplicar Migración de RLS**
+
+1. **Abrir nueva query en SQL Editor:**
    - Clic en "New query"
 
-3. **Copiar y pegar el SQL:**
-   - Abrir el archivo: `supabase/migrations/20250130000007_ensure_prices_columns.sql`
-   - Copiar TODO el contenido
-   - Pegarlo en el SQL Editor
+2. **Copiar y pegar el SQL de la segunda migración:**
+   ```bash
+   cat supabase/migrations/20250130000008_fix_prices_rls_policies.sql
+   ```
 
-4. **Ejecutar:**
+3. **Ejecutar:**
    - Clic en el botón "Run" (▶)
-   - Esperar a que termine (debería tardar ~2-3 segundos)
-   - Verificar que aparezca "Success. No rows returned"
+   - Esperar confirmación de éxito
 
-5. **Verificar:**
+#### **Paso 3: Verificar:**
    ```sql
    SELECT column_name, data_type, is_nullable, column_default
    FROM information_schema.columns
@@ -49,6 +69,19 @@ Aplicar la migración `20250130000007_ensure_prices_columns.sql` que agrega toda
    - `is_promotion` (boolean)
    - `notes` (text)
    - `reported_by` (uuid)
+
+4. **Verificar políticas RLS:**
+   ```sql
+   SELECT schemaname, tablename, policyname, permissive, roles, cmd, qual
+   FROM pg_policies
+   WHERE tablename = 'prices';
+   ```
+
+   Deberías ver políticas:
+   - ✅ `Public read access to prices` (SELECT)
+   - ✅ `Authenticated users can insert prices` (INSERT)
+   - ✅ `Users can update their own price reports` (UPDATE)
+   - ✅ `Users can delete their own price reports` (DELETE)
 
 ---
 
