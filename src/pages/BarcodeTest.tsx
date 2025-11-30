@@ -13,65 +13,65 @@ import { Input } from '@/components/common/Input';
 const PageContainer = styled.div`
   max-width: 800px;
   margin: 0 auto;
-  padding: ${({ theme }) => theme.spacing.xl};
+  padding: ${({ theme }) => theme.spacing[8]};
 `;
 
 const Title = styled.h1`
-  font-size: ${({ theme }) => theme.fontSize['3xl']};
-  font-weight: ${({ theme }) => theme.fontWeight.bold};
+  font-size: ${({ theme }) => theme.typography.variants.h1.fontSize};
+  font-weight: ${({ theme }) => theme.typography.variants.h1.fontWeight};
   color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing[4]};
 `;
 
 const Description = styled.p`
   color: ${({ theme }) => theme.colors.text.secondary};
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  margin-bottom: ${({ theme }) => theme.spacing[8]};
   line-height: 1.6;
 `;
 
 const TestSection = styled.div`
   background: ${({ theme }) => theme.colors.background.secondary};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
-  padding: ${({ theme }) => theme.spacing.xl};
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  padding: ${({ theme }) => theme.spacing[8]};
+  margin-bottom: ${({ theme }) => theme.spacing[8]};
 `;
 
 const InputGroup = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing[6]};
 `;
 
 const Label = styled.label`
   display: block;
-  font-weight: ${({ theme }) => theme.fontWeight.medium};
+  font-weight: 500;
   color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing[2]};
 `;
 
 const ResultCard = styled.div<{ $isValid?: boolean }>`
   background: ${({ theme, $isValid }) =>
     $isValid === undefined
-      ? theme.colors.background.tertiary
+      ? theme.colors.background.elevated
       : $isValid
       ? 'rgba(34, 197, 94, 0.1)'
       : 'rgba(239, 68, 68, 0.1)'};
   border: 2px solid
     ${({ theme, $isValid }) =>
       $isValid === undefined
-        ? theme.colors.border.primary
+        ? theme.colors.border.main
         : $isValid
         ? 'rgba(34, 197, 94, 0.3)'
         : 'rgba(239, 68, 68, 0.3)'};
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  padding: ${({ theme }) => theme.spacing.lg};
-  margin-top: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing[6]};
+  margin-top: ${({ theme }) => theme.spacing[4]};
 `;
 
 const ResultRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: ${({ theme }) => theme.spacing.sm} 0;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border.secondary};
+  padding: ${({ theme }) => theme.spacing[2]} 0;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border.light};
 
   &:last-child {
     border-bottom: none;
@@ -79,22 +79,22 @@ const ResultRow = styled.div`
 `;
 
 const ResultLabel = styled.span`
-  font-weight: ${({ theme }) => theme.fontWeight.medium};
+  font-weight: 500;
   color: ${({ theme }) => theme.colors.text.secondary};
 `;
 
 const ResultValue = styled.span<{ $highlight?: boolean }>`
-  font-family: ${({ theme }) => theme.fonts.mono};
+  font-family: 'Courier New', monospace;
   color: ${({ theme, $highlight }) =>
-    $highlight ? theme.colors.primary.main : theme.colors.text.primary};
+    $highlight ? theme.colors.primary[500] : theme.colors.text.primary};
   font-weight: ${({ $highlight }) => ($highlight ? '600' : '400')};
 `;
 
 const Message = styled.p<{ $type: 'success' | 'error' | 'warning' }>`
-  margin-top: ${({ theme }) => theme.spacing.md};
-  padding: ${({ theme }) => theme.spacing.md};
+  margin-top: ${({ theme }) => theme.spacing[4]};
+  padding: ${({ theme }) => theme.spacing[4]};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
-  font-weight: ${({ theme }) => theme.fontWeight.medium};
+  font-weight: 500;
   background: ${({ $type }) =>
     $type === 'success'
       ? 'rgba(34, 197, 94, 0.1)'
@@ -107,29 +107,29 @@ const Message = styled.p<{ $type: 'success' | 'error' | 'warning' }>`
 
 const PresetButtons = styled.div`
   display: flex;
-  gap: ${({ theme }) => theme.spacing.sm};
+  gap: ${({ theme }) => theme.spacing[2]};
   flex-wrap: wrap;
-  margin-top: ${({ theme }) => theme.spacing.md};
+  margin-top: ${({ theme }) => theme.spacing[4]};
 `;
 
 const PresetButton = styled(Button)`
-  font-size: ${({ theme }) => theme.fontSize.sm};
-  padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.md}`};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  padding: ${({ theme }) => `${theme.spacing[1]} ${theme.spacing[4]}`};
 `;
 
 const InfoBox = styled.div`
-  background: ${({ theme }) => theme.colors.background.tertiary};
-  border-left: 4px solid ${({ theme }) => theme.colors.primary.main};
-  padding: ${({ theme }) => theme.spacing.md};
-  margin-top: ${({ theme }) => theme.spacing.lg};
+  background: ${({ theme }) => theme.colors.background.elevated};
+  border-left: 4px solid ${({ theme }) => theme.colors.primary[500]};
+  padding: ${({ theme }) => theme.spacing[4]};
+  margin-top: ${({ theme }) => theme.spacing[6]};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
 `;
 
 const InfoTitle = styled.h3`
-  font-size: ${({ theme }) => theme.fontSize.lg};
-  font-weight: ${({ theme }) => theme.fontWeight.semibold};
+  font-size: ${({ theme }) => theme.typography.variants.h4.fontSize};
+  font-weight: ${({ theme }) => theme.typography.variants.h4.fontWeight};
   color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing[2]};
 `;
 
 const InfoList = styled.ul`
@@ -140,12 +140,12 @@ const InfoList = styled.ul`
 
 const InfoItem = styled.li`
   color: ${({ theme }) => theme.colors.text.secondary};
-  padding: ${({ theme }) => theme.spacing.xs} 0;
+  padding: ${({ theme }) => theme.spacing[1]} 0;
   line-height: 1.6;
 
   &:before {
     content: '•';
-    color: ${({ theme }) => theme.colors.primary.main};
+    color: ${({ theme }) => theme.colors.primary[500]};
     font-weight: bold;
     display: inline-block;
     width: 1em;
