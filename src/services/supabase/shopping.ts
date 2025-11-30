@@ -344,8 +344,6 @@ export const getShoppingItems = async (
 export const addShoppingItem = async (
   input: AddItemData
 ): Promise<ShoppingItem> => {
-  const subtotal = input.price * (input.quantity || 1);
-
   const { data, error } = await supabase
     .from('shopping_items')
     .insert({
@@ -355,7 +353,6 @@ export const addShoppingItem = async (
       price: input.price,
       quantity: input.quantity || 1,
       unit: input.unit || 'unidad',
-      subtotal,
       store_id: input.store_id || null,
       store_name: input.store_name || null,
       purchased: false,
@@ -382,25 +379,16 @@ export const updateShoppingItem = async (
   id: string,
   input: UpdateItemData
 ): Promise<ShoppingItem> => {
-  // Get current item to calculate new subtotal if needed
+  // Get current item's session_id for updating total
   const { data: currentItem } = await supabase
     .from('shopping_items')
-    .select('*')
+    .select('session_id')
     .eq('id', id)
     .single();
 
-  const updateData: any = { ...input };
-
-  // Recalculate subtotal if price or quantity changed
-  if (currentItem && (input.price !== undefined || input.quantity !== undefined)) {
-    const newPrice = input.price ?? currentItem.price;
-    const newQuantity = input.quantity ?? currentItem.quantity;
-    updateData.subtotal = newPrice * newQuantity;
-  }
-
   const { data, error } = await supabase
     .from('shopping_items')
-    .update(updateData)
+    .update(input)
     .eq('id', id)
     .select()
     .single();
