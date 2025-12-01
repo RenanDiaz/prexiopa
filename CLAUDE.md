@@ -762,6 +762,37 @@ interface IncompleteProduct {
 
 ## 📝 Notas Importantes
 
+### ⚠️ IMPORTANTE: Migraciones de Supabase
+
+**NO intentar ejecutar migraciones desde el CLI de Supabase.**
+
+Las migraciones de Supabase en este proyecto deben ser:
+1. **Generadas** como archivos SQL en la carpeta `supabase/migrations/`
+2. **Ejecutadas manualmente** desde el sitio web de Supabase:
+   - Ir a https://supabase.com/dashboard/project/[tu-proyecto]
+   - Navegar a "SQL Editor"
+   - Copiar y pegar el contenido del archivo de migración
+   - Ejecutar el SQL manualmente
+
+**Razón:** El proyecto está configurado para ejecutar migraciones directamente en el dashboard de Supabase en lugar de usar el CLI local.
+
+**Workflow recomendado:**
+```bash
+# 1. Crear archivo de migración (solo generar el archivo)
+# Ejemplo: supabase/migrations/20250130_nombre_descriptivo.sql
+
+# 2. Escribir el SQL en el archivo
+
+# 3. Ir al dashboard de Supabase y ejecutar manualmente
+
+# 4. Verificar que la migración se aplicó correctamente
+```
+
+**NO ejecutar:**
+- ❌ `supabase db push`
+- ❌ `supabase db reset`
+- ❌ `supabase migration up`
+
 ### Dependencias Nuevas a Instalar:
 ```bash
 # Testing
