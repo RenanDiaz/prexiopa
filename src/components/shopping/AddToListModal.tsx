@@ -287,14 +287,14 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const quantityValue = parseInt(quantity, 10);
+    const quantityValue = parseFloat(quantity);
     const selectedStore = stores.find((s) => s.id === selectedStoreId);
 
     if (!price || price <= 0) {
       return;
     }
 
-    if (!quantityValue || quantityValue <= 0) {
+    if (!quantityValue || quantityValue <= 0 || isNaN(quantityValue)) {
       return;
     }
 
@@ -392,8 +392,8 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
                     placeholder="1"
                     value={quantity}
                     onChange={(e) => setQuantity(e.target.value)}
-                    min="1"
-                    step="1"
+                    min="0.001"
+                    step="0.001"
                     required
                     disabled={isSubmitting}
                   />
