@@ -145,7 +145,8 @@ export const router = createBrowserRouter([
       {
         // Panel de administración - Ruta protegida para moderadores/admins
         // No usa ProtectedRoute porque Admin.tsx tiene su propia validación de roles
-        path: 'admin',
+        // Usa path="admin/*" para soportar subrutas
+        path: 'admin/*',
         element: (
           <SuspenseWrapper>
             <Admin />

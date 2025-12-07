@@ -6,7 +6,7 @@
 import type { ReactNode } from 'react';
 import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
-import { FiList, FiBarChart2, FiUsers, FiSettings } from 'react-icons/fi';
+import { FiList, FiBarChart2, FiUsers, FiSettings, FiAlertCircle } from 'react-icons/fi';
 import { useUserRole, useModerationStats } from '@/hooks/useUserRole';
 import { ROLE_LABELS } from '@/types/role';
 
@@ -166,6 +166,12 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       label: 'Contribuciones',
       icon: FiList,
       exact: true,
+    },
+    {
+      path: '/admin/incomplete',
+      label: 'Productos Incompletos',
+      icon: FiAlertCircle,
+      exact: false,
     },
     {
       path: '/admin/stats',

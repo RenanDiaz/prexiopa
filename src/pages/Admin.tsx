@@ -5,11 +5,12 @@
  */
 
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import { useUserRole } from '@/hooks/useUserRole';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { ContributionsQueue } from '@/components/admin/ContributionsQueue';
+import { IncompleteProductsList } from '@/components/admin/IncompleteProductsList';
 
 const AdminContainer = styled.div`
   min-height: 100vh;
@@ -95,11 +96,14 @@ const Admin = () => {
     );
   }
 
-  // Authorized - Show admin dashboard
+  // Authorized - Show admin dashboard with routes
   return (
     <AdminContainer>
       <AdminLayout>
-        <ContributionsQueue />
+        <Routes>
+          <Route index element={<ContributionsQueue />} />
+          <Route path="incomplete" element={<IncompleteProductsList />} />
+        </Routes>
       </AdminLayout>
     </AdminContainer>
   );

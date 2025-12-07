@@ -6,3 +6,4 @@
 export { AdminLayout } from './AdminLayout';
 export { ContributionsQueue } from './ContributionsQueue';
 export { ContributionReviewCard } from './ContributionReviewCard';
+export { IncompleteProductsList } from './IncompleteProductsList';
