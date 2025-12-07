@@ -1,7 +1,7 @@
 # 🚀 Prexiopá - Plan de Desarrollo Actualizado
 
 > **Última actualización:** 7 de Diciembre, 2025
-> **Estado actual:** MVP Funcional (97% completo) - Sprint 1 ✅ | Sprint 2 ✅ | Sprint 3: 3/5 ✅
+> **Estado actual:** MVP Funcional (98% completo) - Sprint 1 ✅ | Sprint 2 ✅ | Sprint 3: 4/5 ✅
 > **Objetivo:** Completar Fase 5 y preparar para producción
 
 ---
@@ -381,23 +381,28 @@ está implementada en las RPC functions de Supabase y los hooks ya existentes
 
 **Commit:** `ba9698a` - feat: Apply contributions to products on approval
 
-#### Tarea 3.4: Sistema de Reputación de Usuarios (Opcional)
+#### Tarea 3.4: Sistema de Reputación de Usuarios ✅ COMPLETADA
 **Prioridad:** Media
-**Estimado:** 3 horas
+**Estimado:** 3 horas | **Real:** 3 horas
 
 **Objetivo:** Dar reputación a usuarios basado en contribuciones aprobadas.
 
-- [ ] Agregar campo `reputation_score` a tabla `user_roles`
-- [ ] Incrementar score cuando contribución es aprobada (+5)
-- [ ] Decrementar score cuando contribución es rechazada (-2)
-- [ ] Mostrar badge de reputación en perfil de usuario
-- [ ] Auto-aprobar contribuciones de usuarios con score > 100
-- [ ] Crear página "Top Contributors" (leaderboard)
+- [x] Agregar campos `reputation_score`, `contributions_approved`, `contributions_rejected` a tabla `user_roles`
+- [x] Incrementar score cuando contribución es aprobada (+5 a +8 según tipo)
+- [x] Decrementar score cuando contribución es rechazada (-2)
+- [x] Mostrar badge de reputación con componente ReputationBadge
+- [x] Auto-aprobar contribuciones de usuarios con score >= 100
+- [x] Crear página "Top Contributors" (leaderboard con ranking)
+- [x] Sistema de badges: Principiante (0-49), Ayudante (50-99), Contribuidor (100-249), Confiable (250-499), Experto (500+)
+- [x] Trigger automático para actualizar reputación cuando se revisa una contribución
 
-**Archivos a crear/modificar:**
-- `supabase/migrations/XXX_add_reputation_system.sql` (nuevo)
-- `src/components/user/ReputationBadge.tsx` (nuevo)
-- `src/pages/TopContributors.tsx` (nuevo - opcional)
+**Archivos creados:**
+- ✅ `supabase/migrations/20250207000002_reputation_system.sql` (283 líneas)
+- ✅ `src/components/user/ReputationBadge.tsx` (165 líneas)
+- ✅ `src/pages/TopContributors.tsx` (309 líneas)
+
+**Archivos modificados:**
+- ✅ `src/routes/index.tsx` (agregada ruta `/contributors`)
 
 #### Tarea 3.5: Vista de Productos Incompletos
 **Prioridad:** Media

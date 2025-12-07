@@ -32,6 +32,7 @@ const AuthCallback = lazy(() => import('../pages/AuthCallback'));
 const EmailVerification = lazy(() => import('../pages/EmailVerification'));
 const ForgotPassword = lazy(() => import('../pages/ForgotPassword'));
 const ResetPassword = lazy(() => import('../pages/ResetPassword'));
+const TopContributors = lazy(() => import('../pages/TopContributors'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
 /**
@@ -107,6 +108,15 @@ export const router = createBrowserRouter([
         element: (
           <SuspenseWrapper>
             <Stores />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        // Top contributors leaderboard
+        path: 'contributors',
+        element: (
+          <SuspenseWrapper>
+            <TopContributors />
           </SuspenseWrapper>
         ),
       },
