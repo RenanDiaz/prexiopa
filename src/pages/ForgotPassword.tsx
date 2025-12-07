@@ -3,7 +3,8 @@
  * Permite al usuario solicitar un email para resetear su contraseña
  */
 
-import { useState, FormEvent } from 'react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FiArrowLeft, FiMail } from 'react-icons/fi';

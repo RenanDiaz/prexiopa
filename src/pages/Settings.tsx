@@ -3,9 +3,10 @@
  * Permite actualizar información personal, cambiar contraseña y gestionar preferencias
  */
 
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect } from 'react';
+import type { FormEvent } from 'react';
 import styled from 'styled-components';
-import { FiUser, FiLock, FiMail, FiTrash2, FiSave, FiAlertCircle } from 'react-icons/fi';
+import { FiUser, FiLock, FiTrash2, FiSave, FiAlertCircle } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { useAuthStore } from '@/store/authStore';
@@ -135,7 +136,7 @@ const ButtonGroup = styled.div`
   gap: ${({ theme }) => theme.spacing[3]};
   margin-top: ${({ theme }) => theme.spacing[2]};
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  @media (max-width: 640px) {
     flex-direction: column;
   }
 `;

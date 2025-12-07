@@ -20,7 +20,7 @@ const BannerContainer = styled.div<{ $dismissed: boolean }>`
   gap: ${({ theme }) => theme.spacing[4]};
   position: relative;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  @media (max-width: 768px) {
     flex-direction: column;
     align-items: flex-start;
     gap: ${({ theme }) => theme.spacing[3]};
@@ -55,7 +55,7 @@ const Actions = styled.div`
   gap: ${({ theme }) => theme.spacing[3]};
   align-items: center;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  @media (max-width: 768px) {
     width: 100%;
   }
 `;
@@ -82,7 +82,7 @@ const ResendButton = styled.button<{ disabled?: boolean }>`
     transform: translateY(0);
   }
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  @media (max-width: 768px) {
     flex: 1;
   }
 `;

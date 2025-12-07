@@ -3,7 +3,8 @@
  * Permite al usuario establecer una nueva contraseña después de hacer clic en el email
  */
 
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect } from 'react';
+import type { FormEvent } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { FiLock } from 'react-icons/fi';
