@@ -19,6 +19,7 @@ import {
   HiUserAdd,
   HiLogout,
   HiUser,
+  HiCog,
 } from 'react-icons/hi';
 import { useAuthStore } from '@/store/authStore';
 import { ThemeToggle } from './ThemeToggle';
@@ -308,6 +309,10 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
               <NavItem to="/shopping" onClick={onClose}>
                 <HiShoppingCart />
                 Lista de Compras
+              </NavItem>
+              <NavItem to="/settings" onClick={onClose}>
+                <HiCog />
+                Configuración
               </NavItem>
             </Navigation>
 

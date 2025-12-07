@@ -324,6 +324,7 @@ const Register = () => {
           data: {
             full_name: name.trim(),
           },
+          emailRedirectTo: `${window.location.origin}/auth/verify-email`,
         },
       });
 

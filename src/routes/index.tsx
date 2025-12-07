@@ -17,6 +17,7 @@ const Dashboard = lazy(() => import('../pages/Dashboard'));
 const Login = lazy(() => import('../pages/Login'));
 const Register = lazy(() => import('../pages/Register'));
 const Profile = lazy(() => import('../pages/Profile'));
+const Settings = lazy(() => import('../pages/Settings'));
 const ProductDetail = lazy(() => import('../pages/ProductDetail'));
 const StorePage = lazy(() => import('../pages/StorePage'));
 const Favorites = lazy(() => import('../pages/Favorites'));
@@ -28,6 +29,9 @@ const ScannerDemo = lazy(() => import('../pages/ScannerDemo'));
 const Admin = lazy(() => import('../pages/Admin'));
 const BarcodeTest = lazy(() => import('../pages/BarcodeTest'));
 const AuthCallback = lazy(() => import('../pages/AuthCallback'));
+const EmailVerification = lazy(() => import('../pages/EmailVerification'));
+const ForgotPassword = lazy(() => import('../pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('../pages/ResetPassword'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
 /**
@@ -118,6 +122,17 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        // Configuración de usuario - Ruta protegida
+        path: 'settings',
+        element: (
+          <ProtectedRoute>
+            <SuspenseWrapper>
+              <Settings />
+            </SuspenseWrapper>
+          </ProtectedRoute>
+        ),
+      },
+      {
         // Demo del escáner de códigos de barras
         // Ruta de desarrollo para probar el componente BarcodeScanner
         path: 'scanner-demo',
@@ -182,6 +197,33 @@ export const router = createBrowserRouter([
     element: (
       <SuspenseWrapper>
         <AuthCallback />
+      </SuspenseWrapper>
+    ),
+  },
+  {
+    // Verificación de email - Sin layout (página de procesamiento)
+    path: '/auth/verify-email',
+    element: (
+      <SuspenseWrapper>
+        <EmailVerification />
+      </SuspenseWrapper>
+    ),
+  },
+  {
+    // Solicitar reseteo de contraseña - Sin layout
+    path: '/forgot-password',
+    element: (
+      <SuspenseWrapper>
+        <ForgotPassword />
+      </SuspenseWrapper>
+    ),
+  },
+  {
+    // Resetear contraseña - Sin layout (página de procesamiento)
+    path: '/auth/reset-password',
+    element: (
+      <SuspenseWrapper>
+        <ResetPassword />
       </SuspenseWrapper>
     ),
   },

@@ -14,6 +14,7 @@ import { SearchBar, SearchFilters } from '@/components/search';
 import { BarcodeScanner } from '@/components/scanner';
 import { ProductList, CreateProductModal } from '@/components/products';
 import { AddToListModal } from '@/components/shopping';
+import { VerificationBanner } from '@/components/auth/VerificationBanner';
 
 // Hooks
 import { useProductsQuery, useCategoriesQuery } from '@/hooks/useProducts';
@@ -29,6 +30,9 @@ import type { Product } from '@/types/product.types';
 // Services
 import { createProduct } from '@/services/supabase/products';
 import { toast } from 'react-toastify';
+
+// Store
+import { useAuthStore } from '@/store/authStore';
 
 const DashboardContainer = styled.div`
   min-height: 100vh;
@@ -229,6 +233,7 @@ const ErrorMessage = styled.div`
 const Dashboard = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width: 1023px)');
+  const { user } = useAuthStore();
 
   // Active shopping session (React Query)
   const { data: activeSession } = useActiveSessionQuery();
@@ -465,6 +470,13 @@ const Dashboard = () => {
       </Header>
 
       <MainContent>
+        {/* Email Verification Banner - Show only if user is logged in and email not confirmed */}
+        {user && !user.email_confirmed_at && user.email && (
+          <div style={{ gridColumn: '1 / -1' }}>
+            <VerificationBanner userEmail={user.email} />
+          </div>
+        )}
+
         {/* Filters Sidebar */}
         <SidebarSection $isOpen={isFiltersOpen}>
           <FiltersWrapper $isOpen={isFiltersOpen}>

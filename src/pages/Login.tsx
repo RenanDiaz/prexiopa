@@ -204,6 +204,19 @@ const StyledLink = styled(Link)`
   }
 `;
 
+const ForgotPasswordLink = styled(Link)`
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  color: ${({ theme }) => theme.colors.primary[500]};
+  text-decoration: none;
+  text-align: right;
+  margin-top: -${({ theme }) => theme.spacing[2]};
+  display: block;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 const Login = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -360,6 +373,10 @@ const Login = () => {
             />
             {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
           </InputGroup>
+
+          <ForgotPasswordLink to="/forgot-password">
+            ¿Olvidaste tu contraseña?
+          </ForgotPasswordLink>
 
           <Button type="submit" disabled={isLoading}>
             {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
