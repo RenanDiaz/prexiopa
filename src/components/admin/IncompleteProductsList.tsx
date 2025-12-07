@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import styled from 'styled-components';
-import { FiAlertCircle, FiFilter, FiRefreshCw } from 'react-icons/fi';
+import { FiAlertCircle, FiRefreshCw } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import {
   useIncompleteProductsData,
@@ -16,7 +16,6 @@ import type { IncompleteProductsFilters } from '@/types/incomplete-product';
 import {
   getFieldLabel,
   getCompletenessColor,
-  getCompletenessLevel,
   sortMissingFieldsByPriority,
 } from '@/types/incomplete-product';
 
@@ -287,7 +286,7 @@ export const IncompleteProductsList = () => {
   });
 
   // Query incomplete products
-  const { products, totalCount, isLoading, refetch } = useIncompleteProductsData(filters);
+  const { products, isLoading, refetch } = useIncompleteProductsData(filters);
 
   const handleFilterChange = (key: keyof IncompleteProductsFilters, value: any) => {
     setFilters((prev) => ({ ...prev, [key]: value, offset: 0 }));
@@ -362,8 +361,8 @@ export const IncompleteProductsList = () => {
           >
             <option value="">Todas las categorías</option>
             {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
+              <option key={category} value={category}>
+                {category}
               </option>
             ))}
           </Select>

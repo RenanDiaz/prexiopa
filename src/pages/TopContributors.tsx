@@ -4,7 +4,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
-import { FiTrophy, FiAward, FiStar } from 'react-icons/fi';
+import { FiAward } from 'react-icons/fi';
 import { supabase } from '../supabaseClient';
 import { ReputationBadge } from '@/components/user/ReputationBadge';
 
@@ -41,7 +41,7 @@ const Title = styled.h1`
   gap: ${({ theme }) => theme.spacing[3]};
 `;
 
-const TrophyIcon = styled(FiTrophy)`
+const TrophyIcon = styled(FiAward)`
   color: ${({ theme }) => theme.colors.secondary[500]};
 `;
 

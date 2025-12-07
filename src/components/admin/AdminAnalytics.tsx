@@ -26,7 +26,6 @@ import {
   calculatePercentageChange,
   formatReviewTime,
   getContributionTypeLabel,
-  getApprovalRateColor,
   formatPercentageChange,
   getTrendIcon,
 } from '@/types/analytics';
@@ -76,7 +75,7 @@ const TimeRangeButton = styled.button<{ $active: boolean }>`
 
   &:hover {
     background: ${({ theme, $active }) =>
-      $active ? theme.colors.primary[600] : theme.colors.background.hover};
+      $active ? theme.colors.primary[600] : theme.colors.background.elevated};
   }
 `;
 
@@ -209,10 +208,6 @@ export const AdminAnalytics = () => {
   const reviewsChange = calculatePercentageChange(
     dailyStats.data?.reviews_today || 0,
     dailyStats.data?.reviews_yesterday || 0
-  );
-  const productsChange = calculatePercentageChange(
-    dailyStats.data?.new_products_today || 0,
-    dailyStats.data?.new_products_yesterday || 0
   );
 
   // Format chart data
@@ -383,12 +378,12 @@ export const AdminAnalytics = () => {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                 outerRadius={100}
                 fill="#8884d8"
                 dataKey="value"
               >
-                {pieData.map((entry, index) => (
+                {pieData.map((_entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={[COLORS.primary, COLORS.success, COLORS.warning, COLORS.secondary][index % 4]}
