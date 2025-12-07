@@ -11,10 +11,12 @@ Welcome to the Prexiopá documentation! This directory contains all the technica
 Documentation for developers working on the codebase.
 
 - **[SETUP.md](development/SETUP.md)** - Development environment setup
-- **[ARCHITECTURE.md](development/ARCHITECTURE.md)** - System architecture and design patterns
-- **[DATABASE.md](development/DATABASE.md)** - Database schema and migrations
-- **[API.md](development/API.md)** - API service layer documentation
-- **[CONTRIBUTING.md](development/CONTRIBUTING.md)** - Contributing guidelines
+- **[ROUTES.md](development/ROUTES.md)** - Application routing structure
+- **[SCANNER_QUICKSTART.md](development/SCANNER_QUICKSTART.md)** - Barcode scanner implementation guide
+- **[ARCHITECTURE.md](development/ARCHITECTURE.md)** - System architecture and design patterns (coming soon)
+- **[DATABASE.md](development/DATABASE.md)** - Database schema and migrations (coming soon)
+- **[API.md](development/API.md)** - API service layer documentation (coming soon)
+- **[CONTRIBUTING.md](development/CONTRIBUTING.md)** - Contributing guidelines (coming soon)
 
 ### 🚀 Setup Guides
 
@@ -39,6 +41,12 @@ Historical documentation and migration guides from previous versions.
 
 - **[OLD_APP_DATABASE_MODELS.md](legacy/OLD_APP_DATABASE_MODELS.md)** - ThriftyTracker database models
 - **[PHASE_5_ENHANCEMENTS.md](legacy/PHASE_5_ENHANCEMENTS.md)** - Planned schema enhancements
+- **[DEVELOPMENT_PLAN.md](legacy/DEVELOPMENT_PLAN.md)** - Original development plan (85% progress)
+- **[PROJECT_STATUS.md](legacy/PROJECT_STATUS.md)** - Old project status document
+- **[APLICAR_MIGRACION_PRICES.md](legacy/APLICAR_MIGRACION_PRICES.md)** - Price migration guide
+- **[DISCOUNTS_PROMOTIONS_PLAN.md](legacy/DISCOUNTS_PROMOTIONS_PLAN.md)** - Discounts feature plan
+- **[FLUJO_AGREGAR_PRODUCTO_A_LISTA.md](legacy/FLUJO_AGREGAR_PRODUCTO_A_LISTA.md)** - Shopping list flow
+- **[PRODUCT_COMPONENTS_IMPLEMENTATION.md](legacy/PRODUCT_COMPONENTS_IMPLEMENTATION.md)** - Product components guide
 
 ---
 
