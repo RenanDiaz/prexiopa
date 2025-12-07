@@ -11,6 +11,7 @@ import { useUserRole } from '@/hooks/useUserRole';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { ContributionsQueue } from '@/components/admin/ContributionsQueue';
 import { IncompleteProductsList } from '@/components/admin/IncompleteProductsList';
+import { AdminAnalytics } from '@/components/admin/AdminAnalytics';
 
 const AdminContainer = styled.div`
   min-height: 100vh;
@@ -103,6 +104,7 @@ const Admin = () => {
         <Routes>
           <Route index element={<ContributionsQueue />} />
           <Route path="incomplete" element={<IncompleteProductsList />} />
+          <Route path="stats" element={<AdminAnalytics />} />
         </Routes>
       </AdminLayout>
     </AdminContainer>
