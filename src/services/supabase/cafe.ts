@@ -12,6 +12,7 @@ import type {
   ImportedInvoice,
   CAFEItem,
 } from '@/types/cafe';
+import { isQRUrl } from '@/types/cafe';
 import type { TaxRateCode } from '@/types/tax';
 
 // =====================================================
@@ -20,11 +21,17 @@ import type { TaxRateCode } from '@/types/tax';
 
 /**
  * Fetch and parse a CAFE invoice from DGI using the Edge Function
+ * Accepts either a CUFE directly or a full QR URL
  */
-export async function fetchCAFEInvoice(cufe: string): Promise<CAFEFetchResult> {
+export async function fetchCAFEInvoice(cufeOrUrl: string): Promise<CAFEFetchResult> {
   try {
+    // Determine if this is a QR URL or a plain CUFE
+    const body = isQRUrl(cufeOrUrl)
+      ? { qrUrl: cufeOrUrl }
+      : { cufe: cufeOrUrl };
+
     const { data, error } = await supabase.functions.invoke('fetch-cafe', {
-      body: { cufe },
+      body,
     });
 
     if (error) {

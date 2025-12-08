@@ -276,24 +276,56 @@ export function validateCUFE(cufe: string): boolean {
 
 /**
  * Extract CUFE from a DGI URL
- * URL format: https://dgi-fep.mef.gob.pa/Consultas/FacturasPorCUFE/{CUFE}
+ * URL formats supported:
+ * - https://dgi-fep.mef.gob.pa/Consultas/FacturasPorCUFE/{CUFE}
+ * - https://dgi-fep.mef.gob.pa/Consultas/FacturasPorQR?chFE={CUFE}&iAmb=1&digestValue=...&jwt=...
  */
 export function extractCUFEFromUrl(url: string): string | null {
   if (!url || typeof url !== 'string') {
     return null;
   }
 
-  // Try to extract from DGI URL pattern
-  const dgiPattern = /FacturasPorCUFE\/([A-Za-z0-9\-]+)/i;
-  const match = url.match(dgiPattern);
+  // Try to extract from QR URL format (FacturasPorQR?chFE={CUFE})
+  const qrPattern = /[?&]chFE=([A-Za-z0-9\-]+)/i;
+  const qrMatch = url.match(qrPattern);
+  if (qrMatch && qrMatch[1]) {
+    return qrMatch[1].toUpperCase();
+  }
 
-  if (match && match[1]) {
-    return match[1];
+  // Try to extract from CUFE URL pattern (FacturasPorCUFE/{CUFE})
+  const cufePattern = /FacturasPorCUFE\/([A-Za-z0-9\-]+)/i;
+  const cufeMatch = url.match(cufePattern);
+  if (cufeMatch && cufeMatch[1]) {
+    return cufeMatch[1].toUpperCase();
   }
 
   // If it's not a URL, it might be just the CUFE
   if (validateCUFE(url)) {
     return url.trim().toUpperCase();
+  }
+
+  return null;
+}
+
+/**
+ * Check if URL is a QR format URL
+ */
+export function isQRUrl(url: string): boolean {
+  return url.includes('FacturasPorQR');
+}
+
+/**
+ * Extract the full QR URL parameters (for direct fetch)
+ * Returns the complete URL if it's a QR URL, otherwise returns null
+ */
+export function extractQRUrl(url: string): string | null {
+  if (!url || typeof url !== 'string') {
+    return null;
+  }
+
+  // Check if it's already a full QR URL
+  if (url.includes('dgi-fep.mef.gob.pa') && url.includes('FacturasPorQR')) {
+    return url;
   }
 
   return null;

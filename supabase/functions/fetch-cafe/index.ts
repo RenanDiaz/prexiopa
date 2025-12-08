@@ -283,10 +283,47 @@ function parseInvoiceXML(xmlString: string, cufe: string, sourceUrl: string): CA
 }
 
 /**
- * Fetch invoice from DGI and parse it
+ * Extract CUFE from QR URL
  */
-async function fetchCAFE(cufe: string): Promise<FetchResult> {
-  const sourceUrl = `https://dgi-fep.mef.gob.pa/Consultas/FacturasPorCUFE/${cufe}`;
+function extractCUFEFromQRUrl(url: string): string | null {
+  const qrPattern = /[?&]chFE=([A-Za-z0-9\-]+)/i;
+  const match = url.match(qrPattern);
+  return match ? match[1].toUpperCase() : null;
+}
+
+/**
+ * Check if the input is a QR URL
+ */
+function isQRUrl(input: string): boolean {
+  return input.includes('FacturasPorQR');
+}
+
+/**
+ * Fetch invoice from DGI and parse it
+ * Accepts either a CUFE directly or a full QR URL
+ */
+async function fetchCAFE(cufeOrUrl: string): Promise<FetchResult> {
+  let sourceUrl: string;
+  let cufe: string;
+
+  // Determine if input is a QR URL or a plain CUFE
+  if (isQRUrl(cufeOrUrl)) {
+    // It's a QR URL - use it directly
+    sourceUrl = cufeOrUrl;
+    const extractedCufe = extractCUFEFromQRUrl(cufeOrUrl);
+    if (!extractedCufe) {
+      return {
+        success: false,
+        error: 'No se pudo extraer el CUFE de la URL del QR',
+        errorCode: 'INVALID_CUFE',
+      };
+    }
+    cufe = extractedCufe;
+  } else {
+    // It's a plain CUFE - build the URL
+    cufe = cufeOrUrl;
+    sourceUrl = `https://dgi-fep.mef.gob.pa/Consultas/FacturasPorCUFE/${cufe}`;
+  }
 
   try {
     // Fetch the HTML page
@@ -419,13 +456,16 @@ serve(async (req) => {
 
     // Parse request body
     const body = await req.json();
-    const { cufe } = body;
+    const { cufe, qrUrl } = body;
 
-    if (!cufe) {
+    // Accept either cufe directly or a full qrUrl
+    const input = qrUrl || cufe;
+
+    if (!input) {
       return new Response(
         JSON.stringify({
           success: false,
-          error: 'CUFE es requerido',
+          error: 'CUFE o URL del QR es requerido',
           errorCode: 'INVALID_CUFE',
         }),
         {
@@ -435,23 +475,40 @@ serve(async (req) => {
       );
     }
 
-    // Validate CUFE format
-    if (!validateCUFE(cufe)) {
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'Formato de CUFE inválido',
-          errorCode: 'INVALID_CUFE',
-        }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+    // If it's a QR URL, validate it contains the required parameter
+    if (isQRUrl(input)) {
+      if (!extractCUFEFromQRUrl(input)) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: 'URL del QR inválida: no contiene el parámetro chFE',
+            errorCode: 'INVALID_CUFE',
+          }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+    } else {
+      // Validate CUFE format
+      if (!validateCUFE(input)) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: 'Formato de CUFE inválido',
+            errorCode: 'INVALID_CUFE',
+          }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
     }
 
     // Fetch and parse the invoice
-    const result = await fetchCAFE(cufe.trim());
+    const result = await fetchCAFE(input.trim());
 
     return new Response(JSON.stringify(result), {
       status: result.success ? 200 : 400,

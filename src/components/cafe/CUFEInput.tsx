@@ -11,7 +11,7 @@ import { QrCode, ScanLine, AlertCircle, Check } from 'lucide-react';
 import { Input } from '@/components/common/Input';
 import { Button } from '@/components/common/Button';
 import { BarcodeScanner } from '@/components/scanner/BarcodeScanner';
-import { validateCUFE, extractCUFEFromUrl } from '@/types/cafe';
+import { validateCUFE, extractCUFEFromUrl, isQRUrl } from '@/types/cafe';
 
 const Container = styled.div`
   display: flex;
@@ -184,6 +184,19 @@ export const CUFEInput: React.FC<CUFEInputProps> = ({
   // Handle QR scan result
   const handleQRScan = (scannedValue: string) => {
     setShowQRScanner(false);
+
+    // If it's a full QR URL, pass it directly (it contains jwt and digestValue for validation)
+    if (isQRUrl(scannedValue)) {
+      // Extract CUFE for display, but submit the full URL
+      const displayCufe = extractCUFEFromUrl(scannedValue) || scannedValue;
+      onChange(displayCufe);
+
+      // Auto-submit the full QR URL for fetching
+      setTimeout(() => {
+        onSubmit(scannedValue);
+      }, 300);
+      return;
+    }
 
     // Try to extract CUFE from scanned value (might be a URL)
     const extracted = extractCUFEFromUrl(scannedValue);
