@@ -15,11 +15,13 @@ import { PriceComparison } from '@/components/products';
 import { FavoriteButton } from '@/components/favorites';
 import { PriceAlert } from '@/components/alerts';
 import { ContributeDataModal } from '@/components/contributions';
+import { ContributePromotionModal, PromotionList } from '@/components/promotions';
 import { Button } from '@/components/common/Button';
 
 // Hooks
 import { useProductQuery, useProductPricesQuery } from '@/hooks/useProducts';
 import { useHasAlertQuery } from '@/hooks/useAlerts';
+import { useProductPromotions } from '@/hooks/usePromotions';
 
 const ProductContainer = styled.div`
   min-height: 100vh;
@@ -258,6 +260,7 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [isContributeModalOpen, setIsContributeModalOpen] = useState(false);
+  const [isPromotionModalOpen, setIsPromotionModalOpen] = useState(false);
   const [imgError, setImgError] = useState(false);
 
   // Fetch product and prices
@@ -274,6 +277,11 @@ const ProductDetail = () => {
 
   // Check if user has alert for this product
   const { data: hasAlert } = useHasAlertQuery(id || '', null);
+
+  // Get promotions for this product
+  const { data: promotions = [] } = useProductPromotions(id || '', undefined, {
+    enabled: !!id,
+  });
 
   // Get lowest price for alert
   const lowestPrice = prices.length > 0
@@ -402,11 +410,28 @@ const ProductDetail = () => {
               >
                 Contribuir con Datos
               </Button>
+
+              {/* Add Promotion Button */}
+              <Button
+                variant="outline"
+                fullWidth
+                iconLeft={<Tag size={16} />}
+                onClick={() => setIsPromotionModalOpen(true)}
+              >
+                Agregar Promoción
+              </Button>
             </ButtonGroup>
           </ImageSection>
 
           {/* Right Column - Price Comparison */}
           <MainContent>
+            {/* Promotions Section */}
+            {promotions.length > 0 && (
+              <Section>
+                <PromotionList promotions={promotions} />
+              </Section>
+            )}
+
             <Section>
               <SectionTitle>Comparación de Precios</SectionTitle>
               <PriceComparison prices={prices} />
@@ -433,6 +458,14 @@ const ProductDetail = () => {
           <ContributeDataModal
             open={isContributeModalOpen}
             onClose={() => setIsContributeModalOpen(false)}
+            productId={product.id}
+            productName={product.name}
+          />
+
+          {/* Contribute Promotion Modal */}
+          <ContributePromotionModal
+            open={isPromotionModalOpen}
+            onClose={() => setIsPromotionModalOpen(false)}
             productId={product.id}
             productName={product.name}
           />
