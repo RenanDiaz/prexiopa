@@ -5,6 +5,7 @@
 
 import styled from 'styled-components';
 import { useSearchParams } from 'react-router-dom';
+import { Package } from 'lucide-react';
 
 const SearchContainer = styled.div`
   min-height: 100vh;
@@ -288,7 +289,7 @@ const SearchResults = () => {
             <ProductGrid>
               {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
                 <ProductCard key={item}>
-                  <ProductImage>📦</ProductImage>
+                  <ProductImage><Package size={48} /></ProductImage>
                   <ProductName>Producto de Búsqueda {item}</ProductName>
                   <ProductPrice>
                     $19.99

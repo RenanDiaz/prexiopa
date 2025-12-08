@@ -10,17 +10,17 @@ import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import {
-  HiHome,
-  HiShoppingBag,
-  HiHeart,
-  HiShoppingCart,
-  HiX,
-  HiLogin,
-  HiUserAdd,
-  HiLogout,
-  HiUser,
-  HiCog,
-} from 'react-icons/hi';
+  Home,
+  Store,
+  Heart,
+  ShoppingCart,
+  X,
+  LogIn,
+  UserPlus,
+  LogOut,
+  User,
+  Settings,
+} from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -272,7 +272,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
         <MenuHeader>
           <Logo>Prexiopá</Logo>
           <CloseButton onClick={onClose} aria-label="Cerrar menú">
-            <HiX />
+            <X size={24} />
           </CloseButton>
         </MenuHeader>
 
@@ -288,30 +288,30 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                 </UserDetails>
               </UserInfo>
               <ActionButton onClick={() => handleNavigation('/profile')}>
-                <HiUser />
+                <User size={20} />
                 Ver perfil
               </ActionButton>
             </UserSection>
 
             <Navigation>
               <NavItem to="/" onClick={onClose}>
-                <HiHome />
+                <Home size={20} />
                 Inicio
               </NavItem>
               <NavItem to="/stores" onClick={onClose}>
-                <HiShoppingBag />
+                <Store size={20} />
                 Tiendas
               </NavItem>
               <NavItem to="/favorites" onClick={onClose}>
-                <HiHeart />
+                <Heart size={20} />
                 Favoritos
               </NavItem>
               <NavItem to="/shopping" onClick={onClose}>
-                <HiShoppingCart />
+                <ShoppingCart size={20} />
                 Lista de Compras
               </NavItem>
               <NavItem to="/settings" onClick={onClose}>
-                <HiCog />
+                <Settings size={20} />
                 Configuración
               </NavItem>
             </Navigation>
@@ -323,7 +323,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
               </SettingsItem>
               <Divider />
               <ActionButton onClick={handleLogout}>
-                <HiLogout />
+                <LogOut size={20} />
                 Cerrar sesión
               </ActionButton>
             </SettingsSection>
@@ -333,22 +333,22 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
           <>
             <UserSection>
               <ActionButton onClick={() => handleNavigation('/login')}>
-                <HiLogin />
+                <LogIn size={20} />
                 Iniciar Sesión
               </ActionButton>
               <ActionButton onClick={() => handleNavigation('/register')}>
-                <HiUserAdd />
+                <UserPlus size={20} />
                 Registrarse
               </ActionButton>
             </UserSection>
 
             <Navigation>
               <NavItem to="/" onClick={onClose}>
-                <HiHome />
+                <Home size={20} />
                 Inicio
               </NavItem>
               <NavItem to="/stores" onClick={onClose}>
-                <HiShoppingBag />
+                <Store size={20} />
                 Tiendas
               </NavItem>
             </Navigation>

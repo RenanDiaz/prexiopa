@@ -5,7 +5,7 @@
 
 import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
-import { HiMenu } from 'react-icons/hi';
+import { Menu, Search, ShoppingCart, Heart, ShoppingBag } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { useUIStore } from '@/store/uiStore';
 import { ThemeToggle } from './common/ThemeToggle';
@@ -272,11 +272,11 @@ const Navbar = () => {
             aria-label="Abrir menú"
             title="Menú"
           >
-            <HiMenu />
+            <Menu size={24} />
           </HamburgerButton>
 
           <LogoSection to="/">
-            <LogoIcon>🛒</LogoIcon>
+            <LogoIcon><ShoppingBag size={24} /></LogoIcon>
             <LogoText>Prexiopá</LogoText>
           </LogoSection>
 
@@ -304,13 +304,13 @@ const Navbar = () => {
         <NavActions>
           <MobileMenu>
             <IconButton to="/search" title="Buscar">
-              🔍
+              <Search size={20} />
             </IconButton>
             <IconButton to="/shopping" title="Mi Lista">
-              🛒
+              <ShoppingCart size={20} />
             </IconButton>
             <IconButton to="/favorites" title="Favoritos">
-              ❤️
+              <Heart size={20} />
             </IconButton>
           </MobileMenu>
           <ThemeToggle />

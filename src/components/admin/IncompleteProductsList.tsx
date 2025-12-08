@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import styled from 'styled-components';
-import { FiAlertCircle, FiRefreshCw } from 'react-icons/fi';
+import { AlertCircle, RefreshCw, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
   useIncompleteProductsData,
@@ -369,7 +369,7 @@ export const IncompleteProductsList = () => {
         </FilterGroup>
 
         <RefreshButton onClick={() => refetch()}>
-          <FiRefreshCw />
+          <RefreshCw size={16} />
           Actualizar
         </RefreshButton>
       </FiltersBar>
@@ -379,7 +379,7 @@ export const IncompleteProductsList = () => {
         <LoadingState>Cargando productos incompletos...</LoadingState>
       ) : products.length === 0 ? (
         <EmptyState>
-          <EmptyIcon>✅</EmptyIcon>
+          <EmptyIcon><CheckCircle size={48} /></EmptyIcon>
           <EmptyTitle>¡No hay productos incompletos!</EmptyTitle>
           <EmptyText>
             Todos los productos en esta categoría tienen la información completa.
@@ -411,7 +411,7 @@ export const IncompleteProductsList = () => {
                 <MissingFieldsContainer>
                   {sortMissingFieldsByPriority(product.missing_fields).map((field) => (
                     <MissingFieldBadge key={field}>
-                      <FiAlertCircle size={12} />
+                      <AlertCircle size={12} />
                       {getFieldLabel(field)}
                     </MissingFieldBadge>
                   ))}

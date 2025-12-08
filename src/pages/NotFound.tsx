@@ -5,6 +5,7 @@
 
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { SearchX } from 'lucide-react';
 
 const NotFoundContainer = styled.div`
   min-height: 100vh;
@@ -106,7 +107,7 @@ const NotFound = () => {
   return (
     <NotFoundContainer>
       <Content>
-        <Icon>🔍</Icon>
+        <Icon><SearchX size={80} strokeWidth={1.5} /></Icon>
         <ErrorCode>404</ErrorCode>
         <ErrorTitle>Página no encontrada</ErrorTitle>
         <ErrorDescription>

@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { FiFilter, FiRefreshCw } from 'react-icons/fi';
+import { Filter, RefreshCw, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { ContributionReviewCard } from './ContributionReviewCard';
 import { usePendingContributions, useModerationActions } from '@/hooks/useUserRole';
@@ -260,7 +260,7 @@ export const ContributionsQueue: React.FC = () => {
           <EmptyIcon>⚠️</EmptyIcon>
           <EmptyTitle>Error al cargar contribuciones</EmptyTitle>
           <EmptyMessage>{error}</EmptyMessage>
-          <Button onClick={refresh} iconLeft={<FiRefreshCw />}>
+          <Button onClick={refresh} iconLeft={<RefreshCw size={16} />}>
             Reintentar
           </Button>
         </EmptyState>
@@ -273,7 +273,7 @@ export const ContributionsQueue: React.FC = () => {
       <Container>
         <Toolbar>
           <FiltersContainer>
-            <FiFilter />
+            <Filter size={16} />
             <FilterLabel>Filtrar por tipo:</FilterLabel>
             <FilterSelect
               value={typeFilter}
@@ -296,14 +296,14 @@ export const ContributionsQueue: React.FC = () => {
             </FilterSelect>
           </FiltersContainer>
 
-          <Button variant="outline" iconLeft={<FiRefreshCw />} onClick={refresh}>
+          <Button variant="outline" iconLeft={<RefreshCw size={16} />} onClick={refresh}>
             Actualizar
           </Button>
         </Toolbar>
 
         {filteredContributions.length === 0 ? (
           <EmptyState>
-            <EmptyIcon>✅</EmptyIcon>
+            <EmptyIcon><CheckCircle size={48} /></EmptyIcon>
             <EmptyTitle>No hay contribuciones pendientes</EmptyTitle>
             <EmptyMessage>
               {typeFilter === 'all'

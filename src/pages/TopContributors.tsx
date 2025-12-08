@@ -4,7 +4,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
-import { FiAward } from 'react-icons/fi';
+import { Trophy, Target, CheckCircle, XCircle } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import { ReputationBadge } from '@/components/user/ReputationBadge';
 
@@ -41,7 +41,7 @@ const Title = styled.h1`
   gap: ${({ theme }) => theme.spacing[3]};
 `;
 
-const TrophyIcon = styled(FiAward)`
+const TrophyIcon = styled(Trophy)`
   color: ${({ theme }) => theme.colors.secondary[500]};
 `;
 
@@ -256,7 +256,7 @@ export const TopContributors = () => {
           <Subtitle>Los mejores contribuidores de Prexiopá</Subtitle>
         </Header>
         <EmptyState>
-          <EmptyIcon>🎯</EmptyIcon>
+          <EmptyIcon><Target size={64} /></EmptyIcon>
           <EmptyText>
             Aún no hay contribuidores. ¡Sé el primero en contribuir datos de productos!
           </EmptyText>
@@ -291,11 +291,11 @@ export const TopContributors = () => {
                 <StatsRow>
                   <StatItem>
                     <StatLabel>Aprobadas</StatLabel>
-                    <StatValue>✅ {contributor.contributions_approved}</StatValue>
+                    <StatValue><CheckCircle size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} /> {contributor.contributions_approved}</StatValue>
                   </StatItem>
                   <StatItem>
                     <StatLabel>Rechazadas</StatLabel>
-                    <StatValue>❌ {contributor.contributions_rejected}</StatValue>
+                    <StatValue><XCircle size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} /> {contributor.contributions_rejected}</StatValue>
                   </StatItem>
                   <StatItem>
                     <StatLabel>Tasa de Éxito</StatLabel>

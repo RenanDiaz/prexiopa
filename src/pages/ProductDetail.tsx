@@ -6,7 +6,7 @@
 
 import styled from 'styled-components';
 import { useParams, Link } from 'react-router-dom';
-import { FiChevronRight, FiPackage, FiTag, FiHash, FiBell, FiEdit } from 'react-icons/fi';
+import { ChevronRight, Package, Tag, Hash, Bell, Edit, PackageX } from 'lucide-react';
 import { useState } from 'react';
 import productPlaceholder from '@/assets/images/product-placeholder.svg';
 
@@ -297,7 +297,7 @@ const ProductDetail = () => {
       <ProductContainer>
         <ContentWrapper>
           <ErrorContainer>
-            <ErrorIcon>📦</ErrorIcon>
+            <ErrorIcon><PackageX size={80} strokeWidth={1.5} /></ErrorIcon>
             <ErrorTitle>Producto no encontrado</ErrorTitle>
             <ErrorMessage>
               No pudimos encontrar el producto que buscas. Es posible que haya sido eliminado o que
@@ -316,13 +316,13 @@ const ProductDetail = () => {
         {/* Breadcrumb Navigation */}
         <Breadcrumb aria-label="Navegación">
           <BreadcrumbLink to="/">Inicio</BreadcrumbLink>
-          <FiChevronRight size={16} />
+          <ChevronRight size={16} />
           {product.category && (
             <>
               <BreadcrumbLink to={`/?category=${product.category}`}>
                 {product.category}
               </BreadcrumbLink>
-              <FiChevronRight size={16} />
+              <ChevronRight size={16} />
             </>
           )}
           <BreadcrumbCurrent>{product.name}</BreadcrumbCurrent>
@@ -349,7 +349,7 @@ const ProductDetail = () => {
               <ProductMeta>
                 {product.brand && (
                   <MetaItem>
-                    <FiTag size={16} />
+                    <Tag size={16} />
                     <MetaLabel>Marca:</MetaLabel>
                     {product.brand}
                   </MetaItem>
@@ -357,7 +357,7 @@ const ProductDetail = () => {
 
                 {product.category && (
                   <MetaItem>
-                    <FiPackage size={16} />
+                    <Package size={16} />
                     <MetaLabel>Categoría:</MetaLabel>
                     <CategoryBadge>{product.category}</CategoryBadge>
                   </MetaItem>
@@ -365,7 +365,7 @@ const ProductDetail = () => {
 
                 {product.barcode && (
                   <MetaItem>
-                    <FiHash size={16} />
+                    <Hash size={16} />
                     <MetaLabel>Código de barras:</MetaLabel>
                     {product.barcode}
                   </MetaItem>
@@ -387,7 +387,7 @@ const ProductDetail = () => {
               <Button
                 variant={hasAlert ? 'outline' : 'secondary'}
                 fullWidth
-                iconLeft={<FiBell />}
+                iconLeft={<Bell size={16} />}
                 onClick={() => setIsAlertModalOpen(true)}
               >
                 {hasAlert ? 'Editar Alerta de Precio' : 'Crear Alerta de Precio'}
@@ -397,7 +397,7 @@ const ProductDetail = () => {
               <Button
                 variant="outline"
                 fullWidth
-                iconLeft={<FiEdit />}
+                iconLeft={<Edit size={16} />}
                 onClick={() => setIsContributeModalOpen(true)}
               >
                 Contribuir con Datos

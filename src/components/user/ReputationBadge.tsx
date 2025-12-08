@@ -4,6 +4,7 @@
  */
 
 import styled from 'styled-components';
+import { Crown, Star, Medal, CheckCircle, Sprout } from 'lucide-react';
 
 export type ReputationLevel = 'beginner' | 'helper' | 'contributor' | 'trusted' | 'expert';
 
@@ -18,7 +19,7 @@ const getBadgeConfig = (score: number) => {
     return {
       level: 'expert' as const,
       label: 'Experto',
-      icon: '👑',
+      Icon: Crown,
       color: '#F59E0B', // gold
       bgColor: '#FEF3C7',
       borderColor: '#F59E0B',
@@ -28,7 +29,7 @@ const getBadgeConfig = (score: number) => {
     return {
       level: 'trusted' as const,
       label: 'Confiable',
-      icon: '⭐',
+      Icon: Star,
       color: '#8B5CF6', // purple
       bgColor: '#EDE9FE',
       borderColor: '#8B5CF6',
@@ -38,7 +39,7 @@ const getBadgeConfig = (score: number) => {
     return {
       level: 'contributor' as const,
       label: 'Contribuidor',
-      icon: '🥉',
+      Icon: Medal,
       color: '#CD7F32', // bronze
       bgColor: '#FED7AA',
       borderColor: '#CD7F32',
@@ -48,7 +49,7 @@ const getBadgeConfig = (score: number) => {
     return {
       level: 'helper' as const,
       label: 'Ayudante',
-      icon: '✅',
+      Icon: CheckCircle,
       color: '#10B981', // green
       bgColor: '#D1FAE5',
       borderColor: '#10B981',
@@ -57,7 +58,7 @@ const getBadgeConfig = (score: number) => {
   return {
     level: 'beginner' as const,
     label: 'Principiante',
-    icon: '🌱',
+    Icon: Sprout,
     color: '#6B7280', // gray
     bgColor: '#F3F4F6',
     borderColor: '#D1D5DB',
@@ -141,6 +142,10 @@ export const ReputationBadge = ({
 }: ReputationBadgeProps) => {
   const config = getBadgeConfig(score);
   const sizeStyles = getSizeStyles(size);
+  const IconComponent = config.Icon;
+
+  // Get icon size based on badge size
+  const iconSize = size === 'small' ? 14 : size === 'large' ? 20 : 16;
 
   return (
     <BadgeContainer
@@ -150,7 +155,7 @@ export const ReputationBadge = ({
       $gap={sizeStyles.gap}
       title={`${config.label} - ${score} puntos de reputación`}
     >
-      <Icon $size={sizeStyles.iconSize}>{config.icon}</Icon>
+      <Icon $size={sizeStyles.iconSize}><IconComponent size={iconSize} color={config.color} /></Icon>
       <Label $color={config.color} $fontSize={sizeStyles.fontSize}>
         {config.label}
       </Label>

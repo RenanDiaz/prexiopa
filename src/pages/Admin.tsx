@@ -7,6 +7,7 @@
 import { useEffect } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
+import { Lock } from 'lucide-react';
 import { useUserRole } from '@/hooks/useUserRole';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { ContributionsQueue } from '@/components/admin/ContributionsQueue';
@@ -85,7 +86,7 @@ const Admin = () => {
     return (
       <AdminContainer>
         <UnauthorizedContainer>
-          <UnauthorizedIcon>🔒</UnauthorizedIcon>
+          <UnauthorizedIcon><Lock size={80} strokeWidth={1.5} /></UnauthorizedIcon>
           <UnauthorizedTitle>Acceso No Autorizado</UnauthorizedTitle>
           <UnauthorizedMessage>
             No tienes permisos para acceder al panel de administración.

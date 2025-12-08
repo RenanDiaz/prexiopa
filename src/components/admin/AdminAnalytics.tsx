@@ -20,7 +20,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { FiTrendingUp, FiUsers, FiClock, FiBarChart2 } from 'react-icons/fi';
+import { TrendingUp, Users, Clock, BarChart2, BarChart3 } from 'lucide-react';
 import { useAdminAnalytics } from '@/hooks/useAnalytics';
 import {
   calculatePercentageChange,
@@ -241,7 +241,7 @@ export const AdminAnalytics = () => {
   return (
     <Container>
       <Header>
-        <Title>📊 Dashboard de Analíticas</Title>
+        <Title><BarChart3 size={28} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '8px' }} /> Dashboard de Analíticas</Title>
         <Subtitle>Estadísticas de moderación, contribuciones y calidad de datos</Subtitle>
       </Header>
 
@@ -262,7 +262,7 @@ export const AdminAnalytics = () => {
           <StatHeader>
             <StatLabel>Contribuciones Hoy</StatLabel>
             <StatIcon $color={COLORS.primary}>
-              <FiTrendingUp />
+              <TrendingUp size={20} />
             </StatIcon>
           </StatHeader>
           <StatValue>{dailyStats.data?.contributions_today || 0}</StatValue>
@@ -276,7 +276,7 @@ export const AdminAnalytics = () => {
           <StatHeader>
             <StatLabel>Revisiones Hoy</StatLabel>
             <StatIcon $color={COLORS.success}>
-              <FiBarChart2 />
+              <BarChart2 size={20} />
             </StatIcon>
           </StatHeader>
           <StatValue>{dailyStats.data?.reviews_today || 0}</StatValue>
@@ -289,7 +289,7 @@ export const AdminAnalytics = () => {
           <StatHeader>
             <StatLabel>Contribuidores Activos</StatLabel>
             <StatIcon $color={COLORS.secondary}>
-              <FiUsers />
+              <Users size={20} />
             </StatIcon>
           </StatHeader>
           <StatValue>{activeContributors.data || 0}</StatValue>
@@ -300,7 +300,7 @@ export const AdminAnalytics = () => {
           <StatHeader>
             <StatLabel>Tiempo de Revisión</StatLabel>
             <StatIcon $color={COLORS.warning}>
-              <FiClock />
+              <Clock size={20} />
             </StatIcon>
           </StatHeader>
           <StatValue>
@@ -315,7 +315,7 @@ export const AdminAnalytics = () => {
       <ChartsGrid>
         {/* Contribution Trends Over Time */}
         <ChartCard>
-          <ChartTitle>📈 Tendencia de Contribuciones</ChartTitle>
+          <ChartTitle><TrendingUp size={20} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '8px' }} /> Tendencia de Contribuciones</ChartTitle>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={trendData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -353,7 +353,7 @@ export const AdminAnalytics = () => {
 
         {/* Contributions by Type */}
         <ChartCard>
-          <ChartTitle>📊 Contribuciones por Tipo</ChartTitle>
+          <ChartTitle><BarChart2 size={20} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '8px' }} /> Contribuciones por Tipo</ChartTitle>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={typeData}>
               <CartesianGrid strokeDasharray="3 3" />

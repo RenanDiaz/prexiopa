@@ -5,6 +5,7 @@
 
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
+import { Store as StoreIcon, Package } from 'lucide-react';
 
 const StoreContainer = styled.div`
   min-height: 100vh;
@@ -201,7 +202,7 @@ const StorePage = () => {
       <ContentWrapper>
         <Header>
           <StoreHeader>
-            <StoreLogo>🏪</StoreLogo>
+            <StoreLogo><StoreIcon size={48} /></StoreLogo>
             <StoreInfo>
               <StoreName>Tienda de Ejemplo</StoreName>
               <StoreDescription>
@@ -230,7 +231,7 @@ const StorePage = () => {
           <ProductGrid>
             {[1, 2, 3, 4, 5, 6].map((item) => (
               <ProductCard key={item}>
-                <ProductImage>📦</ProductImage>
+                <ProductImage><Package size={48} /></ProductImage>
                 <ProductName>Producto de Ejemplo {item}</ProductName>
                 <ProductPrice>$19.99</ProductPrice>
               </ProductCard>
