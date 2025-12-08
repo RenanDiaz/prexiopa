@@ -11,6 +11,7 @@ import { Lock } from 'lucide-react';
 import { useUserRole } from '@/hooks/useUserRole';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { ContributionsQueue } from '@/components/admin/ContributionsQueue';
+import { PromotionsQueue } from '@/components/admin/PromotionsQueue';
 import { IncompleteProductsList } from '@/components/admin/IncompleteProductsList';
 import { AdminAnalytics } from '@/components/admin/AdminAnalytics';
 
@@ -104,6 +105,7 @@ const Admin = () => {
       <AdminLayout>
         <Routes>
           <Route index element={<ContributionsQueue />} />
+          <Route path="promotions" element={<PromotionsQueue />} />
           <Route path="incomplete" element={<IncompleteProductsList />} />
           <Route path="stats" element={<AdminAnalytics />} />
         </Routes>
