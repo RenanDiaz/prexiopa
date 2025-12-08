@@ -308,10 +308,10 @@ export function extractCUFEFromUrl(url: string): string | null {
 }
 
 /**
- * Check if URL is a QR format URL
+ * Check if URL is a QR format URL (case-insensitive)
  */
 export function isQRUrl(url: string): boolean {
-  return url.includes('FacturasPorQR');
+  return url.toLowerCase().includes('facturasporqr');
 }
 
 /**
