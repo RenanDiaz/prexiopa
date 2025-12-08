@@ -44,6 +44,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import Webcam from 'react-webcam';
 import { BrowserMultiFormatReader } from '@zxing/browser';
+import jsQR from 'jsqr';
 import { FiX, FiRotateCw, FiAlertCircle } from 'react-icons/fi';
 import { HiLightningBolt } from 'react-icons/hi';
 import * as S from './BarcodeScanner.styles';
@@ -125,6 +126,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
 
   // Refs
   const webcamRef = useRef<Webcam>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const codeReaderRef = useRef<BrowserMultiFormatReader | null>(null);
   const scanningIntervalRef = useRef<number | null>(null);
   const timeoutRef = useRef<number | null>(null);
@@ -133,17 +135,26 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
   const overlayRef = useRef<HTMLDivElement>(null);
 
   /**
-   * Initialize barcode reader
+   * Initialize barcode readers
+   * - jsQR for QR codes (best for high-density QR like DGI invoices)
+   * - zxing for traditional barcodes (EAN-13, UPC, Code-128, etc.)
    */
   const initializeReader = useCallback(() => {
+    // Create multi-format reader for traditional barcodes
     codeReaderRef.current = new BrowserMultiFormatReader();
+
+    // Create canvas for jsQR (best for high-density QR codes)
+    if (!canvasRef.current) {
+      canvasRef.current = document.createElement('canvas');
+    }
   }, []);
 
   /**
    * Scan barcode from webcam video
+   * Uses jsQR for QR codes, zxing for traditional barcodes
    */
   const scanBarcode = useCallback(async () => {
-    if (!codeReaderRef.current || !webcamRef.current?.video) {
+    if (!webcamRef.current?.video) {
       return;
     }
 
@@ -151,11 +162,43 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
       const video = webcamRef.current.video;
 
       if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        const result = await codeReaderRef.current.decodeOnceFromVideoElement(video);
+        let barcodeText: string | null = null;
 
-        if (result) {
-          const barcodeText = result.getText();
+        // First try jsQR (best for QR codes, especially high-density ones like DGI invoices)
+        if (canvasRef.current) {
+          const canvas = canvasRef.current;
+          const ctx = canvas.getContext('2d');
 
+          if (ctx) {
+            // Use full video resolution for better QR detection
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const qrCode = jsQR(imageData.data, imageData.width, imageData.height, {
+              inversionAttempts: 'dontInvert',
+            });
+
+            if (qrCode) {
+              barcodeText = qrCode.data;
+            }
+          }
+        }
+
+        // Fall back to zxing for traditional barcodes (EAN-13, UPC, Code-128, etc.)
+        if (!barcodeText && codeReaderRef.current) {
+          try {
+            const result = await codeReaderRef.current.decodeOnceFromVideoElement(video);
+            if (result) {
+              barcodeText = result.getText();
+            }
+          } catch {
+            // No barcode found in this frame
+          }
+        }
+
+        if (barcodeText) {
           // Update state
           setState('success');
           setDetectedCode(barcodeText);
@@ -198,10 +241,10 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
   const startScanning = useCallback(() => {
     setState('ready');
 
-    // Start scanning interval
+    // Start scanning interval (200ms for faster detection of dense QR codes)
     scanningIntervalRef.current = window.setInterval(() => {
       scanBarcode();
-    }, 300);
+    }, 200);
 
     // Set timeout for "no code found"
     if (noCodeTimeout > 0) {

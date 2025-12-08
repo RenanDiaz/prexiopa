@@ -138,6 +138,45 @@ function parseNumber(value: string | null | undefined): number {
 }
 
 /**
+ * Normalize date to ISO format (YYYY-MM-DD)
+ * Handles: DD/MM/YYYY, MM/DD/YYYY, YYYY-MM-DD, DD-MM-YYYY
+ */
+function normalizeDate(dateStr: string): string {
+  if (!dateStr) return '';
+
+  // Already in ISO format
+  if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
+    return dateStr.slice(0, 10);
+  }
+
+  // DD/MM/YYYY or DD-MM-YYYY format (common in Panama/Latin America)
+  const dmyMatch = dateStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  if (dmyMatch) {
+    const [, day, month, year] = dmyMatch;
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  }
+
+  // MM/DD/YYYY format (US style, less common)
+  const mdyMatch = dateStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  if (mdyMatch) {
+    // Assume DMY for Latin America unless day > 12
+    const [, first, second, year] = mdyMatch;
+    const firstNum = parseInt(first, 10);
+    const secondNum = parseInt(second, 10);
+
+    // If first number > 12, it must be the day
+    if (firstNum > 12) {
+      return `${year}-${second.padStart(2, '0')}-${first.padStart(2, '0')}`;
+    }
+    // Default to DMY format
+    return `${year}-${second.padStart(2, '0')}-${first.padStart(2, '0')}`;
+  }
+
+  // Return as-is if no pattern matches (will likely fail, but at least we tried)
+  return dateStr;
+}
+
+/**
  * Get XML element text content using regex
  * Works for both self-closing and regular tags
  */
@@ -338,7 +377,7 @@ function parseInvoiceFromHTML(html: string, cufe: string, sourceUrl: string): CA
     cufe,
     invoiceNumber,
     pointOfSale: undefined,
-    issueDate: issueDateStr,
+    issueDate: normalizeDate(issueDateStr),
     authorizationDate: undefined,
     authorizationProtocol: undefined,
     emitter: {
