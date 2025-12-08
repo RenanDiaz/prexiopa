@@ -417,7 +417,7 @@ function extractCUFEFromQRUrl(url: string): string | null {
  * Check if the input is a QR URL
  */
 function isQRUrl(input: string): boolean {
-  return input.includes('FacturasPorQR');
+  return input.toLowerCase().includes('facturasporqr');
 }
 
 /**
