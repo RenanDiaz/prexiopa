@@ -1,6 +1,6 @@
 # 🚀 Prexiopá - Plan de Desarrollo Actualizado
 
-> **Última actualización:** 7 de Diciembre, 2025
+> **Última actualización:** 8 de Diciembre, 2025
 > **Estado actual:** MVP Funcional (100% completo) - Sprint 1 ✅ | Sprint 2 ✅ | Sprint 3 ✅
 > **Objetivo:** Completar Fase 5 y preparar para producción
 
@@ -695,11 +695,324 @@ interface IncompleteProduct {
 
 ---
 
-## 📋 Features Adicionales (Post-Producción)
+---
+
+### 🧾 **SPRINT 7: ITBMS y Sistema de Promociones**
+*Objetivo: Implementar cálculo de impuestos y sistema completo de descuentos/promociones*
+
+#### Tarea 7.1: Sistema de ITBMS (Impuesto de Transferencia de Bienes Muebles y Servicios)
+**Prioridad:** Alta
+**Estimado:** 6 horas
+
+**Objetivo:** Implementar cálculo de ITBMS con tasas de Panamá (0%, 7%, 10%, 15%).
+
+**Fase A: Base de datos (Supabase)**
+- [ ] Agregar campo `tax_rate` a tabla `categories` (default 7.00)
+- [ ] Crear tabla `tax_rates` para referencia:
+  ```sql
+  CREATE TABLE tax_rates (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name text NOT NULL,           -- 'Exento', 'General', 'Selectivo', 'Servicios'
+    rate decimal(5,2) NOT NULL,   -- 0.00, 7.00, 10.00, 15.00
+    description text,
+    applies_to text[],            -- categorías o tipos de productos
+    is_active boolean DEFAULT true,
+    created_at timestamp with time zone DEFAULT now()
+  );
+  ```
+- [ ] Insertar tasas de ITBMS de Panamá:
+  - 0% - Exento (canasta básica, medicamentos, productos agrícolas)
+  - 7% - Tasa general (mayoría de productos)
+  - 10% - Selectivo (bebidas alcohólicas, tabaco, joyas)
+  - 15% - Servicios específicos (hospedaje, etc.)
+- [ ] Agregar campos a `shopping_list_items`:
+  - `price_includes_tax` boolean DEFAULT true
+  - `tax_rate` decimal(5,2)
+  - `base_price` decimal(10,2) -- precio sin ITBMS
+  - `tax_amount` decimal(10,2) -- monto del ITBMS
+
+**Fase B: Frontend - Modal de precio actualizado**
+- [ ] Agregar radio buttons en modal de agregar producto:
+  - "Precio incluye ITBMS" (default)
+  - "Precio sin ITBMS"
+- [ ] Agregar selector de tasa ITBMS (auto-detectar por categoría del producto)
+- [ ] Calcular y mostrar desglose en tiempo real:
+  - Precio base (sin ITBMS)
+  - Monto ITBMS
+  - Precio total
+- [ ] Actualizar `shoppingStore.ts` con lógica de cálculo
+
+**Fase C: Vista de lista de compra actualizada**
+- [ ] Mostrar precios siempre desglosados (base + ITBMS)
+- [ ] Agrupar ITBMS por tasa en el resumen:
+  ```
+  Subtotal (sin ITBMS):    $45.50
+  ITBMS 7% (8 items):       $3.19
+  ITBMS 10% (2 items):      $0.80
+  ITBMS 0% (3 items):       $0.00
+  ─────────────────────────────
+  TOTAL:                   $49.49
+  ```
+- [ ] Crear componente `TaxBreakdown.tsx`
+
+**Archivos a crear/modificar:**
+- `supabase/migrations/YYYYMMDD_create_tax_system.sql` (nuevo)
+- `src/types/tax.ts` (nuevo)
+- `src/components/shopping/AddItemModal.tsx` (modificar)
+- `src/components/shopping/TaxBreakdown.tsx` (nuevo)
+- `src/store/shoppingStore.ts` (modificar)
+- `src/pages/Shopping.tsx` (modificar)
+
+---
+
+#### Tarea 7.2: Sistema de Promociones - Base de Datos
+**Prioridad:** Alta
+**Estimado:** 5 horas
+
+**Objetivo:** Crear estructura de datos flexible para todos los tipos de promociones.
+
+**Tipos de promociones a soportar:**
+1. `percentage` - Descuento por porcentaje (15% de descuento)
+2. `fixed_amount` - Descuento por monto fijo ($2 de descuento)
+3. `buy_x_get_y` - Paga X y lleva Y (2x1, 3x2)
+4. `bulk_price` - Precio especial por cantidad (Ahorra 4)
+5. `bundle_free` - Compra X, llévate Y gratis
+6. `coupon` - Descuento con código de cupón
+7. `loyalty` - Descuento con cartilla de stickers
+
+**Migración SQL:**
+- [ ] Crear tabla `promotions`:
+  ```sql
+  CREATE TABLE promotions (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name text NOT NULL,
+    description text,
+    promotion_type text NOT NULL CHECK (promotion_type IN (
+      'percentage', 'fixed_amount', 'buy_x_get_y',
+      'bulk_price', 'bundle_free', 'coupon', 'loyalty'
+    )),
+    config jsonb NOT NULL,
+    -- Aplicabilidad
+    applies_to_products uuid[],
+    applies_to_categories uuid[],
+    applies_to_stores uuid[],
+    -- Vigencia
+    starts_at timestamp with time zone,
+    ends_at timestamp with time zone,
+    is_indefinite boolean DEFAULT false,
+    -- Estado y moderación
+    status text CHECK (status IN ('pending', 'approved', 'rejected')) DEFAULT 'pending',
+    is_verified boolean DEFAULT false,
+    contributor_id uuid REFERENCES auth.users(id),
+    reviewed_by uuid REFERENCES auth.users(id),
+    reviewed_at timestamp with time zone,
+    -- Metadata
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now()
+  );
+  ```
+- [ ] Crear índices para búsqueda eficiente
+- [ ] Configurar RLS policies (usuarios pueden crear, moderadores aprueban)
+- [ ] Agregar campos a `shopping_list_items`:
+  - `applied_promotion_id` uuid REFERENCES promotions(id)
+  - `original_price` decimal(10,2)
+  - `discount_amount` decimal(10,2) DEFAULT 0
+
+**Ejemplos de config JSONB por tipo:**
+```json
+// percentage
+{ "discount_percent": 15 }
+
+// fixed_amount
+{ "discount_amount": 2.00 }
+
+// buy_x_get_y
+{ "buy": 3, "pay": 2 }
+
+// bulk_price (Ahorra 4)
+{ "min_quantity": 4, "unit_price": 0.76 }
+
+// bundle_free
+{
+  "required_products": ["uuid1", "uuid2"],
+  "required_qty": 2,
+  "free_product": "uuid3"
+}
+
+// coupon
+{ "coupon_code": "VERANO25", "discount_percent": 25 }
+
+// loyalty
+{ "stickers_required": 10, "discount_percent": 50 }
+```
+
+**Archivos a crear:**
+- `supabase/migrations/YYYYMMDD_create_promotions_system.sql` (nuevo)
+- `src/types/promotion.ts` (nuevo)
+
+---
+
+#### Tarea 7.3: Sistema de Promociones - Contribución de Usuarios
+**Prioridad:** Alta
+**Estimado:** 6 horas
+
+**Objetivo:** Permitir a usuarios contribuir promociones (con moderación).
+
+**Componentes:**
+- [ ] Crear modal `ContributePromotionModal.tsx`:
+  - Selector de tipo de promoción
+  - Formulario dinámico según tipo seleccionado
+  - Selector de producto(s) aplicables
+  - Selector de tienda(s)
+  - Campos de vigencia (fecha inicio/fin o "No sé las fechas")
+  - Vista previa del descuento calculado
+- [ ] Crear store `promotionsStore.ts`:
+  - `submitPromotion(data)`
+  - `getActivePromotions(productId?, storeId?)`
+  - `getUserSubmittedPromotions()`
+  - `getPromotionsByProduct(productId)`
+- [ ] Mostrar badge "No verificada" en promociones pendientes
+- [ ] Agregar botón "Reportar promoción" si está incorrecta
+- [ ] Integrar con sistema de reputación (puntos por promociones aprobadas)
+
+**UI para promociones no verificadas:**
+```
+┌─────────────────────────────────────┐
+│ 🏷️ 15% descuento                   │
+│ ⚠️ No verificada - Contribuida por  │
+│    @usuario hace 2 horas            │
+│ [Usar de todos modos] [Reportar]    │
+└─────────────────────────────────────┘
+```
+
+**Archivos a crear:**
+- `src/components/promotions/ContributePromotionModal.tsx` (nuevo)
+- `src/components/promotions/PromotionBadge.tsx` (nuevo)
+- `src/store/promotionsStore.ts` (nuevo)
+
+---
+
+#### Tarea 7.4: Sistema de Promociones - Aplicación en Compras
+**Prioridad:** Alta
+**Estimado:** 8 horas
+
+**Objetivo:** Integrar promociones en el flujo de registro de compras.
+
+**Fase A: Detección automática**
+- [ ] Al seleccionar producto + tienda, buscar promociones activas
+- [ ] Mostrar promociones disponibles como chips seleccionables
+- [ ] Ordenar por: verificadas primero, luego por descuento mayor
+- [ ] Validar requisitos (cantidad mínima, productos requeridos, etc.)
+
+**Fase B: Modal de precio actualizado**
+- [ ] Agregar sección "Descuento (opcional)" al modal
+- [ ] Dropdown con opciones:
+  - Sin descuento
+  - [Promociones detectadas automáticamente]
+  - Descuento manual (% o $)
+  - + Registrar nueva promoción
+- [ ] Calcular descuento en tiempo real
+- [ ] Mostrar ahorro en el resumen
+
+**Fase C: Lógica de cálculo por tipo**
+- [ ] `percentage`: precio * (1 - descuento/100)
+- [ ] `fixed_amount`: precio - descuento
+- [ ] `buy_x_get_y`: calcular unidades gratis
+- [ ] `bulk_price`: aplicar precio especial si qty >= min
+- [ ] `bundle_free`: detectar si aplica producto gratis
+- [ ] `coupon/loyalty`: validar código/cartilla
+
+**Fase D: Vista de lista actualizada**
+- [ ] Mostrar precio original tachado si hay descuento
+- [ ] Mostrar badge de promoción aplicada
+- [ ] Mostrar "GRATIS" para productos de bundle
+- [ ] Resumen de ahorros al final:
+  ```
+  💰 Ahorraste: $12.50 en esta compra
+  ```
+
+**Archivos a modificar:**
+- `src/components/shopping/AddItemModal.tsx` (modificar significativamente)
+- `src/components/shopping/ShoppingListItem.tsx` (modificar)
+- `src/store/shoppingStore.ts` (agregar lógica de promociones)
+- `src/pages/Shopping.tsx` (mostrar resumen de ahorros)
+
+---
+
+#### Tarea 7.5: Notificaciones de Promociones en Favoritos
+**Prioridad:** Media
+**Estimado:** 4 horas
+
+**Objetivo:** Notificar cuando un producto favorito tiene promoción activa.
+
+- [ ] Crear función RPC `get_favorites_with_promotions(user_id)`
+- [ ] Agregar badge en página de Favoritos si producto tiene promo
+- [ ] Crear componente `PromotionAlert.tsx` para mostrar en favoritos
+- [ ] Opción de push notification (futuro - requiere PWA)
+- [ ] Mostrar en dashboard: "3 de tus favoritos tienen promociones"
+
+**Archivos a crear/modificar:**
+- `src/components/promotions/PromotionAlert.tsx` (nuevo)
+- `src/pages/Favorites.tsx` (modificar)
+- `src/pages/Dashboard.tsx` (modificar - agregar widget)
+
+---
+
+#### Tarea 7.6: Admin - Moderación de Promociones
+**Prioridad:** Media
+**Estimado:** 4 horas
+
+**Objetivo:** Permitir a moderadores revisar y aprobar promociones contribuidas.
+
+- [ ] Agregar tab "Promociones" en Admin dashboard
+- [ ] Crear componente `PromotionsQueue.tsx` (similar a ContributionsQueue)
+- [ ] Mostrar detalles de la promoción para revisión
+- [ ] Botones aprobar/rechazar con razón
+- [ ] Al aprobar, marcar como `is_verified = true`
+- [ ] Estadísticas: promociones pendientes, aprobadas hoy, etc.
+
+**Archivos a crear:**
+- `src/components/admin/PromotionsQueue.tsx` (nuevo)
+- `src/components/admin/PromotionReviewCard.tsx` (nuevo)
+
+---
+
+**Resumen de archivos nuevos para Sprint 7:**
+```
+supabase/migrations/
+├── YYYYMMDD_create_tax_system.sql
+└── YYYYMMDD_create_promotions_system.sql
+
+src/types/
+├── tax.ts
+└── promotion.ts
+
+src/store/
+└── promotionsStore.ts
+
+src/components/
+├── shopping/
+│   └── TaxBreakdown.tsx
+├── promotions/
+│   ├── ContributePromotionModal.tsx
+│   ├── PromotionBadge.tsx
+│   └── PromotionAlert.tsx
+└── admin/
+    ├── PromotionsQueue.tsx
+    └── PromotionReviewCard.tsx
+```
+
+**Dependencias del Sprint 7:**
+- Requiere Sprint 2 completado (sistema de contribuciones)
+- Requiere Sprint 3 completado (sistema de moderación)
+
+---
+
+## 📋 Features Adicionales (Post-Produccion)
 
 ### Fase 6: Features Avanzados (Opcional)
 
-#### Geolocalización de Tiendas
+#### Geolocalizacion de Tiendas
 **Estimado:** 8 horas
 - [ ] Agregar coordenadas a tabla `stores` en Supabase
 - [ ] Implementar `navigator.geolocation` API
@@ -737,13 +1050,14 @@ interface IncompleteProduct {
 ### Orden Recomendado de Implementación:
 
 1. ✅ **COMPLETADO (Semana 1):** Protected Routes, Dark Mode, Toasts
-2. **ALTA (Semana 2-3):** Mobile Menu, Sistema de Contribuciones, Email/Password Auth
-3. **ALTA (Semana 4):** Backoffice de Moderación, Roles y Permisos
+2. ✅ **COMPLETADO (Semana 2-3):** Mobile Menu, Sistema de Contribuciones, Email/Password Auth
+3. ✅ **COMPLETADO (Semana 4):** Backoffice de Moderación, Roles y Permisos
 4. **ALTA (Semana 5):** Testing Setup y Tests Básicos
 5. **MEDIA (Semana 6):** Performance Optimization
 6. **CRÍTICA (Semana 7):** Deploy, CI/CD, Monitoring
 7. **MEDIA (Semana 8):** SEO y PWA
-8. **OPCIONAL (Post-Launch):** Features Avanzados
+8. **ALTA (Semana 9-10):** ITBMS y Sistema de Promociones (Sprint 7)
+9. **OPCIONAL (Post-Launch):** Features Avanzados
 
 ---
 
@@ -753,16 +1067,28 @@ interface IncompleteProduct {
 - ✅ Protected routes funcionando (COMPLETADO)
 - ✅ Dark mode toggle operativo (COMPLETADO)
 - ✅ Toast notifications en todas las acciones (COMPLETADO)
-- [ ] Mobile menu offcanvas funcional
-- [ ] Sistema de contribuciones implementado
-- [ ] Backoffice de moderación operativo
-- [ ] Email/password auth completo
+- ✅ Mobile menu offcanvas funcional (COMPLETADO)
+- ✅ Sistema de contribuciones implementado (COMPLETADO)
+- ✅ Backoffice de moderación operativo (COMPLETADO)
+- ✅ Email/password auth completo (COMPLETADO)
 - [ ] Test coverage > 60%
 - [ ] Lighthouse Performance > 90
 - [ ] Lighthouse Accessibility > 95
 - [ ] Bundle size < 400KB
 - [ ] Deploy en producción exitoso
 - [ ] Sentry y GA4 configurados
+
+### Sprint 7 (ITBMS y Promociones) Completo Cuando:
+- [ ] Sistema de ITBMS implementado con tasas de Panamá
+- [ ] Cálculo automático de impuestos en lista de compra
+- [ ] Desglose de ITBMS por tasa en resumen
+- [ ] Tabla de promociones creada con todos los tipos
+- [ ] Usuarios pueden contribuir promociones
+- [ ] Moderadores pueden aprobar/rechazar promociones
+- [ ] Promociones se aplican automáticamente en compras
+- [ ] Badge "No verificada" visible en promociones pendientes
+- [ ] Notificaciones de promociones en favoritos
+- [ ] Resumen de ahorros visible al completar compra
 
 ---
 
@@ -850,3 +1176,33 @@ npm install zod react-hook-form @hookform/resolvers
 **¡Éxito en el desarrollo! 🚀**
 
 Este plan está diseñado para llevar Prexiopá del 85% actual al 100% production-ready en aproximadamente 6 semanas de trabajo enfocado.
+
+## Nuevas funcionalidades
+
+Ayúdame a hacer brainstorm para nuevas funcionalidades de mi app Prexiopá. Te puedo explicar el flujo actual del registro de compras:
+1. Se crea una nueva sesión de compra; esta puede ser para planear una compra, o para registrar una compra ya hecha.
+2. Se eligen los productos a agregar a la lista de compras. Para esto se va a la página de productos y se puede scrollear, filtrar, buscar (por nombre o por código de barras), o escanear el código de barras.
+2.1. Si se escribe o se escanea un código de barras, hace la búsqueda, si no tiene resultados, muestra un modal de registro de producto donde pide nombre del producto, marca y presentación (cantidad y unidad), por ejemplo 6 unidades, o 355mL.
+3. Al elegir o registrar exitosamente un producto, aparece un modal para registrar el precio unitario, la cantidad, y el nombre de la tienda.
+4. Al darle guardar, se agrega el producto con su precio, cantidad y subtotal de línea a la lista activa.
+5. Se repiten los pasos del 2 al 4 cuantas veces sea necesario, hasta tener todos los productos de la compra.
+6. En la lista de compra se le da al botón de completar y se marca la lista como completada y pasa al historial, y para hacer una nueva lista, se debe volver al paso 1.
+
+Hay 2 funcionalidades que me hacen falta:
+1. Descuentos y promociones
+2. ITBMS (o IVA, pero como la aplicación está hecha con objetivo Panamá, sería ITBMS de momento)
+
+Cómo y dónde me recomiendas agregar esto?
+
+En el supermercado que yo regularmente compro tienen diferentes tipos de descuentos y promociones:
+1. Descuento por porcentaje (15% de descuento)
+2. Descuento por precio (de $6.99 a $4.99 o lo que es lo mismo $2 de descuento)
+3. Paga X y lleva Y (2x1, 3x2, etc)
+4. Al llevar X productos iguales, cada uno baja el precio (En el caso de este supermercado se llama Ahorra 4, y varía, por ejemplo puede costar $0.80, pero si llevas 4, te salen en $0.76 cada uno)
+5. Al comprar un producto X (o X y Y) productos, te llevas un producto Z gratis (compra 2 bolsas de nachos y te llevas un queso gratis)
+6. Al presentar un cupón, producto X tiene descuento.
+7. Al presentar una cartilla de stickers, producto X tiene descuento.
+
+Estos normalmente tienen un tiempo de vigencia (fecha inicio y fecha fin), pero también pueden ser indefinidos o no saberse las fechas.
+
+En el caso del ITBMS, puede estar exento, 7% o 10% que creo que son los que existen, y dependen de una categoría. Si me faltan tasas, tómalas en cuenta también.

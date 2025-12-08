@@ -14,7 +14,7 @@
 
 import { useState, useCallback } from 'react';
 import styled from 'styled-components';
-import { FiX, FiPercent, FiDollarSign, FiGift, FiTag, FiShoppingBag, FiCalendar, FiAlertCircle } from 'react-icons/fi';
+import { FiX, FiPercent, FiDollarSign, FiGift, FiTag, FiShoppingBag, FiAlertCircle } from 'react-icons/fi';
 import { Button } from '@/components/common';
 import { useCreatePromotion } from '@/hooks/usePromotions';
 import { useStoresQuery } from '@/hooks/useStores';
@@ -168,7 +168,7 @@ const Input = styled.input`
   }
 
   &::placeholder {
-    color: ${({ theme }) => theme.colors.text.tertiary};
+    color: ${({ theme }) => theme.colors.text.hint};
   }
 `;
 
@@ -264,13 +264,13 @@ const WarningBox = styled.div`
   align-items: flex-start;
   gap: ${({ theme }) => theme.spacing[2]};
   padding: ${({ theme }) => theme.spacing[3]};
-  background: ${({ theme }) => theme.colors.warning[50]};
-  border: 1px solid ${({ theme }) => theme.colors.warning[200]};
+  background: #FFF8E1;
+  border: 1px solid #FFE082;
   border-radius: ${({ theme }) => theme.borderRadius.base};
   margin-bottom: ${({ theme }) => theme.spacing[4]};
 
   svg {
-    color: ${({ theme }) => theme.colors.warning[600]};
+    color: #F57C00;
     flex-shrink: 0;
     margin-top: 2px;
   }
@@ -278,7 +278,7 @@ const WarningBox = styled.div`
 
 const WarningText = styled.p`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
-  color: ${({ theme }) => theme.colors.warning[800]};
+  color: #E65100;
   margin: 0;
 `;
 
@@ -408,7 +408,7 @@ export const ContributePromotionModal: React.FC<ContributePromotionModalProps> =
   const handleSubmit = async () => {
     const input: CreatePromotionInput = {
       name: generateName(),
-      description: null,
+      description: undefined,
       promotion_type: promotionType,
       store_id: storeId || undefined,
       store_name: storeName || undefined,

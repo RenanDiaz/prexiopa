@@ -8,12 +8,10 @@
 import { supabase } from '../../supabaseClient';
 import type {
   Promotion,
-  PromotionProduct,
   ProductPromotion,
   CreatePromotionInput,
   VerifyPromotionInput,
   PromotionWithProducts,
-  PromotionStatus,
   PromotionType,
 } from '@/types/promotion';
 
@@ -73,11 +71,15 @@ export async function getPromotion(promotionId: string): Promise<PromotionWithPr
     `)
     .eq('promotion_id', promotionId);
 
-  const products = promotionProducts?.map((pp) => ({
-    id: (pp.products as { id: string; name: string }).id,
-    name: (pp.products as { id: string; name: string }).name,
-    role: pp.role,
-  })) || [];
+  const products = promotionProducts?.map((pp) => {
+    // Handle both array and single object cases from Supabase join
+    const productData = Array.isArray(pp.products) ? pp.products[0] : pp.products;
+    return {
+      id: (productData as { id: string; name: string })?.id || '',
+      name: (productData as { id: string; name: string })?.name || '',
+      role: pp.role,
+    };
+  }).filter(p => p.id) || [];
 
   return {
     ...promotion,

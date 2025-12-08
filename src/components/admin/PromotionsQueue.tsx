@@ -78,7 +78,7 @@ const EmptyState = styled.div`
 
 const EmptyIcon = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing[4]};
-  color: ${({ theme }) => theme.colors.text.tertiary};
+  color: ${({ theme }) => theme.colors.text.hint};
 `;
 
 const EmptyTitle = styled.h3`
@@ -154,15 +154,15 @@ const StatusBadge = styled.span<{ $status: string }>`
   border-radius: ${({ theme }) => theme.borderRadius.full};
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  background: ${({ theme, $status }) => {
-    if ($status === 'pending') return theme.colors.warning[100];
-    if ($status === 'unverified') return theme.colors.warning[50];
-    return theme.colors.gray[100];
+  background: ${({ $status }) => {
+    if ($status === 'pending') return '#FFF3E0';
+    if ($status === 'unverified') return '#FFF8E1';
+    return '#F5F5F5';
   }};
-  color: ${({ theme, $status }) => {
-    if ($status === 'pending') return theme.colors.warning[700];
-    if ($status === 'unverified') return theme.colors.warning[600];
-    return theme.colors.gray[600];
+  color: ${({ $status }) => {
+    if ($status === 'pending') return '#E65100';
+    if ($status === 'unverified') return '#F57C00';
+    return '#757575';
   }};
 `;
 
@@ -189,7 +189,7 @@ const DetailItem = styled.div`
 const DetailLabel = styled.span`
   display: block;
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
-  color: ${({ theme }) => theme.colors.text.tertiary};
+  color: ${({ theme }) => theme.colors.text.hint};
   margin-bottom: ${({ theme }) => theme.spacing[1]};
   text-transform: uppercase;
   letter-spacing: 0.5px;

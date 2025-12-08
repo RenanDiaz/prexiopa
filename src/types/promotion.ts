@@ -254,7 +254,7 @@ export function isPromotionActive(promotion: Promotion | ProductPromotion): bool
  */
 export function calculateEffectiveDiscount(
   promotion: Promotion | ProductPromotion,
-  originalPrice?: number
+  _originalPrice?: number
 ): { type: 'percent' | 'amount' | 'special'; value: number; label: string } | null {
   const details = promotion.details;
 

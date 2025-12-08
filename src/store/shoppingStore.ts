@@ -106,10 +106,6 @@ const calculateSubtotal = (price: number, quantity: number): number => {
   return Number((price * quantity).toFixed(2));
 };
 
-const calculateSessionTotal = (items: ShoppingItem[]): number => {
-  return Number(items.reduce((sum, item) => sum + item.subtotal, 0).toFixed(2));
-};
-
 /**
  * Recalculate all tax-related totals for a session
  */

@@ -9,8 +9,6 @@ import * as promotionsService from '@/services/supabase/promotions';
 import type {
   CreatePromotionInput,
   VerifyPromotionInput,
-  ProductPromotion,
-  PromotionWithProducts,
 } from '@/types/promotion';
 import { useAuthStore } from '@/store/authStore';
 import { showSuccessNotification, showErrorNotification } from '@/store/uiStore';
@@ -144,7 +142,7 @@ export function useCreatePromotion() {
   return useMutation({
     mutationFn: (input: CreatePromotionInput) =>
       promotionsService.createPromotion(input),
-    onSuccess: (newPromotion) => {
+    onSuccess: () => {
       // Invalidate relevant queries
       queryClient.invalidateQueries({ queryKey: promotionKeys.all });
 

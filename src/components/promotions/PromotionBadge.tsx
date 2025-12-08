@@ -24,8 +24,8 @@ const BadgeContainer = styled.div<{ $verified: boolean }>`
   padding: ${({ theme }) => `${theme.spacing[1]} ${theme.spacing[2]}`};
   background: ${({ theme, $verified }) =>
     $verified
-      ? theme.colors.success[500]
-      : theme.colors.warning[500]};
+      ? theme.colors.semantic.success.main
+      : theme.colors.semantic.warning.main};
   color: white;
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
@@ -55,14 +55,14 @@ const LargeBadgeContainer = styled.div<{ $verified: boolean }>`
   align-items: center;
   gap: ${({ theme }) => theme.spacing[2]};
   padding: ${({ theme }) => theme.spacing[3]};
-  background: ${({ theme, $verified }) =>
+  background: ${({ $verified }) =>
     $verified
-      ? theme.colors.success[50]
-      : theme.colors.warning[50]};
-  border: 1px solid ${({ theme, $verified }) =>
+      ? '#E8F5E9'
+      : '#FFF8E1'};
+  border: 1px solid ${({ $verified }) =>
     $verified
-      ? theme.colors.success[200]
-      : theme.colors.warning[200]};
+      ? '#A5D6A7'
+      : '#FFE082'};
   border-radius: ${({ theme }) => theme.borderRadius.base};
 `;
 
@@ -74,8 +74,8 @@ const LargeBadgeIcon = styled.div<{ $verified: boolean }>`
   height: 36px;
   background: ${({ theme, $verified }) =>
     $verified
-      ? theme.colors.success[500]
-      : theme.colors.warning[500]};
+      ? theme.colors.semantic.success.main
+      : theme.colors.semantic.warning.main};
   color: white;
   border-radius: ${({ theme }) => theme.borderRadius.full};
 `;
@@ -88,10 +88,10 @@ const LargeBadgeContent = styled.div`
 const LargeBadgeTitle = styled.div<{ $verified: boolean }>`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  color: ${({ theme, $verified }) =>
+  color: ${({ $verified }) =>
     $verified
-      ? theme.colors.success[700]
-      : theme.colors.warning[700]};
+      ? '#2E7D32'
+      : '#E65100'};
 `;
 
 const LargeBadgeSubtitle = styled.div`
@@ -105,7 +105,7 @@ const LargeBadgeWarning = styled.div`
   align-items: center;
   gap: ${({ theme }) => theme.spacing[1]};
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
-  color: ${({ theme }) => theme.colors.warning[600]};
+  color: #F57C00;
   margin-top: ${({ theme }) => theme.spacing[1]};
 
   svg {

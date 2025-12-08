@@ -57,7 +57,7 @@ const Row = styled.div<{ $highlight?: boolean; $total?: boolean }>`
       ? theme.typography.fontWeight.bold
       : $highlight
         ? theme.typography.fontWeight.medium
-        : theme.typography.fontWeight.normal};
+        : theme.typography.fontWeight.regular};
 
   ${({ $total, theme }) =>
     $total &&
@@ -77,8 +77,8 @@ const Label = styled.span`
 
 const ItemCount = styled.span`
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
-  color: ${({ theme }) => theme.colors.text.tertiary};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.normal};
+  color: ${({ theme }) => theme.colors.text.hint};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.regular};
 `;
 
 const Amount = styled.span<{ $highlight?: boolean }>`
@@ -95,7 +95,7 @@ const Divider = styled.hr`
 
 const EmptyState = styled.p`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
-  color: ${({ theme }) => theme.colors.text.tertiary};
+  color: ${({ theme }) => theme.colors.text.hint};
   text-align: center;
   margin: 0;
   padding: ${({ theme }) => theme.spacing[2]} 0;
