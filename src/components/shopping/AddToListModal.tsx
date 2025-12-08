@@ -6,12 +6,14 @@
  * - Ingresar/verificar el precio del producto
  * - Seleccionar la tienda
  * - Ajustar la cantidad
+ * - Seleccionar si el precio incluye ITBMS o no
+ * - Seleccionar la tasa de ITBMS aplicable
  * - Opcionalmente contribuir el precio para otros usuarios
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import styled from 'styled-components';
-import { FiShoppingCart, FiDollarSign, FiPackage, FiAlertCircle } from 'react-icons/fi';
+import { FiShoppingCart, FiDollarSign, FiPackage, FiAlertCircle, FiPercent } from 'react-icons/fi';
 import { Modal } from '@/components/common/Modal';
 import { Input } from '@/components/common/Input';
 import { PriceInput } from '@/components/common/PriceInput';
@@ -19,6 +21,14 @@ import { Button } from '@/components/common/Button';
 import type { Product } from '@/types/product.types';
 import productPlaceholder from '@/assets/images/product-placeholder.svg';
 import { formatProductMeasurement } from '@/types/product.types';
+import type { TaxRateCode } from '@/types/tax';
+import {
+  PANAMA_TAX_RATES,
+  getDefaultTaxRateForCategory,
+  calculateBasePrice,
+  calculateTaxAmount,
+  formatCurrency,
+} from '@/types/tax';
 
 const ModalContent = styled.div`
   display: flex;
@@ -203,6 +213,111 @@ const HelpText = styled.p`
   margin: ${({ theme }) => theme.spacing[1]} 0 0 0;
 `;
 
+// ITBMS Section Styles
+const TaxSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing[3]};
+  padding: ${({ theme }) => theme.spacing[4]};
+  background: ${({ theme }) => theme.colors.background.secondary};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border: 1px solid ${({ theme }) => theme.colors.border.light};
+`;
+
+const TaxSectionTitle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing[2]};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.colors.text.primary};
+
+  svg {
+    color: ${({ theme }) => theme.colors.primary[500]};
+  }
+`;
+
+const RadioGroup = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing[4]};
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: ${({ theme }) => theme.spacing[2]};
+  }
+`;
+
+const RadioLabel = styled.label<{ $checked?: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing[2]};
+  padding: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[3]};
+  background: ${({ theme, $checked }) =>
+    $checked ? theme.colors.primary[50] : theme.colors.background.default};
+  border: 2px solid ${({ theme, $checked }) =>
+    $checked ? theme.colors.primary[500] : theme.colors.border.main};
+  border-radius: ${({ theme }) => theme.borderRadius.base};
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.primary[400]};
+  }
+
+  input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+
+  span {
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
+    color: ${({ theme }) => theme.colors.text.primary};
+  }
+`;
+
+const TaxRateRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing[3]};
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+`;
+
+const TaxRateLabel = styled.span`
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  color: ${({ theme }) => theme.colors.text.secondary};
+  white-space: nowrap;
+`;
+
+const TaxBreakdownBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing[1]};
+  padding: ${({ theme }) => theme.spacing[3]};
+  background: ${({ theme }) => theme.colors.background.default};
+  border-radius: ${({ theme }) => theme.borderRadius.base};
+  border: 1px dashed ${({ theme }) => theme.colors.border.main};
+`;
+
+const TaxBreakdownRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  color: ${({ theme }) => theme.colors.text.secondary};
+
+  &:last-child {
+    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+    color: ${({ theme }) => theme.colors.text.primary};
+    padding-top: ${({ theme }) => theme.spacing[2]};
+    border-top: 1px solid ${({ theme }) => theme.colors.border.light};
+    margin-top: ${({ theme }) => theme.spacing[1]};
+  }
+`;
 
 export interface Store {
   id: string;
@@ -222,6 +337,10 @@ export interface AddToListModalProps {
     store_id: string;
     store_name: string;
     savePrice: boolean;
+    // Tax fields
+    taxRateCode: TaxRateCode;
+    taxRate: number;
+    priceIncludesTax: boolean;
   }) => void;
   isSubmitting?: boolean;
   /** If provided, the store selector will be locked to this store (from active session) */
@@ -245,8 +364,28 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
   const [quantity, setQuantity] = useState('1');
   const [savePrice, setSavePrice] = useState(true);
 
+  // Tax state
+  const [priceIncludesTax, setPriceIncludesTax] = useState(true);
+  const [taxRateCode, setTaxRateCode] = useState<TaxRateCode>('general');
+  const [taxRate, setTaxRate] = useState(7);
+
   // Ref for price input
   const priceInputRef = useRef<HTMLInputElement>(null);
+
+  // Calculate tax breakdown in real-time
+  const taxBreakdown = useMemo(() => {
+    const quantityNum = parseFloat(quantity) || 1;
+    const basePrice = calculateBasePrice(price, taxRate, priceIncludesTax);
+    const taxAmount = calculateTaxAmount(basePrice, taxRate, quantityNum);
+    const subtotal = price * quantityNum;
+
+    return {
+      basePrice,
+      taxAmount,
+      subtotal,
+      basePriceTotal: basePrice * quantityNum,
+    };
+  }, [price, quantity, taxRate, priceIncludesTax]);
 
   // Initialize form with product data
   useEffect(() => {
@@ -276,6 +415,12 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
 
       // Check savePrice by default
       setSavePrice(true);
+
+      // Initialize tax rate based on product category
+      const defaultTaxRate = getDefaultTaxRateForCategory(product.category || '');
+      setTaxRateCode(defaultTaxRate.code);
+      setTaxRate(defaultTaxRate.rate);
+      setPriceIncludesTax(true); // Default: price includes tax
 
       // Focus price input after modal opens
       setTimeout(() => {
@@ -310,7 +455,20 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
       store_id: selectedStore.id,
       store_name: selectedStore.name,
       savePrice,
+      // Tax fields
+      taxRateCode,
+      taxRate,
+      priceIncludesTax,
     });
+  };
+
+  // Handle tax rate change from selector
+  const handleTaxRateChange = (code: TaxRateCode) => {
+    setTaxRateCode(code);
+    const selectedRate = PANAMA_TAX_RATES.find((r) => r.code === code);
+    if (selectedRate) {
+      setTaxRate(selectedRate.rate);
+    }
   };
 
   const handleClose = () => {
@@ -319,6 +477,10 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
       setSelectedStoreId('');
       setQuantity('1');
       setSavePrice(true);
+      // Reset tax fields
+      setPriceIncludesTax(true);
+      setTaxRateCode('general');
+      setTaxRate(7);
       onClose();
     }
   };
@@ -406,12 +568,79 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
                   <FiAlertCircle size={18} />
                   <span>
                     {priceDifference > 0
-                      ? `Este precio es ${Math.abs(priceDifference).toFixed(0)}% más alto que el último reportado.`
-                      : `Este precio es ${Math.abs(priceDifference).toFixed(0)}% más bajo que el último reportado.`}
-                    {' '}¿Es correcto?
+                      ? `Este precio es ${Math.abs(priceDifference).toFixed(0)}% mas alto que el ultimo reportado.`
+                      : `Este precio es ${Math.abs(priceDifference).toFixed(0)}% mas bajo que el ultimo reportado.`}
+                    {' '}Es correcto?
                   </span>
                 </PriceHint>
               )}
+
+              {/* ITBMS Section */}
+              <TaxSection>
+                <TaxSectionTitle>
+                  <FiPercent size={16} />
+                  ITBMS (Impuesto)
+                </TaxSectionTitle>
+
+                {/* Price includes tax toggle */}
+                <RadioGroup>
+                  <RadioLabel $checked={priceIncludesTax}>
+                    <input
+                      type="radio"
+                      name="priceIncludesTax"
+                      checked={priceIncludesTax}
+                      onChange={() => setPriceIncludesTax(true)}
+                      disabled={isSubmitting}
+                    />
+                    <span>Precio incluye ITBMS</span>
+                  </RadioLabel>
+                  <RadioLabel $checked={!priceIncludesTax}>
+                    <input
+                      type="radio"
+                      name="priceIncludesTax"
+                      checked={!priceIncludesTax}
+                      onChange={() => setPriceIncludesTax(false)}
+                      disabled={isSubmitting}
+                    />
+                    <span>Precio sin ITBMS</span>
+                  </RadioLabel>
+                </RadioGroup>
+
+                {/* Tax rate selector */}
+                <TaxRateRow>
+                  <TaxRateLabel>Tasa de ITBMS:</TaxRateLabel>
+                  <Select
+                    value={taxRateCode}
+                    onChange={(e) => handleTaxRateChange(e.target.value as TaxRateCode)}
+                    disabled={isSubmitting}
+                    style={{ flex: 1 }}
+                  >
+                    {PANAMA_TAX_RATES.map((rate) => (
+                      <option key={rate.code} value={rate.code}>
+                        {rate.label}
+                      </option>
+                    ))}
+                  </Select>
+                </TaxRateRow>
+
+                {/* Tax breakdown preview */}
+                {price > 0 && (
+                  <TaxBreakdownBox>
+                    <TaxBreakdownRow>
+                      <span>Precio base (sin ITBMS):</span>
+                      <span>{formatCurrency(taxBreakdown.basePrice)}</span>
+                    </TaxBreakdownRow>
+                    <TaxBreakdownRow>
+                      <span>ITBMS ({taxRate}%):</span>
+                      <span>{formatCurrency(taxBreakdown.taxAmount)}</span>
+                    </TaxBreakdownRow>
+                    <TaxBreakdownRow>
+                      <span>Subtotal ({quantity} x {formatCurrency(price)}):</span>
+                      <span>{formatCurrency(taxBreakdown.subtotal)}</span>
+                    </TaxBreakdownRow>
+                  </TaxBreakdownBox>
+                )}
+              </TaxSection>
 
               {/* Store Selector */}
               <FormGroup>

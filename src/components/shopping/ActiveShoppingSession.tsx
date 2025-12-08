@@ -3,7 +3,7 @@
  * Interfaz principal para gestionar una sesión de compras activa
  */
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   FiShoppingCart,
   FiCheck,
@@ -13,6 +13,7 @@ import {
   FiAlertCircle,
 } from 'react-icons/fi';
 import { ShoppingItemCard } from './ShoppingItemCard';
+import { TaxBreakdownComponent } from './TaxBreakdown';
 import { Button } from '../common/Button';
 import { Modal } from '../common/Modal';
 import EmptyState from '../common/EmptyState';
@@ -26,6 +27,8 @@ import {
   useDecrementItemQuantityMutation,
   useDeleteItemMutation,
 } from '@/hooks/useShoppingLists';
+import { calculateSessionTaxSummary, DEFAULT_TAX_RATE_CODE, DEFAULT_TAX_RATE } from '@/types/tax';
+import type { TaxRateCode } from '@/types/tax';
 import * as S from './ActiveShoppingSession.styles';
 
 export interface ActiveShoppingSessionProps {
@@ -60,6 +63,37 @@ export const ActiveShoppingSession = ({
   const purchasedItems = items.filter((item) => item.purchased).length;
   const progress = totalItems > 0 ? (purchasedItems / totalItems) * 100 : 0;
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  // Calculate tax summary using useMemo for performance
+  const taxSummary = useMemo(() => {
+    if (items.length === 0) {
+      return {
+        subtotalBeforeTax: 0,
+        totalTax: 0,
+        grandTotal: 0,
+        breakdown: {},
+      };
+    }
+
+    // Map items to the format expected by calculateSessionTaxSummary
+    const taxItems = items.map((item) => {
+      const taxRateCode = (item.tax_rate_code as TaxRateCode) || DEFAULT_TAX_RATE_CODE;
+      const taxRate = item.tax_rate ?? DEFAULT_TAX_RATE;
+      const basePrice = item.base_price ?? item.price;
+      const taxAmount = item.tax_amount ?? 0;
+
+      return {
+        basePrice,
+        taxRate,
+        taxRateCode,
+        taxAmount,
+        quantity: item.quantity,
+        subtotal: item.subtotal,
+      };
+    });
+
+    return calculateSessionTaxSummary(taxItems);
+  }, [items]);
 
   // Handlers
   const handleTogglePurchased = (itemId: string, purchased: boolean) => {
@@ -212,6 +246,16 @@ export const ActiveShoppingSession = ({
             </S.ProgressBarContainer>
           </S.ProgressSection>
         )}
+
+        {/* Tax Breakdown */}
+        {totalItems > 0 && (
+          <TaxBreakdownComponent
+            subtotalBeforeTax={taxSummary.subtotalBeforeTax}
+            totalTax={taxSummary.totalTax}
+            grandTotal={taxSummary.grandTotal}
+            breakdown={taxSummary.breakdown}
+          />
+        )}
       </S.Header>
 
       {/* Items List */}
@@ -279,8 +323,16 @@ export const ActiveShoppingSession = ({
                 <strong>{purchasedItems}</strong>
               </S.ModalStatRow>
               <S.ModalStatRow>
-                <span>Total gastado:</span>
-                <strong>{formatPrice(total)}</strong>
+                <span>Subtotal (sin ITBMS):</span>
+                <strong>{formatPrice(taxSummary.subtotalBeforeTax)}</strong>
+              </S.ModalStatRow>
+              <S.ModalStatRow>
+                <span>Total ITBMS:</span>
+                <strong>{formatPrice(taxSummary.totalTax)}</strong>
+              </S.ModalStatRow>
+              <S.ModalStatRow>
+                <span>Total a pagar:</span>
+                <strong>{formatPrice(taxSummary.grandTotal)}</strong>
               </S.ModalStatRow>
             </S.ModalStats>
 

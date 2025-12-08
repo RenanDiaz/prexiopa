@@ -28,6 +28,7 @@ import { useActiveSessionQuery, useAddItemMutation, useCreateSessionMutation } f
 import { useStoresQuery } from '@/hooks/useStores';
 import { showWarningNotification } from '@/store/uiStore';
 import { AddToListModal } from '@/components/shopping';
+import type { TaxRateCode } from '@/types/tax';
 import {
   CardContainer,
   CardImageWrapper,
@@ -156,6 +157,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     store_id: string;
     store_name: string;
     savePrice: boolean;
+    // Tax fields
+    taxRateCode: TaxRateCode;
+    taxRate: number;
+    priceIncludesTax: boolean;
   }) => {
     try {
       // If no active session, create one automatically with the selected store
@@ -173,7 +178,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       const finalStoreId = activeSession?.store_id || data.store_id;
       const finalStoreName = activeSession?.store_name || data.store_name;
 
-      // Add item to shopping list
+      // Add item to shopping list with tax info
       await addItemMutation.mutateAsync({
         session_id: sessionId,
         product_id: data.product_id,
@@ -182,6 +187,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         quantity: data.quantity,
         store_id: finalStoreId,
         store_name: finalStoreName,
+        // Tax fields
+        taxRateCode: data.taxRateCode,
+        taxRate: data.taxRate,
+        priceIncludesTax: data.priceIncludesTax,
       });
 
       // If savePrice is true, save to prices table

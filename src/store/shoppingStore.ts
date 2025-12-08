@@ -7,6 +7,15 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { toast } from 'react-toastify';
+import type { TaxRateCode, TaxBreakdown } from '@/types/tax';
+import {
+  DEFAULT_TAX_RATE_CODE,
+  DEFAULT_TAX_RATE,
+  calculateBasePrice,
+  calculateTaxAmount,
+  calculateSessionTaxSummary,
+  getTaxRateByCode,
+} from '@/types/tax';
 
 export interface ShoppingItem {
   id: string;
@@ -17,6 +26,12 @@ export interface ShoppingItem {
   unit: string;
   subtotal: number;
   notes?: string;
+  // Tax fields (ITBMS)
+  taxRateCode: TaxRateCode;
+  taxRate: number;
+  priceIncludesTax: boolean;
+  basePrice: number;
+  taxAmount: number;
 }
 
 export interface ShoppingSession {
@@ -28,6 +43,10 @@ export interface ShoppingSession {
   status: 'in_progress' | 'completed' | 'cancelled';
   notes?: string;
   items: ShoppingItem[];
+  // Tax summary fields
+  subtotalBeforeTax: number;
+  totalTax: number;
+  taxBreakdown: TaxBreakdown;
 }
 
 interface ShoppingState {
@@ -35,6 +54,20 @@ interface ShoppingState {
   recentSessions: ShoppingSession[];
   isLoading: boolean;
   error: string | null;
+}
+
+// Input type for adding items (without calculated fields)
+export interface AddItemInput {
+  productId: string | null;
+  productName: string;
+  price: number;
+  quantity: number;
+  unit: string;
+  notes?: string;
+  // Tax fields
+  taxRateCode?: TaxRateCode;
+  taxRate?: number;
+  priceIncludesTax?: boolean;
 }
 
 interface ShoppingActions {
@@ -46,8 +79,8 @@ interface ShoppingActions {
   updateSessionNotes: (notes: string) => void;
 
   // Item management
-  addItem: (item: Omit<ShoppingItem, 'id' | 'subtotal'>) => void;
-  updateItem: (itemId: string, updates: Partial<ShoppingItem>) => void;
+  addItem: (item: AddItemInput) => void;
+  updateItem: (itemId: string, updates: Partial<AddItemInput>) => void;
   removeItem: (itemId: string) => void;
   clearItems: () => void;
 
@@ -78,6 +111,46 @@ const calculateSessionTotal = (items: ShoppingItem[]): number => {
 };
 
 /**
+ * Recalculate all tax-related totals for a session
+ */
+const recalculateSessionTaxTotals = (session: ShoppingSession): void => {
+  const summary = calculateSessionTaxSummary(session.items);
+  session.subtotalBeforeTax = summary.subtotalBeforeTax;
+  session.totalTax = summary.totalTax;
+  session.taxBreakdown = summary.breakdown;
+  session.total = summary.grandTotal;
+};
+
+/**
+ * Create a new shopping item with tax calculations
+ */
+const createShoppingItem = (itemData: AddItemInput): ShoppingItem => {
+  const taxRateCode = itemData.taxRateCode || DEFAULT_TAX_RATE_CODE;
+  const taxRate = itemData.taxRate ?? getTaxRateByCode(taxRateCode)?.rate ?? DEFAULT_TAX_RATE;
+  const priceIncludesTax = itemData.priceIncludesTax ?? true;
+
+  const basePrice = calculateBasePrice(itemData.price, taxRate, priceIncludesTax);
+  const taxAmount = calculateTaxAmount(basePrice, taxRate, itemData.quantity);
+  const subtotal = calculateSubtotal(itemData.price, itemData.quantity);
+
+  return {
+    id: `item_${generateId()}`,
+    productId: itemData.productId,
+    productName: itemData.productName,
+    price: itemData.price,
+    quantity: itemData.quantity,
+    unit: itemData.unit,
+    subtotal,
+    notes: itemData.notes,
+    taxRateCode,
+    taxRate,
+    priceIncludesTax,
+    basePrice,
+    taxAmount,
+  };
+};
+
+/**
  * Shopping Store con Zustand + Immer
  * Maneja sesiones de compra activas y historial
  */
@@ -103,6 +176,10 @@ export const useShoppingStore = create<ShoppingStore>()(
             total: 0,
             status: 'in_progress',
             items: [],
+            // Tax fields initialized
+            subtotalBeforeTax: 0,
+            totalTax: 0,
+            taxBreakdown: {},
           };
           state.error = null;
         });
@@ -183,19 +260,19 @@ export const useShoppingStore = create<ShoppingStore>()(
               total: 0,
               status: 'in_progress',
               items: [],
+              subtotalBeforeTax: 0,
+              totalTax: 0,
+              taxBreakdown: {},
             };
           }
 
-          const subtotal = calculateSubtotal(itemData.price, itemData.quantity);
-
-          const newItem: ShoppingItem = {
-            ...itemData,
-            id: `item_${generateId()}`,
-            subtotal,
-          };
+          // Create item with tax calculations
+          const newItem = createShoppingItem(itemData);
 
           state.currentSession.items.push(newItem);
-          state.currentSession.total = calculateSessionTotal(state.currentSession.items);
+
+          // Recalculate session totals including tax
+          recalculateSessionTaxTotals(state.currentSession);
         });
 
         toast.success(`${itemData.productName} agregado a la lista`, {
@@ -212,18 +289,35 @@ export const useShoppingStore = create<ShoppingStore>()(
             const itemIndex = state.currentSession.items.findIndex((i) => i.id === itemId);
             if (itemIndex !== -1) {
               const item = state.currentSession.items[itemIndex];
-              const updatedItem = { ...item, ...updates };
 
-              // Recalculate subtotal if price or quantity changed
-              if (updates.price !== undefined || updates.quantity !== undefined) {
-                updatedItem.subtotal = calculateSubtotal(
-                  updatedItem.price,
-                  updatedItem.quantity
-                );
-              }
+              // Merge updates
+              const updatedPrice = updates.price ?? item.price;
+              const updatedQuantity = updates.quantity ?? item.quantity;
+              const updatedTaxRateCode = updates.taxRateCode ?? item.taxRateCode;
+              const updatedTaxRate = updates.taxRate ?? item.taxRate;
+              const updatedPriceIncludesTax = updates.priceIncludesTax ?? item.priceIncludesTax;
 
-              state.currentSession.items[itemIndex] = updatedItem;
-              state.currentSession.total = calculateSessionTotal(state.currentSession.items);
+              // Recalculate tax-related fields
+              const basePrice = calculateBasePrice(updatedPrice, updatedTaxRate, updatedPriceIncludesTax);
+              const taxAmount = calculateTaxAmount(basePrice, updatedTaxRate, updatedQuantity);
+              const subtotal = calculateSubtotal(updatedPrice, updatedQuantity);
+
+              // Update item
+              state.currentSession.items[itemIndex] = {
+                ...item,
+                ...updates,
+                price: updatedPrice,
+                quantity: updatedQuantity,
+                taxRateCode: updatedTaxRateCode,
+                taxRate: updatedTaxRate,
+                priceIncludesTax: updatedPriceIncludesTax,
+                basePrice,
+                taxAmount,
+                subtotal,
+              };
+
+              // Recalculate session totals
+              recalculateSessionTaxTotals(state.currentSession);
             }
           }
         });
@@ -238,7 +332,8 @@ export const useShoppingStore = create<ShoppingStore>()(
             state.currentSession.items = state.currentSession.items.filter(
               (item) => item.id !== itemId
             );
-            state.currentSession.total = calculateSessionTotal(state.currentSession.items);
+            // Recalculate session totals including tax
+            recalculateSessionTaxTotals(state.currentSession);
           }
         });
       },
@@ -251,6 +346,9 @@ export const useShoppingStore = create<ShoppingStore>()(
           if (state.currentSession) {
             state.currentSession.items = [];
             state.currentSession.total = 0;
+            state.currentSession.subtotalBeforeTax = 0;
+            state.currentSession.totalTax = 0;
+            state.currentSession.taxBreakdown = {};
           }
         });
       },

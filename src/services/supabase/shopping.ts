@@ -6,6 +6,8 @@
  */
 
 import { supabase } from '../../supabaseClient';
+import type { TaxRateCode } from '@/types/tax';
+import { DEFAULT_TAX_RATE_CODE, DEFAULT_TAX_RATE, calculateBasePrice, calculateTaxAmount } from '@/types/tax';
 
 /**
  * Shopping session status
@@ -61,6 +63,12 @@ export interface ShoppingItem {
   paid_quantity?: number | null;
   paid_discount?: number | null;
   save_to_history?: boolean;
+  // Tax fields (ITBMS)
+  tax_rate_code?: TaxRateCode;
+  tax_rate?: number;
+  price_includes_tax?: boolean;
+  base_price?: number;
+  tax_amount?: number;
 }
 
 /**
@@ -97,6 +105,10 @@ export interface AddItemData {
   store_id?: string | null;
   store_name?: string | null;
   notes?: string;
+  // Tax fields (ITBMS)
+  taxRateCode?: TaxRateCode;
+  taxRate?: number;
+  priceIncludesTax?: boolean;
 }
 
 /**
@@ -344,6 +356,16 @@ export const getShoppingItems = async (
 export const addShoppingItem = async (
   input: AddItemData
 ): Promise<ShoppingItem> => {
+  // Calculate tax values
+  const taxRateCode = input.taxRateCode || DEFAULT_TAX_RATE_CODE;
+  const taxRate = input.taxRate ?? DEFAULT_TAX_RATE;
+  const priceIncludesTax = input.priceIncludesTax ?? true;
+  const quantity = input.quantity || 1;
+
+  // Calculate base price and tax amount
+  const basePrice = calculateBasePrice(input.price, taxRate, priceIncludesTax);
+  const taxAmount = calculateTaxAmount(basePrice, taxRate, quantity);
+
   const { data, error } = await supabase
     .from('shopping_items')
     .insert({
@@ -351,12 +373,18 @@ export const addShoppingItem = async (
       product_id: input.product_id || null,
       product_name: input.product_name,
       price: input.price,
-      quantity: input.quantity || 1,
+      quantity: quantity,
       unit: input.unit || 'unidad',
       store_id: input.store_id || null,
       store_name: input.store_name || null,
       purchased: false,
       notes: input.notes || null,
+      // Tax fields
+      tax_rate_code: taxRateCode,
+      tax_rate: taxRate,
+      price_includes_tax: priceIncludesTax,
+      base_price: basePrice,
+      tax_amount: taxAmount,
     })
     .select()
     .single();

@@ -26,6 +26,7 @@ import { useActiveSessionQuery, useAddItemMutation } from '@/hooks/useShoppingLi
 import type { PriceRange, FilterChangePayload } from '@/components/search/SearchFilters';
 import type { ProductFilters, CreateProductInput } from '@/services/supabase/products';
 import type { Product } from '@/types/product.types';
+import type { TaxRateCode } from '@/types/tax';
 
 // Services
 import { createProduct } from '@/services/supabase/products';
@@ -396,9 +397,13 @@ const Dashboard = () => {
       store_id: string;
       store_name: string;
       savePrice: boolean;
+      // Tax fields
+      taxRateCode: TaxRateCode;
+      taxRate: number;
+      priceIncludesTax: boolean;
     }) => {
       if (!activeSession) {
-        toast.error('No hay una sesión activa');
+        toast.error('No hay una sesion activa');
         return;
       }
 
@@ -411,6 +416,10 @@ const Dashboard = () => {
           product_name: data.product_name,
           price: data.price,
           quantity: data.quantity,
+          // Tax fields
+          taxRateCode: data.taxRateCode,
+          taxRate: data.taxRate,
+          priceIncludesTax: data.priceIncludesTax,
         });
 
         // If savePrice is true, save to database
