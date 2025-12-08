@@ -13,7 +13,8 @@
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { DOMParser } from 'https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts';
+// Note: We parse HTML directly with regex instead of DOMParser
+// because deno_dom's DOMParser has limitations
 
 // CORS headers for browser requests
 const corsHeaders = {
@@ -166,68 +167,141 @@ function getAllXmlElementBlocks(xml: string, tagName: string): string[] {
 }
 
 /**
- * Parse XML invoice data using regex-based parsing
- * (deno_dom's DOMParser doesn't support text/xml)
+ * Extract value from HTML dt/dd pattern
+ * Pattern: <dt class="small">LABEL</dt><dd>VALUE</dd>
  */
-function parseInvoiceXML(xmlString: string, cufe: string, sourceUrl: string): CAFEInvoice {
-  console.log('Parsing XML, length:', xmlString.length);
+function extractDTValue(html: string, label: string): string {
+  const pattern = new RegExp(
+    `<dt[^>]*>\\s*${label}\\s*</dt>\\s*<dd[^>]*>([^<]*)</dd>`,
+    'i'
+  );
+  const match = html.match(pattern);
+  return match ? match[1].trim() : '';
+}
 
-  // Parse general data (gDGen)
-  const gDGen = getXmlElementBlock(xmlString, 'gDGen');
-  const invoiceNumber = getXmlElementText(gDGen, 'dNroDF') || getXmlElementText(xmlString, 'dNroDF');
-  const pointOfSale = getXmlElementText(gDGen, 'dPtoFacDF') || getXmlElementText(xmlString, 'dPtoFacDF');
-  const issueDateStr = getXmlElementText(gDGen, 'dFechaEm') || getXmlElementText(xmlString, 'dFechaEm');
+/**
+ * Extract value from HTML table cell with data-title attribute
+ * Pattern: <td data-title="TITLE" ...>VALUE</td>
+ */
+function extractTdValue(row: string, dataTitle: string): string {
+  const pattern = new RegExp(
+    `<td[^>]*data-title="${dataTitle}"[^>]*>([^<]*)</td>`,
+    'i'
+  );
+  const match = row.match(pattern);
+  return match ? match[1].trim() : '';
+}
 
-  console.log('Parsed general data:', { invoiceNumber, pointOfSale, issueDateStr });
+/**
+ * Extract all table rows from tbody
+ */
+function extractTableRows(html: string): string[] {
+  const tbodyMatch = html.match(/<tbody[^>]*>([\s\S]*?)<\/tbody>/i);
+  if (!tbodyMatch) return [];
 
-  // Parse emitter data (gEmis)
-  const gEmis = getXmlElementBlock(xmlString, 'gEmis');
-  const gRucEmi = getXmlElementBlock(gEmis, 'gRucEmi');
-  const emitterRuc = getXmlElementText(gRucEmi, 'dRuc') || getXmlElementText(gEmis, 'dRuc');
-  const emitterDV = getXmlElementText(gRucEmi, 'dDV') || getXmlElementText(gEmis, 'dDV');
-  const emitterName = getXmlElementText(gEmis, 'dNombEm');
-  const emitterBranch = getXmlElementText(gEmis, 'dSucEm');
-  const emitterAddress = getXmlElementText(gEmis, 'dDirecEm');
-  const emitterPhone = getXmlElementText(gEmis, 'dTfnEm');
+  const rowPattern = /<tr[^>]*>[\s\S]*?<\/tr>/gi;
+  return tbodyMatch[1].match(rowPattern) || [];
+}
 
-  console.log('Parsed emitter:', { emitterRuc, emitterName });
+/**
+ * Estimate tax rate from unit price, total price, and tax amount
+ * Returns the tax code (0, 1, 2, 3)
+ */
+function estimateTaxCode(
+  unitPrice: number,
+  totalPrice: number,
+  taxAmount: number
+): string {
+  if (taxAmount === 0) return '0'; // Exempt
 
-  // Parse receiver data (gDatRec)
-  const gDatRec = getXmlElementBlock(xmlString, 'gDatRec');
-  const gRucRec = getXmlElementBlock(gDatRec, 'gRucRec');
-  const receiverRuc = getXmlElementText(gRucRec, 'dRuc') || getXmlElementText(gDatRec, 'dRuc');
-  const receiverName = getXmlElementText(gDatRec, 'dNombRec');
-  const receiverType = getXmlElementText(gDatRec, 'iTipoRec');
+  // Calculate implied tax rate
+  const baseAmount = totalPrice - taxAmount;
+  if (baseAmount <= 0) return '1'; // Default to 7%
 
-  // Parse items (gItem)
+  const impliedRate = (taxAmount / baseAmount) * 100;
+
+  // Match to closest known rate
+  if (impliedRate < 3) return '0'; // Exempt (0%)
+  if (impliedRate < 8.5) return '1'; // General (7%)
+  if (impliedRate < 12.5) return '2'; // Selective (10%)
+  return '3'; // Services/Tobacco (15%)
+}
+
+/**
+ * Parse invoice data directly from the HTML response
+ * The DGI page renders the invoice data in HTML tables
+ */
+function parseInvoiceFromHTML(html: string, cufe: string, sourceUrl: string): CAFEInvoice {
+  console.log('Parsing HTML response, length:', html.length);
+
+  // Extract emitter (Emisor) data
+  // The HTML has sections with <dt>LABEL</dt><dd>VALUE</dd> pairs
+  const emitterRuc = extractDTValue(html, 'RUC');
+  const emitterDV = extractDTValue(html, 'DV');
+  const emitterName = extractDTValue(html, 'NOMBRE');
+  const emitterAddress = extractDTValue(html, 'DIRECCIÓN');
+  const emitterPhone = extractDTValue(html, 'TELÉFONO');
+
+  console.log('Parsed emitter:', { emitterRuc, emitterName, emitterDV });
+
+  // Extract invoice number and date from page
+  // Look for patterns like "No. Documento: 12345" or "Fecha: 2025-12-08"
+  const invoiceNumberMatch = html.match(/No\.?\s*Documento[:\s]*(\d+)/i);
+  const invoiceNumber = invoiceNumberMatch ? invoiceNumberMatch[1] : '';
+
+  // Try to extract date from multiple patterns
+  let issueDateStr = '';
+  const dateMatch = html.match(
+    /Fecha[^:]*:\s*(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4})/i
+  );
+  if (dateMatch) {
+    issueDateStr = dateMatch[1];
+  }
+
+  // Extract CUFE breakdown from the URL itself to get date
+  // CUFE format includes date: FE + RUC parts + YYYYMMDD + sequence
+  const cufeMatch = cufe.match(/(\d{8})\d{13}0[1-4][1-2]\d{10}$/);
+  if (cufeMatch && !issueDateStr) {
+    const dateStr = cufeMatch[1];
+    issueDateStr = `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}`;
+  }
+
+  console.log('Parsed general data:', { invoiceNumber, issueDateStr });
+
+  // Parse items from the table
+  // Table structure: Linea, Código, Descripción, Cantidad, Precio Unitario, etc.
   const items: CAFEItem[] = [];
-  const gItems = getAllXmlElementBlocks(xmlString, 'gItem');
+  const rows = extractTableRows(html);
 
-  console.log('Found items:', gItems.length);
+  console.log('Found table rows:', rows.length);
 
-  gItems.forEach((gItem, index) => {
-    const description = getXmlElementText(gItem, 'dDescProd');
-    const quantity = parseNumber(getXmlElementText(gItem, 'dCantCodInt'));
-    const unit = getXmlElementText(gItem, 'cUnidad') || 'UND';
-    const productCode = getXmlElementText(gItem, 'dCodProd');
+  rows.forEach((row, index) => {
+    const description =
+      extractTdValue(row, 'Descripción') || extractTdValue(row, 'Descripcion');
+    const quantity = parseNumber(extractTdValue(row, 'Cantidad'));
+    const productCode =
+      extractTdValue(row, 'Código') || extractTdValue(row, 'Codigo');
+    const unitPrice =
+      parseNumber(extractTdValue(row, 'Precio Unitario')) ||
+      parseNumber(extractTdValue(row, 'Precio'));
+    const totalPrice = parseNumber(extractTdValue(row, 'Total'));
+    const taxAmount =
+      parseNumber(extractTdValue(row, 'ITBMS')) ||
+      parseNumber(extractTdValue(row, 'Impuesto'));
 
-    // Parse prices
-    const gPrecios = getXmlElementBlock(gItem, 'gPrecios');
-    const unitPrice = parseNumber(getXmlElementText(gPrecios, 'dPrUnit'));
-    const totalPrice = parseNumber(getXmlElementText(gPrecios, 'dValTotItem'));
+    // Skip empty rows
+    if (!description && !productCode) return;
 
-    // Parse ITBMS
-    const gITBMSItem = getXmlElementBlock(gItem, 'gITBMSItem');
-    const taxCode = getXmlElementText(gITBMSItem, 'dTasaITBMS') || '1';
-    const taxAmount = parseNumber(getXmlElementText(gITBMSItem, 'dValITBMS'));
+    // Estimate tax code from amounts
+    const taxCode = estimateTaxCode(unitPrice, totalPrice, taxAmount);
     const taxRate = TAX_CODE_TO_RATE[taxCode] ?? 7;
     const taxRateCode = TAX_CODE_TO_RATE_CODE[taxCode] ?? 'general';
 
     items.push({
       lineNumber: index + 1,
-      description,
+      description: description || 'Producto',
       quantity: quantity || 1,
-      unit,
+      unit: 'UND',
       unitPrice,
       totalPrice,
       taxCode,
@@ -238,67 +312,53 @@ function parseInvoiceXML(xmlString: string, cufe: string, sourceUrl: string): CA
     });
   });
 
-  // Parse totals (gTot)
-  const gTot = getXmlElementBlock(xmlString, 'gTot');
-  const subtotal = parseNumber(getXmlElementText(gTot, 'dTotNeto'));
-  const totalTax = parseNumber(getXmlElementText(gTot, 'dTotITBMS'));
-  const grandTotal = parseNumber(getXmlElementText(gTot, 'dVTot'));
-  const taxableAmount7 = parseNumber(getXmlElementText(gTot, 'dTotGravado'));
-  const exemptAmount = parseNumber(getXmlElementText(gTot, 'dTotExe'));
-  const discount = parseNumber(getXmlElementText(gTot, 'dTotDesc'));
+  console.log('Parsed items:', items.length);
 
-  console.log('Parsed totals:', { subtotal, totalTax, grandTotal });
+  // Calculate totals from items
+  const subtotal = items.reduce(
+    (sum, item) => sum + (item.totalPrice - item.taxAmount),
+    0
+  );
+  const totalTax = items.reduce((sum, item) => sum + item.taxAmount, 0);
+  const grandTotal = items.reduce((sum, item) => sum + item.totalPrice, 0);
 
-  // Parse payment info (gPago)
-  const gPago = getXmlElementBlock(xmlString, 'gPago');
-  const paymentMethod = getXmlElementText(gPago, 'iFormaPago');
-  const amountPaid = parseNumber(getXmlElementText(gPago, 'dVlrCuota'));
+  // Try to extract totals from footer if available
+  const itbmsTotalMatch = html.match(/ITBMS\s*Total[:\s]*([0-9.,]+)/i);
+  const extractedTotalTax = itbmsTotalMatch
+    ? parseNumber(itbmsTotalMatch[1])
+    : totalTax;
 
-  // Parse authorization
-  const gAutXML = getXmlElementBlock(xmlString, 'gAutXML');
-  const authorizationProtocol = getXmlElementText(gAutXML, 'dProtAut');
-  const authorizationDateStr = getXmlElementText(gAutXML, 'dFecProc');
+  console.log('Parsed totals:', {
+    subtotal,
+    totalTax: extractedTotalTax,
+    grandTotal,
+  });
 
   return {
     cufe,
     invoiceNumber,
-    pointOfSale,
+    pointOfSale: undefined,
     issueDate: issueDateStr,
-    authorizationDate: authorizationDateStr || undefined,
-    authorizationProtocol: authorizationProtocol || undefined,
+    authorizationDate: undefined,
+    authorizationProtocol: undefined,
     emitter: {
       ruc: emitterRuc,
       name: emitterName,
       dv: emitterDV || undefined,
-      branch: emitterBranch || undefined,
+      branch: undefined,
       address: emitterAddress || undefined,
       phone: emitterPhone || undefined,
     },
-    receiver: receiverRuc || receiverName
-      ? {
-          ruc: receiverRuc || undefined,
-          name: receiverName || undefined,
-          type: receiverType || undefined,
-        }
-      : undefined,
+    receiver: undefined,
     items,
     totals: {
       subtotal,
-      totalTax,
+      totalTax: extractedTotalTax,
       grandTotal,
-      taxableAmount7,
-      exemptAmount,
-      discount,
     },
-    payment:
-      paymentMethod || amountPaid
-        ? {
-            method: paymentMethod || undefined,
-            amountPaid: amountPaid || undefined,
-          }
-        : undefined,
+    payment: undefined,
     metadata: {
-      rawXml: xmlString,
+      rawXml: undefined,
       fetchedAt: new Date().toISOString(),
       sourceUrl,
     },
@@ -319,6 +379,44 @@ function extractCUFEFromQRUrl(url: string): string | null {
  */
 function isQRUrl(input: string): boolean {
   return input.includes('FacturasPorQR');
+}
+
+/**
+ * Sleep helper for retry delays
+ */
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Fetch with retry logic
+ */
+async function fetchWithRetry(
+  url: string,
+  options: RequestInit,
+  maxRetries: number = 3
+): Promise<Response> {
+  let lastError: Error | null = null;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`Fetch attempt ${attempt}/${maxRetries} for:`, url);
+      const response = await fetch(url, options);
+      return response;
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      console.error(`Attempt ${attempt} failed:`, lastError.message);
+
+      // If it's a connection error and we have retries left, wait and retry
+      if (attempt < maxRetries) {
+        const delay = attempt * 1000; // 1s, 2s, 3s...
+        console.log(`Waiting ${delay}ms before retry...`);
+        await sleep(delay);
+      }
+    }
+  }
+
+  throw lastError || new Error('All fetch attempts failed');
 }
 
 /**
@@ -351,18 +449,29 @@ async function fetchCAFE(cufeOrUrl: string): Promise<FetchResult> {
   try {
     console.log('Fetching URL:', sourceUrl);
 
-    // Fetch the HTML page with browser-like headers
-    const response = await fetch(sourceUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-        'Accept-Language': 'es-PA,es;q=0.9,en;q=0.8',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache',
+    // Fetch the HTML page with browser-like headers and retry logic
+    const response = await fetchWithRetry(
+      sourceUrl,
+      {
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          Accept:
+            'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+          'Accept-Language': 'es-PA,es;q=0.9,en;q=0.8',
+          'Cache-Control': 'no-cache',
+          Pragma: 'no-cache',
+          Connection: 'keep-alive',
+          'Upgrade-Insecure-Requests': '1',
+          'Sec-Fetch-Dest': 'document',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-Site': 'none',
+          'Sec-Fetch-User': '?1',
+        },
+        redirect: 'follow',
       },
-      redirect: 'follow',
-    });
+      3
+    );
 
     console.log('Response status:', response.status);
     console.log('Response headers:', Object.fromEntries(response.headers.entries()));
@@ -401,78 +510,38 @@ async function fetchCAFE(cufeOrUrl: string): Promise<FetchResult> {
 
     const html = await response.text();
 
-    // Parse HTML to extract the XML from the hidden field
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
+    console.log('HTML response received, length:', html.length);
 
-    if (!doc) {
+    // Check if the page contains invoice data (look for the details table)
+    if (!html.includes('table') || !html.includes('data-title')) {
+      // The page might not have loaded the invoice data
+      // Check for error messages
+      if (html.includes('No se encontr') || html.includes('no encontrada')) {
+        return {
+          success: false,
+          error: 'Factura no encontrada en el sistema de la DGI',
+          errorCode: 'NOT_FOUND',
+        };
+      }
       return {
         success: false,
-        error: 'Error al procesar la respuesta de la DGI',
+        error: 'No se pudo obtener los datos de la factura. La página no contiene información del documento.',
         errorCode: 'PARSE_ERROR',
       };
     }
 
-    // Look for the hidden field containing XML
-    // The field might be #facturaXML or similar
-    let xmlContent: string | null = null;
+    // Parse invoice data directly from HTML
+    // The DGI page renders the invoice data in HTML tables with data-title attributes
+    const invoice = parseInvoiceFromHTML(html, cufe, sourceUrl);
 
-    // Try different selectors
-    const xmlField =
-      doc.querySelector('#facturaXML') ||
-      doc.querySelector('input[name="facturaXML"]') ||
-      doc.querySelector('textarea[name="facturaXML"]');
-
-    if (xmlField) {
-      xmlContent = xmlField.getAttribute('value') || xmlField.textContent;
-    }
-
-    // If no hidden field, try to find XML in a script tag or data attribute
-    if (!xmlContent) {
-      const scripts = doc.querySelectorAll('script');
-      for (const script of scripts) {
-        const text = script.textContent || '';
-        // Look for XML content in JavaScript
-        const xmlMatch = text.match(/FacturaXML['":\s]*['"](<\?xml[\s\S]*?<\/rFE>)['"]/i);
-        if (xmlMatch) {
-          xmlContent = xmlMatch[1];
-          break;
-        }
-      }
-    }
-
-    // If still no XML, try to extract from the page content
-    // Some pages might have the XML embedded differently
-    if (!xmlContent) {
-      // Look for XML declaration in the HTML
-      const xmlMatch = html.match(/<\?xml[\s\S]*?<\/rFE>/i);
-      if (xmlMatch) {
-        xmlContent = xmlMatch[0];
-      }
-    }
-
-    // If we couldn't find XML, try to parse from HTML tables
-    if (!xmlContent) {
-      // Fallback: parse from HTML structure
-      // This is less reliable but might work for some pages
+    // Validate that we got some data
+    if (!invoice.emitter.ruc && !invoice.emitter.name && invoice.items.length === 0) {
       return {
         success: false,
-        error:
-          'No se pudo extraer los datos XML de la factura. Es posible que el formato de la DGI haya cambiado.',
+        error: 'No se pudieron extraer los datos de la factura del HTML',
         errorCode: 'PARSE_ERROR',
       };
     }
-
-    // Decode HTML entities if needed
-    xmlContent = xmlContent
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&amp;/g, '&')
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'");
-
-    // Parse the XML
-    const invoice = parseInvoiceXML(xmlContent, cufe, sourceUrl);
 
     return {
       success: true,
@@ -480,9 +549,27 @@ async function fetchCAFE(cufeOrUrl: string): Promise<FetchResult> {
     };
   } catch (error) {
     console.error('Error fetching CAFE:', error);
+
+    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+
+    // Check for connection errors
+    if (
+      errorMessage.includes('Connection reset') ||
+      errorMessage.includes('connection') ||
+      errorMessage.includes('ECONNREFUSED') ||
+      errorMessage.includes('timeout')
+    ) {
+      return {
+        success: false,
+        error:
+          'No se pudo conectar con el servidor de la DGI. El servicio puede estar temporalmente no disponible. Por favor intenta de nuevo en unos minutos.',
+        errorCode: 'FETCH_ERROR',
+      };
+    }
+
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error desconocido',
+      error: errorMessage,
       errorCode: 'UNKNOWN',
     };
   }
