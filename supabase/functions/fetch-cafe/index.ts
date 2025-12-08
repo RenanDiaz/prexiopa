@@ -468,8 +468,7 @@ async function fetchCAFE(cufeOrUrl: string): Promise<FetchResult> {
 
   // Determine if input is a QR URL or a plain CUFE
   if (isQRUrl(cufeOrUrl)) {
-    // It's a QR URL - use it directly
-    sourceUrl = cufeOrUrl;
+    // It's a QR URL
     const extractedCufe = extractCUFEFromQRUrl(cufeOrUrl);
     if (!extractedCufe) {
       return {
@@ -479,6 +478,10 @@ async function fetchCAFE(cufeOrUrl: string): Promise<FetchResult> {
       };
     }
     cufe = extractedCufe;
+    // Always use the clean FacturasPorCUFE URL instead of the QR URL
+    // The QR URL is often case-sensitive regarding signatures/params, and scanners might uppercase it.
+    // FacturasPorCUFE is more robust as long as we have the CUFE.
+    sourceUrl = `https://dgi-fep.mef.gob.pa/Consultas/FacturasPorCUFE/${cufe}`;
   } else {
     // It's a plain CUFE - build the URL
     cufe = cufeOrUrl;
