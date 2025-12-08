@@ -478,6 +478,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
             }}
             onUserMedia={handleUserMedia}
             onUserMediaError={handleUserMediaError}
+            mirrored={facingMode === 'user'}
             style={{
               width: '100%',
               height: '100%',
@@ -526,6 +527,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
             }}
             onUserMedia={handleUserMedia}
             onUserMediaError={handleUserMediaError}
+            mirrored={facingMode === 'user'}
             style={{
               width: '100%',
               height: '100%',

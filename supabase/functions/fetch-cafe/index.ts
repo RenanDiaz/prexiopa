@@ -137,68 +137,89 @@ function parseNumber(value: string | null | undefined): number {
 }
 
 /**
- * Get text content from XML element
+ * Get XML element text content using regex
+ * Works for both self-closing and regular tags
  */
-function getElementText(parent: Element, tagName: string): string {
-  const element = parent.querySelector(tagName);
-  return element?.textContent?.trim() || '';
+function getXmlElementText(xml: string, tagName: string): string {
+  // Match both <tag>content</tag> and <tag /> patterns
+  const pattern = new RegExp(`<${tagName}[^>]*>([^<]*)</${tagName}>`, 'i');
+  const match = xml.match(pattern);
+  return match ? match[1].trim() : '';
 }
 
 /**
- * Parse XML invoice data
+ * Get XML element block (including nested content)
+ */
+function getXmlElementBlock(xml: string, tagName: string): string {
+  const pattern = new RegExp(`<${tagName}[^>]*>[\\s\\S]*?</${tagName}>`, 'i');
+  const match = xml.match(pattern);
+  return match ? match[0] : '';
+}
+
+/**
+ * Get all XML element blocks (for multiple occurrences like gItem)
+ */
+function getAllXmlElementBlocks(xml: string, tagName: string): string[] {
+  const pattern = new RegExp(`<${tagName}[^>]*>[\\s\\S]*?</${tagName}>`, 'gi');
+  const matches = xml.match(pattern);
+  return matches || [];
+}
+
+/**
+ * Parse XML invoice data using regex-based parsing
+ * (deno_dom's DOMParser doesn't support text/xml)
  */
 function parseInvoiceXML(xmlString: string, cufe: string, sourceUrl: string): CAFEInvoice {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(xmlString, 'text/xml');
-
-  if (!doc) {
-    throw new Error('Failed to parse XML');
-  }
-
-  const root = doc.documentElement;
+  console.log('Parsing XML, length:', xmlString.length);
 
   // Parse general data (gDGen)
-  const gDGen = root.querySelector('gDGen');
-  const invoiceNumber = getElementText(gDGen!, 'dNroDF') || getElementText(root, 'dNroDF');
-  const pointOfSale = getElementText(gDGen!, 'dPtoFacDF') || getElementText(root, 'dPtoFacDF');
-  const issueDateStr = getElementText(gDGen!, 'dFechaEm') || getElementText(root, 'dFechaEm');
+  const gDGen = getXmlElementBlock(xmlString, 'gDGen');
+  const invoiceNumber = getXmlElementText(gDGen, 'dNroDF') || getXmlElementText(xmlString, 'dNroDF');
+  const pointOfSale = getXmlElementText(gDGen, 'dPtoFacDF') || getXmlElementText(xmlString, 'dPtoFacDF');
+  const issueDateStr = getXmlElementText(gDGen, 'dFechaEm') || getXmlElementText(xmlString, 'dFechaEm');
+
+  console.log('Parsed general data:', { invoiceNumber, pointOfSale, issueDateStr });
 
   // Parse emitter data (gEmis)
-  const gEmis = root.querySelector('gEmis');
-  const gRucEmi = gEmis?.querySelector('gRucEmi');
-  const emitterRuc = getElementText(gRucEmi!, 'dRuc') || getElementText(gEmis!, 'dRuc');
-  const emitterDV = getElementText(gRucEmi!, 'dDV') || getElementText(gEmis!, 'dDV');
-  const emitterName = getElementText(gEmis!, 'dNombEm');
-  const emitterBranch = getElementText(gEmis!, 'dSucEm');
-  const emitterAddress = getElementText(gEmis!, 'dDirecEm');
-  const emitterPhone = getElementText(gEmis!, 'dTfnEm');
+  const gEmis = getXmlElementBlock(xmlString, 'gEmis');
+  const gRucEmi = getXmlElementBlock(gEmis, 'gRucEmi');
+  const emitterRuc = getXmlElementText(gRucEmi, 'dRuc') || getXmlElementText(gEmis, 'dRuc');
+  const emitterDV = getXmlElementText(gRucEmi, 'dDV') || getXmlElementText(gEmis, 'dDV');
+  const emitterName = getXmlElementText(gEmis, 'dNombEm');
+  const emitterBranch = getXmlElementText(gEmis, 'dSucEm');
+  const emitterAddress = getXmlElementText(gEmis, 'dDirecEm');
+  const emitterPhone = getXmlElementText(gEmis, 'dTfnEm');
+
+  console.log('Parsed emitter:', { emitterRuc, emitterName });
 
   // Parse receiver data (gDatRec)
-  const gDatRec = root.querySelector('gDatRec');
-  const gRucRec = gDatRec?.querySelector('gRucRec');
-  const receiverRuc = getElementText(gRucRec!, 'dRuc') || getElementText(gDatRec!, 'dRuc');
-  const receiverName = getElementText(gDatRec!, 'dNombRec');
-  const receiverType = getElementText(gDatRec!, 'iTipoRec');
+  const gDatRec = getXmlElementBlock(xmlString, 'gDatRec');
+  const gRucRec = getXmlElementBlock(gDatRec, 'gRucRec');
+  const receiverRuc = getXmlElementText(gRucRec, 'dRuc') || getXmlElementText(gDatRec, 'dRuc');
+  const receiverName = getXmlElementText(gDatRec, 'dNombRec');
+  const receiverType = getXmlElementText(gDatRec, 'iTipoRec');
 
   // Parse items (gItem)
   const items: CAFEItem[] = [];
-  const gItems = root.querySelectorAll('gItem');
+  const gItems = getAllXmlElementBlocks(xmlString, 'gItem');
+
+  console.log('Found items:', gItems.length);
 
   gItems.forEach((gItem, index) => {
-    const description = getElementText(gItem as Element, 'dDescProd');
-    const quantity = parseNumber(getElementText(gItem as Element, 'dCantCodInt'));
-    const unit = getElementText(gItem as Element, 'cUnidad') || 'UND';
-    const productCode = getElementText(gItem as Element, 'dCodProd');
+    const description = getXmlElementText(gItem, 'dDescProd');
+    const quantity = parseNumber(getXmlElementText(gItem, 'dCantCodInt'));
+    const unit = getXmlElementText(gItem, 'cUnidad') || 'UND';
+    const productCode = getXmlElementText(gItem, 'dCodProd');
 
     // Parse prices
-    const gPrecios = (gItem as Element).querySelector('gPrecios');
-    const unitPrice = parseNumber(getElementText(gPrecios!, 'dPrUnit'));
-    const totalPrice = parseNumber(getElementText(gPrecios!, 'dValTotItem'));
+    const gPrecios = getXmlElementBlock(gItem, 'gPrecios');
+    const unitPrice = parseNumber(getXmlElementText(gPrecios, 'dPrUnit'));
+    const totalPrice = parseNumber(getXmlElementText(gPrecios, 'dValTotItem'));
 
     // Parse ITBMS
-    const gITBMSItem = (gItem as Element).querySelector('gITBMSItem');
-    const taxCode = getElementText(gITBMSItem!, 'dTasaITBMS') || '1';
-    const taxAmount = parseNumber(getElementText(gITBMSItem!, 'dValITBMS'));
+    const gITBMSItem = getXmlElementBlock(gItem, 'gITBMSItem');
+    const taxCode = getXmlElementText(gITBMSItem, 'dTasaITBMS') || '1';
+    const taxAmount = parseNumber(getXmlElementText(gITBMSItem, 'dValITBMS'));
     const taxRate = TAX_CODE_TO_RATE[taxCode] ?? 7;
     const taxRateCode = TAX_CODE_TO_RATE_CODE[taxCode] ?? 'general';
 
@@ -218,23 +239,25 @@ function parseInvoiceXML(xmlString: string, cufe: string, sourceUrl: string): CA
   });
 
   // Parse totals (gTot)
-  const gTot = root.querySelector('gTot');
-  const subtotal = parseNumber(getElementText(gTot!, 'dTotNeto'));
-  const totalTax = parseNumber(getElementText(gTot!, 'dTotITBMS'));
-  const grandTotal = parseNumber(getElementText(gTot!, 'dVTot'));
-  const taxableAmount7 = parseNumber(getElementText(gTot!, 'dTotGravado'));
-  const exemptAmount = parseNumber(getElementText(gTot!, 'dTotExe'));
-  const discount = parseNumber(getElementText(gTot!, 'dTotDesc'));
+  const gTot = getXmlElementBlock(xmlString, 'gTot');
+  const subtotal = parseNumber(getXmlElementText(gTot, 'dTotNeto'));
+  const totalTax = parseNumber(getXmlElementText(gTot, 'dTotITBMS'));
+  const grandTotal = parseNumber(getXmlElementText(gTot, 'dVTot'));
+  const taxableAmount7 = parseNumber(getXmlElementText(gTot, 'dTotGravado'));
+  const exemptAmount = parseNumber(getXmlElementText(gTot, 'dTotExe'));
+  const discount = parseNumber(getXmlElementText(gTot, 'dTotDesc'));
+
+  console.log('Parsed totals:', { subtotal, totalTax, grandTotal });
 
   // Parse payment info (gPago)
-  const gPago = root.querySelector('gPago');
-  const paymentMethod = getElementText(gPago!, 'iFormaPago');
-  const amountPaid = parseNumber(getElementText(gPago!, 'dVlrCuworta'));
+  const gPago = getXmlElementBlock(xmlString, 'gPago');
+  const paymentMethod = getXmlElementText(gPago, 'iFormaPago');
+  const amountPaid = parseNumber(getXmlElementText(gPago, 'dVlrCuota'));
 
   // Parse authorization
-  const gAutXML = root.querySelector('gAutXML');
-  const authorizationProtocol = getElementText(gAutXML!, 'dProtAut');
-  const authorizationDateStr = getElementText(gAutXML!, 'dFecProc');
+  const gAutXML = getXmlElementBlock(xmlString, 'gAutXML');
+  const authorizationProtocol = getXmlElementText(gAutXML, 'dProtAut');
+  const authorizationDateStr = getXmlElementText(gAutXML, 'dFecProc');
 
   return {
     cufe,
@@ -326,20 +349,47 @@ async function fetchCAFE(cufeOrUrl: string): Promise<FetchResult> {
   }
 
   try {
-    // Fetch the HTML page
+    console.log('Fetching URL:', sourceUrl);
+
+    // Fetch the HTML page with browser-like headers
     const response = await fetch(sourceUrl, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; Prexiopa/1.0)',
-        Accept: 'text/html,application/xhtml+xml,application/xml',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language': 'es-PA,es;q=0.9,en;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
       },
+      redirect: 'follow',
     });
 
+    console.log('Response status:', response.status);
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
     if (!response.ok) {
+      // Try to get error body for debugging
+      const errorBody = await response.text().catch(() => 'Unable to read error body');
+      console.error('DGI error response:', errorBody.substring(0, 500));
+
       if (response.status === 404) {
         return {
           success: false,
           error: 'Factura no encontrada en el sistema de la DGI',
           errorCode: 'NOT_FOUND',
+        };
+      }
+      if (response.status === 400) {
+        // If QR URL failed, try with CUFE URL instead
+        if (isQRUrl(cufeOrUrl)) {
+          console.log('QR URL failed, retrying with CUFE URL...');
+          const cufeUrl = `https://dgi-fep.mef.gob.pa/Consultas/FacturasPorCUFE/${cufe}`;
+          return fetchCAFE(cufe); // Retry with just the CUFE
+        }
+        return {
+          success: false,
+          error: 'La DGI rechazó la solicitud. Verifica que el CUFE sea correcto.',
+          errorCode: 'FETCH_ERROR',
         };
       }
       return {
