@@ -6,12 +6,14 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiShoppingCart, FiPlus, FiClock, FiCalendar, FiCheckSquare, FiSearch } from 'react-icons/fi';
+import { Receipt } from 'lucide-react';
 import styled from 'styled-components';
 import { ActiveShoppingSession, ShoppingListCard } from '@/components/shopping';
 import { Button } from '@/components/common/Button';
 import { Modal } from '@/components/common/Modal';
 import { Input } from '@/components/common/Input';
 import EmptyState from '@/components/common/EmptyState';
+import { ImportCAFEModal } from '@/components/cafe';
 import {
   useActiveSessionQuery,
   useShoppingSessionsQuery,
@@ -285,10 +287,22 @@ const NoStoresMessage = styled.div`
 
 type TabType = 'active' | 'history';
 
+const HeaderButtons = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing[3]};
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    width: 100%;
+    flex-direction: column;
+  }
+`;
+
 const Shopping = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('active');
   const [showNewSessionModal, setShowNewSessionModal] = useState(false);
+  const [showImportCAFEModal, setShowImportCAFEModal] = useState(false);
   const [storeSearchText, setStoreSearchText] = useState('');
   const [selectedStoreId, setSelectedStoreId] = useState<string | null>(null);
   const [showStoreSuggestions, setShowStoreSuggestions] = useState(false);
@@ -385,13 +399,22 @@ const Shopping = () => {
             </Title>
 
             {!activeSession && (
-              <Button
-                variant="primary"
-                iconLeft={<FiPlus />}
-                onClick={() => setShowNewSessionModal(true)}
-              >
-                Nueva Sesión
-              </Button>
+              <HeaderButtons>
+                <Button
+                  variant="outline"
+                  iconLeft={<Receipt size={18} />}
+                  onClick={() => setShowImportCAFEModal(true)}
+                >
+                  Importar Factura
+                </Button>
+                <Button
+                  variant="primary"
+                  iconLeft={<FiPlus />}
+                  onClick={() => setShowNewSessionModal(true)}
+                >
+                  Nueva Sesión
+                </Button>
+              </HeaderButtons>
             )}
           </TitleRow>
 
@@ -572,6 +595,17 @@ const Shopping = () => {
             </Button>
           </Modal.Footer>
         </Modal>
+
+        {/* Import CAFE Modal */}
+        <ImportCAFEModal
+          isOpen={showImportCAFEModal}
+          onClose={() => setShowImportCAFEModal(false)}
+          onImportSuccess={() => {
+            setShowImportCAFEModal(false);
+            // Switch to history tab to see the imported session
+            setActiveTab('history');
+          }}
+        />
       </ContentWrapper>
     </ShoppingContainer>
   );
