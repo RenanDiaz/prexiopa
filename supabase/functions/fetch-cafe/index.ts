@@ -291,21 +291,33 @@ function parseInvoiceFromHTML(html: string, cufe: string, sourceUrl: string): CA
   // Try to extract date from multiple patterns
   let issueDateStr = '';
   const dateMatch = html.match(
-    /Fecha[^:]*:\s*(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4})/i
+    /Fecha[^:]*:\s*(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{4})/i
   );
   if (dateMatch) {
     issueDateStr = dateMatch[1];
+    console.log('Raw date extracted from HTML:', issueDateStr);
+  } else {
+    console.log('No date match found in HTML');
   }
 
-  // Extract CUFE breakdown from the URL itself to get date
-  // CUFE format includes date: FE + RUC parts + YYYYMMDD + sequence
-  const cufeMatch = cufe.match(/(\d{8})\d{13}0[1-4][1-2]\d{10}$/);
-  if (cufeMatch && !issueDateStr) {
-    const dateStr = cufeMatch[1];
-    issueDateStr = `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}`;
+  // Extract date from CUFE if not found in HTML
+  // CUFE format: FE + Type + RUC + DV + Code(4) + YYYYMMDD + Sequence
+  // Example: FE0120000000541-81-118009-0610192025120300001102620310312027507502
+  //                                      DV ^^^^ ^^^^^^^^
+  //                                         Code YYYYMMDD
+  if (!issueDateStr) {
+    // Look for pattern: -DV(2 digits) + Code(4 digits) + YYYYMMDD(8 digits)
+    // We search for 8 consecutive digits that look like a date (year 20XX)
+    const datePattern = /(20\d{2})(\d{2})(\d{2})/;
+    const matches = cufe.match(datePattern);
+    if (matches) {
+      issueDateStr = `${matches[1]}-${matches[2]}-${matches[3]}`;
+      console.log('Date extracted from CUFE:', issueDateStr);
+    }
   }
 
   console.log('Parsed general data:', { invoiceNumber, issueDateStr });
+  console.log('After normalizeDate:', normalizeDate(issueDateStr));
 
   // Parse items from the table
   // Table structure: Linea, Código, Descripción, Cantidad, Precio Unitario, etc.
