@@ -290,9 +290,27 @@ function parseInvoiceFromHTML(html: string, cufe: string, sourceUrl: string): CA
 
   // Try to extract date from multiple patterns
   let issueDateStr = '';
-  const dateMatch = html.match(
-    /Fecha[^:]*:\s*(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{4})/i
-  );
+
+  // First, let's see all occurrences of "fecha" in the HTML to understand the context
+  const fechaMatches = html.match(/fecha[^<]{0,100}/gi);
+  if (fechaMatches) {
+    console.log('All "Fecha" occurrences in HTML:', fechaMatches);
+  }
+
+  // Try multiple date patterns
+  // Pattern 1: "FECHA AUTORIZACIÓN" followed by DD/MM/YYYY HH:MM:SS
+  let dateMatch = html.match(/FECHA\s+AUTORIZACIÓN[^0-9]*(\d{2}\/\d{2}\/\d{4})/i);
+
+  // Pattern 2: "Fecha:" followed by date
+  if (!dateMatch) {
+    dateMatch = html.match(/Fecha[^:]*:\s*(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{4})/i);
+  }
+
+  // Pattern 3: Generic date in common formats
+  if (!dateMatch) {
+    dateMatch = html.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/);
+  }
+
   if (dateMatch) {
     issueDateStr = dateMatch[1];
     console.log('Raw date extracted from HTML:', issueDateStr);
