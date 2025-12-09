@@ -3,8 +3,10 @@
  * Tarjeta para mostrar un item individual en la lista de compras
  */
 
-import { FiCheck, FiPlus, FiMinus, FiTrash2 } from 'react-icons/fi';
+import { useState } from 'react';
+import { FiCheck, FiPlus, FiMinus, FiTrash2, FiEdit2 } from 'react-icons/fi';
 import type { ShoppingItem } from '@/services/supabase/shopping';
+import { EditItemModal } from './EditItemModal';
 import * as S from './ShoppingItemCard.styles';
 
 export interface ShoppingItemCardProps {
@@ -13,6 +15,7 @@ export interface ShoppingItemCardProps {
   onIncrementQuantity?: (itemId: string) => void;
   onDecrementQuantity?: (itemId: string) => void;
   onDelete?: (itemId: string) => void;
+  onEdit?: (itemId: string, quantity: number, price: number) => Promise<void>;
   readOnly?: boolean;
   className?: string;
 }
@@ -23,9 +26,12 @@ export const ShoppingItemCard = ({
   onIncrementQuantity,
   onDecrementQuantity,
   onDelete,
+  onEdit,
   readOnly = false,
   className,
 }: ShoppingItemCardProps) => {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   // Formatear precio
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-PA', {
@@ -61,6 +67,19 @@ export const ShoppingItemCard = ({
     e.stopPropagation();
     if (!readOnly && onDelete) {
       onDelete(item.id);
+    }
+  };
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!readOnly) {
+      setIsEditModalOpen(true);
+    }
+  };
+
+  const handleSaveEdit = async (itemId: string, quantity: number, price: number) => {
+    if (onEdit) {
+      await onEdit(itemId, quantity, price);
     }
   };
 
@@ -120,6 +139,14 @@ export const ShoppingItemCard = ({
               </S.QuantityButton>
             </S.QuantityControls>
 
+            <S.QuantityButton
+              onClick={handleEdit}
+              aria-label="Editar producto"
+              title="Editar cantidad y precio"
+            >
+              <FiEdit2 />
+            </S.QuantityButton>
+
             <S.DeleteButton
               onClick={handleDelete}
               aria-label="Eliminar producto"
@@ -129,6 +156,16 @@ export const ShoppingItemCard = ({
           </S.Actions>
         )}
       </S.Content>
+
+      {/* Edit Modal */}
+      {onEdit && (
+        <EditItemModal
+          isOpen={isEditModalOpen}
+          item={item}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={handleSaveEdit}
+        />
+      )}
     </S.Card>
   );
 };

@@ -26,6 +26,7 @@ import {
   useIncrementItemQuantityMutation,
   useDecrementItemQuantityMutation,
   useDeleteItemMutation,
+  useEditItemMutation,
 } from '@/hooks/useShoppingLists';
 import { calculateSessionTaxSummary, DEFAULT_TAX_RATE_CODE, DEFAULT_TAX_RATE } from '@/types/tax';
 import type { TaxRateCode } from '@/types/tax';
@@ -57,6 +58,7 @@ export const ActiveShoppingSession = ({
   const incrementMutation = useIncrementItemQuantityMutation();
   const decrementMutation = useDecrementItemQuantityMutation();
   const deleteMutation = useDeleteItemMutation();
+  const editMutation = useEditItemMutation();
 
   // Calcular estadísticas
   const totalItems = items.length;
@@ -128,6 +130,20 @@ export const ActiveShoppingSession = ({
   const handleDeleteItem = (itemId: string) => {
     if (!session) return;
     deleteMutation.mutate({ itemId, sessionId: session.id });
+  };
+
+  const handleEditItem = async (itemId: string, quantity: number, price: number) => {
+    if (!session) return;
+
+    return new Promise<void>((resolve, reject) => {
+      editMutation.mutate(
+        { itemId, sessionId: session.id, quantity, price },
+        {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        }
+      );
+    });
   };
 
   const handleCompleteSession = () => {
@@ -275,6 +291,7 @@ export const ActiveShoppingSession = ({
               onIncrementQuantity={handleIncrementQuantity}
               onDecrementQuantity={handleDecrementQuantity}
               onDelete={handleDeleteItem}
+              onEdit={handleEditItem}
             />
           ))
         )}

@@ -394,6 +394,43 @@ export const useDecrementItemQuantityMutation = () => {
   });
 };
 
+/**
+ * Hook para editar cantidad y precio de un item
+ */
+export const useEditItemMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      itemId,
+      sessionId,
+      quantity,
+      price,
+    }: {
+      itemId: string;
+      sessionId: string;
+      quantity: number;
+      price: number;
+    }) => {
+      return shoppingService.updateShoppingItem(itemId, {
+        quantity,
+        price,
+      });
+    },
+    onSuccess: (_, { sessionId }) => {
+      queryClient.invalidateQueries({ queryKey: shoppingKeys.items(sessionId) });
+      queryClient.invalidateQueries({ queryKey: shoppingKeys.session(sessionId) });
+      queryClient.invalidateQueries({ queryKey: shoppingKeys.activeSession() });
+
+      showSuccessNotification('Producto actualizado correctamente');
+    },
+    onError: (error: Error) => {
+      console.error('Error al editar item:', error);
+      showErrorNotification('No se pudo actualizar el producto');
+    },
+  });
+};
+
 // ============================================================================
 // Phase 5.3 - Dual Mode Hooks
 // ============================================================================
