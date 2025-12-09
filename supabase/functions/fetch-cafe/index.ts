@@ -301,12 +301,18 @@ function parseInvoiceFromHTML(html: string, cufe: string, sourceUrl: string): CA
   // Pattern 1: "FECHA AUTORIZACIÓN" followed by DD/MM/YYYY HH:MM:SS
   let dateMatch = html.match(/FECHA\s+AUTORIZACIÓN[^0-9]*(\d{2}\/\d{2}\/\d{4})/i);
 
-  // Pattern 2: "Fecha:" followed by date
+  // Pattern 2: "FACTURA" followed by date on next line
+  // Example: "FACTURA\n29/11/2025 17:51:15"
+  if (!dateMatch) {
+    dateMatch = html.match(/FACTURA[^0-9]*(\d{2}\/\d{2}\/\d{4})/i);
+  }
+
+  // Pattern 3: "Fecha:" followed by date
   if (!dateMatch) {
     dateMatch = html.match(/Fecha[^:]*:\s*(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{4})/i);
   }
 
-  // Pattern 3: Generic date in common formats
+  // Pattern 4: Generic date in common formats (last resort)
   if (!dateMatch) {
     dateMatch = html.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/);
   }
