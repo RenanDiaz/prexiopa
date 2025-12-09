@@ -138,11 +138,31 @@ function parseNumber(value: string | null | undefined): number {
 }
 
 /**
+ * Convert Spanish month names to numbers
+ */
+function spanishMonthToNumber(month: string): string {
+  const months: Record<string, string> = {
+    'enero': '01', 'febrero': '02', 'marzo': '03', 'abril': '04',
+    'mayo': '05', 'junio': '06', 'julio': '07', 'agosto': '08',
+    'septiembre': '09', 'octubre': '10', 'noviembre': '11', 'diciembre': '12'
+  };
+  return months[month.toLowerCase()] || '01';
+}
+
+/**
  * Normalize date to ISO format (YYYY-MM-DD)
- * Handles: DD/MM/YYYY, MM/DD/YYYY, YYYY-MM-DD, DD-MM-YYYY
+ * Handles: DD/MM/YYYY, MM/DD/YYYY, YYYY-MM-DD, DD-MM-YYYY, "D de MES de YYYY"
  */
 function normalizeDate(dateStr: string): string {
   if (!dateStr) return '';
+
+  // Text format: "2 de diciembre de 2025"
+  const textMatch = dateStr.match(/(\d{1,2})\s+de\s+(\w+)\s+de\s+(\d{4})/i);
+  if (textMatch) {
+    const [, day, month, year] = textMatch;
+    const monthNum = spanishMonthToNumber(month);
+    return `${year}-${monthNum}-${day.padStart(2, '0')}`;
+  }
 
   // Already in ISO format
   if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
@@ -297,22 +317,31 @@ function parseInvoiceFromHTML(html: string, cufe: string, sourceUrl: string): CA
     console.log('All "Fecha" occurrences in HTML:', fechaMatches);
   }
 
-  // Try multiple date patterns
-  // Pattern 1: "FECHA AUTORIZACIÓN" followed by DD/MM/YYYY HH:MM:SS
-  let dateMatch = html.match(/FECHA\s+AUTORIZACIÓN[^0-9]*(\d{2}\/\d{2}\/\d{4})/i);
+  // Try multiple date patterns (in priority order)
+  // Pattern 1: "FECHA DE EMISIÓN" followed by text date or DD/MM/YYYY (HIGHEST PRIORITY)
+  // Example: "FECHA DE EMISIÓN\n2 de diciembre de 2025"
+  let dateMatch = html.match(/FECHA\s+DE\s+EMISIÓN[^0-9]*(\d{1,2}\s+de\s+\w+\s+de\s+\d{4})/i);
+  if (!dateMatch) {
+    dateMatch = html.match(/FECHA\s+DE\s+EMISIÓN[^0-9]*(\d{2}\/\d{2}\/\d{4})/i);
+  }
 
-  // Pattern 2: "FACTURA" followed by date on next line
+  // Pattern 2: "FECHA AUTORIZACIÓN" followed by DD/MM/YYYY HH:MM:SS
+  if (!dateMatch) {
+    dateMatch = html.match(/FECHA\s+AUTORIZACIÓN[^0-9]*(\d{2}\/\d{2}\/\d{4})/i);
+  }
+
+  // Pattern 3: "FACTURA" followed by date on next line
   // Example: "FACTURA\n29/11/2025 17:51:15"
   if (!dateMatch) {
     dateMatch = html.match(/FACTURA[^0-9]*(\d{2}\/\d{2}\/\d{4})/i);
   }
 
-  // Pattern 3: "Fecha:" followed by date
+  // Pattern 4: "Fecha:" followed by date
   if (!dateMatch) {
     dateMatch = html.match(/Fecha[^:]*:\s*(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{4})/i);
   }
 
-  // Pattern 4: Generic date in common formats (last resort)
+  // Pattern 5: Generic date in common formats (last resort)
   if (!dateMatch) {
     dateMatch = html.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/);
   }
