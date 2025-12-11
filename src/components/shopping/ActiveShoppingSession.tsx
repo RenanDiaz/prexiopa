@@ -97,6 +97,14 @@ export const ActiveShoppingSession = ({
     return calculateSessionTaxSummary(taxItems);
   }, [items]);
 
+  // Calculate total savings from promotions
+  const totalSavings = useMemo(() => {
+    return items.reduce((sum, item) => {
+      const itemDiscount = (item.discount_amount || 0) * item.quantity;
+      return sum + itemDiscount;
+    }, 0);
+  }, [items]);
+
   // Handlers
   const handleTogglePurchased = (itemId: string, purchased: boolean) => {
     if (!session) return;
@@ -271,6 +279,16 @@ export const ActiveShoppingSession = ({
             grandTotal={taxSummary.grandTotal}
             breakdown={taxSummary.breakdown}
           />
+        )}
+
+        {/* Savings Summary */}
+        {totalSavings > 0 && (
+          <S.SavingsBanner>
+            <S.SavingsIcon>💰</S.SavingsIcon>
+            <S.SavingsText>
+              ¡Ahorraste <strong>{formatPrice(totalSavings)}</strong> con promociones!
+            </S.SavingsText>
+          </S.SavingsBanner>
         )}
       </S.Header>
 

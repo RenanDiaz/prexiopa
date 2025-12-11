@@ -403,7 +403,7 @@ export const useEditItemMutation = () => {
   return useMutation({
     mutationFn: async ({
       itemId,
-      sessionId,
+      sessionId: _sessionId,
       quantity,
       price,
     }: {

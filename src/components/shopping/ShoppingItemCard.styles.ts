@@ -125,6 +125,18 @@ export const StoreTag = styled.span`
   border-radius: ${({ theme }) => theme.borderRadius.sm};
 `;
 
+export const PromotionBadge = styled.span`
+  display: inline-block;
+  width: fit-content;
+  padding: ${({ theme }) => `${theme.spacing[1]} ${theme.spacing[2]}`};
+  background: #D1FAE5; // Green 100
+  color: #065F46; // Green 800
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  border: 1px solid #86EFAC; // Green 300
+`;
+
 export const Notes = styled.p`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   color: ${({ theme }) => theme.colors.text.disabled};

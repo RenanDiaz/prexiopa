@@ -13,7 +13,7 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import styled from 'styled-components';
-import { FiShoppingCart, FiDollarSign, FiPackage, FiAlertCircle, FiPercent } from 'react-icons/fi';
+import { FiShoppingCart, FiDollarSign, FiPackage, FiAlertCircle, FiPercent, FiTag } from 'react-icons/fi';
 import { Modal } from '@/components/common/Modal';
 import { Input } from '@/components/common/Input';
 import { PriceInput } from '@/components/common/PriceInput';
@@ -29,6 +29,9 @@ import {
   calculateTaxAmount,
   formatCurrency,
 } from '@/types/tax';
+import { useProductPromotions } from '@/hooks/usePromotions';
+import { calculatePromotionDiscount, formatPromotionDescription } from '@/utils/promotions';
+import type { ProductPromotion } from '@/types/promotion';
 
 const ModalContent = styled.div`
   display: flex;
@@ -319,6 +322,112 @@ const TaxBreakdownRow = styled.div`
   }
 `;
 
+// Promotion Section Styles
+const PromotionSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing[3]};
+  padding: ${({ theme }) => theme.spacing[4]};
+  background: ${({ theme }) => theme.colors.background.secondary};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border: 1px solid ${({ theme }) => theme.colors.border.light};
+`;
+
+const PromotionSectionTitle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing[2]};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.colors.text.primary};
+
+  svg {
+    color: ${({ theme }) => theme.colors.primary[500]};
+  }
+`;
+
+const PromotionsList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing[2]};
+  max-height: 300px;
+  overflow-y: auto;
+`;
+
+const PromotionChip = styled.button<{ $selected?: boolean; $verified?: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: ${({ theme }) => theme.spacing[1]};
+  padding: ${({ theme }) => theme.spacing[3]};
+  background: ${({ theme, $selected }) =>
+    $selected ? theme.colors.primary[50] : theme.colors.background.default};
+  border: 2px solid ${({ theme, $selected, $verified }) =>
+    $selected
+      ? theme.colors.primary[500]
+      : $verified
+      ? '#10B981' // Green for verified
+      : '#F59E0B'}; // Amber for unverified
+  border-radius: ${({ theme }) => theme.borderRadius.base};
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.primary[400]};
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+const PromotionChipHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: ${({ theme }) => theme.spacing[2]};
+`;
+
+const PromotionChipTitle = styled.div`
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.colors.text.primary};
+`;
+
+const PromotionChipBadge = styled.span<{ $verified?: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing[1]};
+  padding: ${({ theme }) => theme.spacing[1]} ${({ theme }) => theme.spacing[2]};
+  background: ${({ $verified }) =>
+    $verified ? '#D1FAE5' : '#FEF3C7'}; // Green/Amber light
+  color: ${({ $verified }) =>
+    $verified ? '#065F46' : '#92400E'}; // Green/Amber dark
+  border-radius: ${({ theme }) => theme.borderRadius.full};
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  flex-shrink: 0;
+`;
+
+const PromotionChipSaving = styled.div`
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  color: #059669; // Green 600
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  margin-top: ${({ theme }) => theme.spacing[1]};
+`;
+
+const EmptyPromotions = styled.div`
+  padding: ${({ theme }) => theme.spacing[4]};
+  text-align: center;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+`;
+
 export interface Store {
   id: string;
   name: string;
@@ -341,6 +450,10 @@ export interface AddToListModalProps {
     taxRateCode: TaxRateCode;
     taxRate: number;
     priceIncludesTax: boolean;
+    // Promotion fields
+    appliedPromotionId?: string | null;
+    originalPrice?: number;
+    discountAmount?: number;
   }) => void;
   isSubmitting?: boolean;
   /** If provided, the store selector will be locked to this store (from active session) */
@@ -369,23 +482,57 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
   const [taxRateCode, setTaxRateCode] = useState<TaxRateCode>('general');
   const [taxRate, setTaxRate] = useState(7);
 
+  // Promotion state
+  const [selectedPromotion, setSelectedPromotion] = useState<ProductPromotion | null>(null);
+  const [couponCode, setCouponCode] = useState('');
+
   // Ref for price input
   const priceInputRef = useRef<HTMLInputElement>(null);
 
-  // Calculate tax breakdown in real-time
+  // Fetch active promotions for this product + store
+  const { data: promotions = [], isLoading: isLoadingPromotions } = useProductPromotions(
+    product.id,
+    selectedStoreId || undefined,
+    { enabled: !!selectedStoreId }
+  );
+
+  // Calculate promotion discount
+  const promotionCalculation = useMemo(() => {
+    if (!selectedPromotion || price <= 0) {
+      return null;
+    }
+
+    const quantityNum = parseFloat(quantity) || 1;
+    return calculatePromotionDiscount(selectedPromotion, price, quantityNum, {
+      couponCode: couponCode || undefined,
+      hasLoyaltyCard: false, // TODO: Implement loyalty card tracking
+      hasRequiredProducts: false, // TODO: Check cart for required products
+    });
+  }, [selectedPromotion, price, quantity, couponCode]);
+
+  // Calculate tax breakdown in real-time (with promotion applied)
   const taxBreakdown = useMemo(() => {
     const quantityNum = parseFloat(quantity) || 1;
-    const basePrice = calculateBasePrice(price, taxRate, priceIncludesTax);
+
+    // Use discounted price if promotion is applicable
+    const effectivePrice = promotionCalculation?.isApplicable
+      ? promotionCalculation.finalPrice / quantityNum
+      : price;
+
+    const basePrice = calculateBasePrice(effectivePrice, taxRate, priceIncludesTax);
     const taxAmount = calculateTaxAmount(basePrice, taxRate, quantityNum);
-    const subtotal = price * quantityNum;
+    const subtotal = effectivePrice * quantityNum;
 
     return {
       basePrice,
       taxAmount,
       subtotal,
       basePriceTotal: basePrice * quantityNum,
+      // Include promotion info
+      originalPrice: price * quantityNum,
+      discountAmount: promotionCalculation?.isApplicable ? promotionCalculation.discountAmount : 0,
     };
-  }, [price, quantity, taxRate, priceIncludesTax]);
+  }, [price, quantity, taxRate, priceIncludesTax, promotionCalculation]);
 
   // Initialize form with product data
   useEffect(() => {
@@ -459,6 +606,10 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
       taxRateCode,
       taxRate,
       priceIncludesTax,
+      // Promotion fields
+      appliedPromotionId: selectedPromotion?.id || null,
+      originalPrice: promotionCalculation?.isApplicable ? promotionCalculation.originalPrice : undefined,
+      discountAmount: promotionCalculation?.isApplicable ? promotionCalculation.discountAmount : undefined,
     });
   };
 
@@ -481,6 +632,9 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
       setPriceIncludesTax(true);
       setTaxRateCode('general');
       setTaxRate(7);
+      // Reset promotion fields
+      setSelectedPromotion(null);
+      setCouponCode('');
       onClose();
     }
   };
@@ -641,6 +795,93 @@ export const AddToListModal: React.FC<AddToListModalProps> = ({
                   </TaxBreakdownBox>
                 )}
               </TaxSection>
+
+              {/* Promotions Section */}
+              {selectedStoreId && price > 0 && (
+                <PromotionSection>
+                  <PromotionSectionTitle>
+                    <FiTag size={16} />
+                    Descuentos y Promociones (Opcional)
+                  </PromotionSectionTitle>
+
+                  {isLoadingPromotions ? (
+                    <EmptyPromotions>Buscando promociones...</EmptyPromotions>
+                  ) : promotions.length === 0 ? (
+                    <EmptyPromotions>
+                      No hay promociones activas para este producto en esta tienda
+                    </EmptyPromotions>
+                  ) : (
+                    <PromotionsList>
+                      {promotions.map((promo) => {
+                        const calculation = calculatePromotionDiscount(
+                          promo,
+                          price,
+                          parseFloat(quantity) || 1
+                        );
+
+                        return (
+                          <PromotionChip
+                            key={promo.id}
+                            type="button"
+                            $selected={selectedPromotion?.id === promo.id}
+                            $verified={promo.status === 'verified'}
+                            onClick={() => {
+                              if (selectedPromotion?.id === promo.id) {
+                                setSelectedPromotion(null);
+                              } else {
+                                setSelectedPromotion(promo);
+                              }
+                            }}
+                            disabled={!calculation.isApplicable}
+                          >
+                            <PromotionChipHeader>
+                              <PromotionChipTitle>
+                                {formatPromotionDescription(promo)}
+                              </PromotionChipTitle>
+                              <PromotionChipBadge $verified={promo.status === 'verified'}>
+                                {promo.status === 'verified' ? '✓ Verificada' : '⚠ No verificada'}
+                              </PromotionChipBadge>
+                            </PromotionChipHeader>
+                            {calculation.isApplicable && calculation.discountAmount > 0 && (
+                              <PromotionChipSaving>
+                                💰 Ahorras: {formatCurrency(calculation.discountAmount)} (
+                                {calculation.discountPercent.toFixed(0)}% OFF)
+                              </PromotionChipSaving>
+                            )}
+                            {!calculation.isApplicable && calculation.notApplicableReason && (
+                              <div style={{ fontSize: '0.75rem', color: '#9CA3AF', marginTop: '4px' }}>
+                                {calculation.notApplicableReason}
+                              </div>
+                            )}
+                          </PromotionChip>
+                        );
+                      })}
+                    </PromotionsList>
+                  )}
+
+                  {/* Show discount in summary */}
+                  {promotionCalculation?.isApplicable && promotionCalculation.discountAmount > 0 && (
+                    <TaxBreakdownBox style={{ background: '#F0FDF4', borderColor: '#86EFAC' }}>
+                      <TaxBreakdownRow>
+                        <span>Precio original:</span>
+                        <span style={{ textDecoration: 'line-through' }}>
+                          {formatCurrency(taxBreakdown.originalPrice)}
+                        </span>
+                      </TaxBreakdownRow>
+                      <TaxBreakdownRow>
+                        <span style={{ color: '#16A34A' }}>Descuento aplicado:</span>
+                        <span style={{ color: '#16A34A', fontWeight: 600 }}>
+                          -{formatCurrency(taxBreakdown.discountAmount)}
+                        </span>
+                      </TaxBreakdownRow>
+                      <TaxBreakdownRow>
+                        <span>Precio final:</span>
+                        <span>{formatCurrency(taxBreakdown.subtotal)}</span>
+                      </TaxBreakdownRow>
+                    </TaxBreakdownBox>
+                  )}
+                </PromotionSection>
+              )}
 
               {/* Store Selector */}
               <FormGroup>

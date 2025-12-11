@@ -270,3 +270,31 @@ export const ModalWarning = styled.div`
     flex-shrink: 0;
   }
 `;
+
+// Savings Banner Styles
+export const SavingsBanner = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing[3]};
+  padding: ${({ theme }) => theme.spacing[4]};
+  background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+  border: 1px solid #86EFAC;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  margin-top: ${({ theme }) => theme.spacing[2]};
+`;
+
+export const SavingsIcon = styled.div`
+  font-size: 24px;
+  flex-shrink: 0;
+`;
+
+export const SavingsText = styled.div`
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
+  color: #065F46;
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+
+  strong {
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+    color: #047857;
+  }
+`;

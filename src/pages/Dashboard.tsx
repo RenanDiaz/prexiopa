@@ -401,6 +401,10 @@ const Dashboard = () => {
       taxRateCode: TaxRateCode;
       taxRate: number;
       priceIncludesTax: boolean;
+      // Promotion fields
+      appliedPromotionId?: string | null;
+      originalPrice?: number;
+      discountAmount?: number;
     }) => {
       if (!activeSession) {
         toast.error('No hay una sesion activa');
@@ -420,6 +424,10 @@ const Dashboard = () => {
           taxRateCode: data.taxRateCode,
           taxRate: data.taxRate,
           priceIncludesTax: data.priceIncludesTax,
+          // Promotion fields
+          appliedPromotionId: data.appliedPromotionId,
+          originalPrice: data.originalPrice,
+          discountAmount: data.discountAmount,
         });
 
         // If savePrice is true, save to database

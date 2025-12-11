@@ -69,6 +69,10 @@ export interface ShoppingItem {
   price_includes_tax?: boolean;
   base_price?: number;
   tax_amount?: number;
+  // Promotion fields
+  applied_promotion_id?: string | null;
+  original_price?: number | null;
+  discount_amount?: number | null;
 }
 
 /**
@@ -109,6 +113,10 @@ export interface AddItemData {
   taxRateCode?: TaxRateCode;
   taxRate?: number;
   priceIncludesTax?: boolean;
+  // Promotion fields
+  appliedPromotionId?: string | null;
+  originalPrice?: number;
+  discountAmount?: number;
 }
 
 /**
@@ -385,6 +393,10 @@ export const addShoppingItem = async (
       price_includes_tax: priceIncludesTax,
       base_price: basePrice,
       tax_amount: taxAmount,
+      // Promotion fields
+      applied_promotion_id: input.appliedPromotionId || null,
+      original_price: input.originalPrice || null,
+      discount_amount: input.discountAmount || 0,
     })
     .select()
     .single();

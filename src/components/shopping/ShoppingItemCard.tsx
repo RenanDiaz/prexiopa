@@ -104,10 +104,28 @@ export const ShoppingItemCard = ({
 
           <S.PriceRow>
             <S.UnitPrice>
-              {formatPrice(item.price)} × {item.quantity}
+              {item.discount_amount && item.discount_amount > 0 ? (
+                <>
+                  <span style={{ textDecoration: 'line-through', color: '#9CA3AF', marginRight: '8px' }}>
+                    {formatPrice(item.original_price || item.price)}
+                  </span>
+                  {formatPrice(item.price)}
+                </>
+              ) : (
+                <>
+                  {formatPrice(item.price)} × {item.quantity}
+                </>
+              )}
             </S.UnitPrice>
             <S.Subtotal>{formatPrice(subtotal)}</S.Subtotal>
           </S.PriceRow>
+
+          {/* Promotion Badge */}
+          {item.discount_amount && item.discount_amount > 0 && (
+            <S.PromotionBadge>
+              💰 Ahorro: {formatPrice(item.discount_amount * item.quantity)}
+            </S.PromotionBadge>
+          )}
 
           {item.store_name && (
             <S.StoreTag>{item.store_name}</S.StoreTag>
