@@ -10,4 +10,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    // Generate source maps for error tracking (Sentry)
+    sourcemap: true,
+  },
 })

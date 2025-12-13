@@ -3,12 +3,12 @@
  * Envuelve todas las páginas con Navbar, Footer y estructura común
  */
 
+import { useEffect } from 'react';
 import styled from 'styled-components';
-import { Outlet } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './layout/Footer';
+import { trackPageView } from '../lib/analytics';
 
 const LayoutContainer = styled.div`
   min-height: 100vh;
@@ -28,6 +28,13 @@ const MainContent = styled.main`
  * Incluye la navegación, contenido y footer
  */
 const Layout = () => {
+  const location = useLocation();
+
+  // Track page views on route change
+  useEffect(() => {
+    trackPageView(location.pathname + location.search);
+  }, [location]);
+
   return (
     <LayoutContainer>
       <Navbar />
@@ -35,18 +42,6 @@ const Layout = () => {
         <Outlet />
       </MainContent>
       <Footer />
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
     </LayoutContainer>
   );
 };
