@@ -215,7 +215,7 @@ wrangler.jsonc
 
 Cada fase se puede desplegar sola y tiene un criterio de salida.
 
-### Fase 0 — Validación (spike, ≤ 1 día) ⚠️ Gate — preguntas 1–2 ✅, prueba de salida desde Cloudflare pendiente (ver §10)
+### Fase 0 — Validación (spike, ≤ 1 día) ✅ Cerrada (ver §10)
 
 Sirve para saber si el producto tiene sentido antes de construir nada.
 
@@ -284,9 +284,12 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 | ¿El código es EAN/UPC? | **Depende de la cadena** (§10.2). Con solo 7 facturas ya hay 8 productos que coinciden entre dos cadenas distintas |
 | ¿Cómo vienen los descuentos? | **Como columna "Descuento" de cada línea.** 33 líneas con descuento, $23.37 en total. "Total" ya es el neto con ITBMS |
 | ¿Precisión decimal? | Inconsistente: TAMEK manda 6 decimales con ruido de float (`1.639999`) y CITY MALL totales sin redondear (`3.53875`) |
-| ¿La DGI responde desde Cloudflare? | **Pendiente.** Hay que desplegar `spikes/dgi-egress` |
+| ¿La DGI responde desde Cloudflare? | **Sí.** 7 de 7 respondieron 200 con líneas y total, desde el colo `MIA`. Latencia: 0.6–1.5 s para el emisor `541-81`, y **11–12 s** para TAMEK y CITY MALL |
 
-**Veredicto:** el producto es viable. Queda pendiente solo la prueba de salida desde Cloudflare.
+**Veredicto:** el producto es viable. La Fase 0 quedó cerrada el 2026-10-24.
+
+- Las 2 facturas que el spike reportó con `lines: 1` son compras reales de un solo producto (ATLAS LATA 355 ML por $4.62 y VALUE507 CREMA 400 por $2.60). Los totales cuadran con el encabezado; no se trata de otro formato de página.
+- **Por la latencia:** el fetch a la DGI usa un timeout de 30 s con 1 reintento, y el preview de F1 muestra un estado de "Consultando la DGI…". CA1.1 se cumple aunque el preview tarde 12 s.
 
 ### 10.1 Columnas de la tabla de líneas (HTML de la DGI)
 
