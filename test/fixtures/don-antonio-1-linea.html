@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html>
+
+<html lang="es-pa">
+<head>
+    <link rel="icon" type="image/png" href="/Images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" /><title>
+	
+    Buscar Facturas Por CUFE
+
+</title>
+
+    
+
+    <link href="/Scripts/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="/Content/Site.css" rel="stylesheet"/>
+
+<link href="/Content/Semantic-UI/semantic.min.css" rel="stylesheet"/>
+
+
+
+
+
+
+<link href="/Content/jquery-ui/jquery-ui.css" rel="stylesheet"/>
+
+
+    
+
+
+    
+<link href="/Content/footable/footable.bootstrap.min.css" rel="stylesheet"/>
+
+<link href="/Content/bootstrap-datepicker3.min.css" rel="stylesheet"/>
+
+
+
+
+
+
+
+    
+
+    
+    
+    <link rel="stylesheet" href="/Content/icomoon/style.css">
+
+    
+    
+
+
+     
+
+    
+
+    
+
+
+    
+</head>
+<body>
+
+   
+
+    <div class="header-background">
+        
+<!--- TFS 582 -->
+
+<!--- FIN TFS 582 -->
+
+<!-- INICIO MODAL DE SEGURIDAD (PHISHING) -->
+
+    <div class="modal fade" id="modalPhishing" tabindex="-1" role="dialog" aria-labelledby="modalPhishingLabel" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <!-- Cabecera con color Naranja de Alerta -->
+                <div class="modal-header" style="background-color: #FF0000; color: white;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" style="color: white; opacity: 1;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="modalPhishingLabel" style="font-weight: bold;">
+                        ⚠️ Alerta de Seguridad: Prevención de Phishing
+                    </h4>
+                </div>
+                <div class="modal-body" style="font-size: 15px;">
+                    <p><strong>Estimado contribuyente,</strong></p>
+                    <p>DGI advierte sobre correos fraudulentos:</p>
+                    <ul>
+                        <li>La DGI advierte sobre la circulación de correos electrónicos fraudulentos relacionados con devoluciones de impuestos. No abra enlaces, descargue archivos ni comparta información personal, financiera o bancaria.</li>
+                        <li>Verifique que las comunicaciones oficiales provengan del dominio @mef.gob.pa</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Entendido, cerrar alerta</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script para abrir el modal solo una vez por sesión -->
+    
+
+<!-- FIN MODAL DE SEGURIDAD -->
+
+
+<nav class="navbar navbar-default">
+    <div>
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#MenuPrincipal" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">
+                <img alt="brand" src="/Images/log_gobierno_color.svg" /></a>
+            
+        </div>
+
+        <!--
+            /// <summary>
+            // ***********************************************************************
+            // Clase          : Menu Principal
+            // Autor          : CIAT - Jaime Chung
+            // Fecha          : 24/11/2017
+            // ***********************************************************************
+            /// </summary>
+        -->
+        <div class="collapse navbar-collapse" id="MenuPrincipal">
+            <ul id="2_MainMenu" class="nav navbar-nav"><li><a href='/Sesion/LoginFEP'>Iniciar Sesión</a></li><li class='dropdown'><a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>Consultas<span class='caret'></span></a><ul class='dropdown-menu'><li><a tabindex='-1' href='/Consultas/FacturasPorCUFE' >Facturas por CUFE</a></li><li><a tabindex='-1' href='/Consultas/EmpresasEnFacturaElectronica' >Facturadores Electrónicos</a></li></ul></li></ul> 
+                       
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+
+    <!-- /.container-fluid -->
+</nav>
+        
+
+
+
+
+    </div>
+   
+    
+
+    <div class="container-fluid">
+        <!-- contenido -->
+        <div class="row">
+            
+                  
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                
+            </div>
+        </div>
+        <div class="row">
+            
+
+    <form action="/Consultas/ConsultarFacturasPorCUFE?Length=9" data-ajax="true" data-ajax-failure="OnFailure" data-ajax-success="OnSuccessBuscar" id="criterioBusqueda" method="post">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Criterio de Búsqueda</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="CUFE">CUFE</label>
+                        <input class="form-control" data-val="true" data-val-length="El número de caracteres del CUFE debe ser igual a 66." data-val-length-max="66" data-val-length-min="66" data-val-regex="CUFE mal formado" data-val-regex-pattern="^(FE[0-9]{2}[1-2]{1}([0-9A-Z]|[-]){20}-[0-9A-Z]{6}([12]\d{3}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01]))\d{13}0[1-4]{1}[1-2]{1}\d{10})$" data-val-required="The CUFE field is required." id="CUFE" maxlength="66" name="CUFE" type="text" value="FE0120000000541-81-118009-0610192025120300001102620310312027507502" />
+                        <span class="text-danger">
+                            <span class="field-validation-valid" data-valmsg-for="CUFE" data-valmsg-replace="true"></span>  
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="row">
+                <div class="col-md-8" >
+                    
+
+                    <button id="btnConsultar" style="margin-top: 10px;" class="g-recaptcha btn btn-default" data-sitekey="6LeukHQUAAAAABeb1kJnVsj9NieVyfjmUVvup7dD" data-callback="ConsultarCUFE" data-badge="inline">
+                        Consultar
+                    </button>
+
+                     
+
+
+                    <button style="margin-top: 10px;" type="reset" class="btn btn-default" onclick="limpiarFormularios();">Cancelar</button>
+                </div>
+
+            </div>
+
+
+            <div id="validacionMensajeCriterio" class="row" style="display:none; margin-top:10px;">
+                <div class="col-md-12">
+                    <div id="validacionMensajeCriterioResultado" class="alert alert-warning" role="alert"></div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+        
+
+    </form>
+
+
+    <div id="facturaHTML">
+        <div class="row" xmlns:def="http://dgi-fep.mef.gob.pa"><div class="col-sm-12"><div class="panel panel-default"><div class="panel-heading"><div class="row"><div class="col-sm-4 text-left"><h5>
+                    No. 0000110262</h5></div><div class="col-sm-4 text-center"><h4><strong>
+                          FACTURA
+                        </strong></h4></div><div class="col-sm-4 text-right"><h5>03/12/2025 20:27:50</h5></div></div></div><div class="panel-body"><div class="row"><div class="col-sm-2"></div><div class="col-sm-10"><div class="row"><div class="col-sm-8"><dl class="dl-vertical"><dt class="small">CÓDIGO ÚNICO DE FACTURA ELECTRÓNICA [CUFE]</dt><dd style="word-wrap: break-word;">FE0120000000541-81-118009-0610192025120300001102620310312027507502</dd></dl></div><div class="col-sm-4"><dl class="dl-vertical"><dt class="small">PROTOCOLO DE AUTORIZACIÓN</dt><dd>20250000001683027307</dd></dl></div></div><div class="row"><div class="col-sm-8"><dl class="dl-vertical"><dt class="small">MODALIDAD EMISIÓN</dt><dd>
+                          Autorización de uso Posterior, Operación normal
+                        </dd></dl></div><div class="col-sm-4"><dl class="dl-vertical"><dt class="small">FECHA AUTORIZACIÓN</dt><dd>03/12/2025 20:28:06</dd></dl></div></div></div></div></div><div class="panel-footer text-right"><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Eventos</button></div></div></div></div><div class="row" xmlns:def="http://dgi-fep.mef.gob.pa"><div class="col-sm-6"><div class="panel panel-default"><div class="panel-heading">
+              EMISOR
+            </div><div class="panel-body"><div class="row"><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">RUC</dt><dd>541-81-118009</dd></dl></div><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">DV</dt><dd>06</dd></dl></div><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">NOMBRE</dt><dd>Inmobiliaria Don Antonio, S.A.</dd></dl></div></div><div class="row"><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">DIRECCIÓN</dt><dd>PANAMA,PANAMA,SAN FRANCISCO</dd></dl></div><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">TELÉFONO</dt><dd>9876-5432</dd></dl></div></div></div></div></div><div class="col-sm-6"><div class="panel panel-default"><div class="panel-heading"><div class="row"><div class="col-sm-4">
+                  RECEPTOR
+                </div><div class="col-sm-4"><kbd>
+                          CONSUMIDOR FINAL
+                        </kbd></div></div></div><div class="panel-body"><div class="row"><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">
+                          CÉDULA DE IDENTIDAD
+                        </dt><dd>REDACTADO</dd></dl></div><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">DV</dt><dd>REDACTADO</dd></dl></div><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">NOMBRE</dt><dd>REDACTADO</dd></dl></div></div><div class="row"><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">DIRECCIÓN</dt><dd>REDACTADO</dd></dl></div><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">TELÉFONO</dt><dd>REDACTADO</dd></dl></div></div></div></div></div></div><div class="row" xmlns:def="http://dgi-fep.mef.gob.pa"><div class="col-sm-12"><div class="panel panel-default"><div class="panel-heading"><div data-toggle="collapse" data-target="#detalle">
+                Detalle <span class="glyphicon glyphicon-th-list"></span></div></div><div class="panel-body collapse in" id="detalle"><table class="table table-striped table-hover"><thead><tr><th data-breakpoints="xs" data-classes="text-center">Linea</th><th data-breakpoints="all" data-classes="text-center">Código</th><th>Descripción</th><th>Información de interés</th><th data-breakpoints="xs" data-classes="text-center">Cantidad</th><th data-breakpoints="xs sm" data-classes="text-right">Precio Unitario</th><th data-breakpoints="xs sm" data-classes="text-right">Descuento Unitario</th><th data-breakpoints="xs sm md" data-classes="text-right">Monto</th><th data-breakpoints="xs sm md" data-classes="text-right">ITBMS</th><th data-breakpoints="all" data-classes="text-right">ISC</th><th data-breakpoints="all" data-classes="text-right">Acarreo</th><th data-breakpoints="all" data-classes="text-right">Seguro</th><th data-classes="text-right">Total</th></tr></thead><tbody><tr><td data-title="Linea" class="text-center">1</td><td data-title="Código" class="text-center">8964613281</td><td data-title="Descripción" class="text-left">ATLAS LATA 355 ML</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">4.20</td><td data-title="Descuento" class="text-right">0.00</td><td data-title="Monto" class="text-right">4.20</td><td data-title="Impuesto" class="text-right">0.42</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">4.62</td></tr></tbody><tfoot><tr><td class="text-right" colspan="12">
+                        Descuentos: <div style="width: 100px;display: inline-block;">0.00</div></td></tr><tr><td class="text-right" colspan="12">
+                      Valor Total: <div style="width: 100px;display: inline-block;">4.62</div></td></tr><tr><td class="text-right" colspan="12">
+                      ITBMS Total: <div style="width: 100px;display: inline-block;">0.42</div></td></tr><tr><td class="text-right" colspan="12"><kbd>Forma de Pago</kbd><div style="width: 100px;display: inline-block;"></div></td></tr><tr><td class="text-right" colspan="12">
+                            Tarjeta Crédito: <div style="width: 100px;display: inline-block;">4.62</div></td></tr><tr><td class="text-right" colspan="12">
+                            TOTAL PAGADO: <div style="width: 100px;display: inline-block;">4.62</div></td></tr><tr><td class="text-right" colspan="12">
+                            Vuelto: <div style="width: 100px;display: inline-block;">0.00</div></td></tr></tfoot></table></div></div></div></div><div class="row" xmlns:def="http://dgi-fep.mef.gob.pa"><div class="col-sm-12"><div class="panel panel-default"><div class="panel-heading">
+              INFORMACION COMERCIAL GENERAL
+            </div><div class="panel-body"><div class="row"><div class="col-sm-2"><dl class="dl-vertical"><dt class="small">No. Pedido o Referencia</dt><dd></dd></dl></div><div class="col-sm-8"><dl class="dl-vertical"><dt class="small">Información del Pedido</dt><dd></dd></dl></div></div></div></div></div></div><div class="row" xmlns:def="http://dgi-fep.mef.gob.pa"><div class="col-md-5"></div><div class="col-md-2" style="text-align: center;"><a class="btn btn-primary btn-lg" onclick="imprimirFactura(); return false;"><span class="icon-pdf" style="font-size: 30px;"></span><br>Descargar CAFE
+        </a></div><div class="col-md-5"></div></div><div id="myModal" class="modal fade" role="dialog" xmlns:def="http://dgi-fep.mef.gob.pa"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal"></button><h4 class="modal-title">Eventos</h4></div><div class="modal-body"><div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Lista de Eventos</h3></div><div class="panel-body"><table class="table table-striped table-hover"><thead><tr><th>Fecha Autorización</th><th>Tipo Evento</th><th data-breakpoints="xs sm md">Ver</th></tr></thead><tbody id="tbodyResultado"><tr><td>03/12/2025 20:28:06</td><td>
+                              Autorización
+                            </td><td><a href="#" onclick="MostrarEvento('pa_1'); return false;"><i class="glyphicon glyphicon-eye-open"></i></a></td></tr></tbody></table></div></div><div class="panel panel-default listaEventos" id="pa_1" style="display: none;"><div class="panel-heading"><h3 class="panel-title">Evento</h3></div><div class="panel-body"><div class="row"><div class="col-md-6"><label>Fecha Autorización</label><div>03/12/2025 20:28:06</div></div><div class="col-md-6"><label>Tipo Evento</label><div>
+                          Autorización
+                        </div></div></div></div></div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button></div></div></div></div>
+    </div>
+
+
+    <form action="/Consultas/DescargarFacturaPDF" id="fImprimir" method="post" target="ifImprimir">
+           <input id="facturaXML" name="facturaXML" type="hidden" value="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" />
+    </form>
+    <iframe id="ifImprimir" name="ifImprimir" style="width: 0px; height: 0px; display: none;"/>
+
+   
+
+
+
+        </div>
+        
+    </div>
+    <div class="footer pieMenu">
+            <div>
+                <div class="text-right" style="padding-right: 1em;">
+                    <p>Ministerio de Economía y Finanzas</p>
+                    <p><a href="http://disclaimer.innovacion.gob.pa/">Limitación de Responsabilidad</a> | <a href="https://dgi.mef.gob.pa/Condicion.php">Condiciones de Uso</a> - DGI - WB BETA | <strong>Versión:</strong> 1.0.0.0</p>
+                </div>
+            </div>
+        </div>
+     <div id="modalEspera" class="modalEspera"></div>
+
+
+    <div id="ventanaMensajes" class="modal modal-wide" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="tituloVentanaMensajes"></h4>
+          </div>
+          <div class="modal-body">
+            <p id="cuerpoVentanaMensajes" style="text-align:justify;"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    
+</body>
+</html>
