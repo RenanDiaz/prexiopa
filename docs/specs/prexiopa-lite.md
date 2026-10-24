@@ -360,7 +360,8 @@ El HTML trae la cédula, el nombre y el teléfono del receptor. Los fixtures **d
 - Si se llevan varias unidades del mismo producto, sale **una sola línea** con cantidad 1, y "Precio" y "Total" corresponden a todas las unidades. Ningún código se repite dentro de una factura.
 - Los pesables también salen con cantidad 1: "ZANAHORIA 1 KG" cuesta $0.82 en una compra y $0.94 en otra, según el peso real, pero el peso no aparece.
 - 191 de 191 líneas en las 5 facturas de muestra. En TAMEK y CITY MALL las cantidades son reales (`1.937008` kg, `0.745` kg, `6` unidades).
-- El XML oculto de la página (`facturaXML`) viene cifrado, y el HTML se genera de ese mismo XML: no hay otra fuente de la cantidad real.
+- El XML oculto de la página (`facturaXML`) viene cifrado, y el HTML se genera de ese mismo XML: no hay otra fuente de la cantidad real en la DGI.
+- **El ticket impreso que entrega la tienda sí muestra la cantidad y el precio unitario correctos.** El punto de venta tiene los datos; se pierden al generar la factura electrónica que se transmite a la DGI.
 
 **Contexto normativo:** según la Ficha Técnica de la FE v1.10 de la DGI, `dCantCodInt` (C06) es obligatorio y es la "cantidad del producto o servicio, en la unidad de medida del código interno". La validación automática solo exige que `dPrItem` = `dCantCodInt × (dPrUnit − dPrUnitDesc)`, así que una línea con cantidad 1 y "precio unitario" igual al total de varias unidades pasa la validación. Que la cantidad no sea la real no lo detecta el sistema de la DGI.
 
@@ -372,7 +373,7 @@ El HTML trae la cédula, el nombre y el teléfono del receptor. Los fixtures **d
 4. **Corrección opcional** (CA5.5): "+ / −" para unidades y un campo de peso para pesables. Guarda `quantity_source = 'user'` y no cambia `line_total_cents` ni los totales de la compra, que siempre son los de la factura.
 5. **F3 nunca mezcla:** el "más bajo de los últimos 90 días" (CA3.2) solo considera líneas con cantidad real (regla de §5.3).
 
-**Fuera de alcance:** reclamarle a la DGI o a la cadena, y leer el ticket impreso (OCR) para sacar la cantidad.
+**Fuera de alcance:** reclamarle a la DGI o a la cadena, y leer el ticket impreso (OCR) para sacar la cantidad. Si la inferencia y la corrección manual no alcanzan en la práctica, el OCR del ticket es la alternativa a evaluar.
 
 ---
 
