@@ -230,7 +230,7 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 **Salida:** si las facturas no traen el detalle por línea, o la DGI bloquea Cloudflare, **se detiene el plan** y se replantea.
 
-### Fase 1 — Esqueleto — ✅ local; falta el deploy con Better Auth
+### Fase 1 — Esqueleto — ✅ completada (24 Oct 2026)
 
 - Taguear el estado actual como `v0-supabase` y eliminar el código v0 (queda en el historial de git).
 - Scaffold: Worker + Hono + D1 + Drizzle + Vite SPA, con auth Better Auth + Google y el middleware de §6.2.
@@ -239,6 +239,8 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 - Reemplazar `CLAUDE.md` por el del Anexo A.
 
 **Salida:** una pantalla "Hola, {email}" en producción, CI en verde y el test de aislamiento (§6.4) pasando con un endpoint de ejemplo.
+
+**Resultado:** en producción en `https://prexiopa.com` con login de Google (Better Auth) verificado. Migraciones `0000` y `0001` aplicadas en D1. CI en verde en el PR del esqueleto; los commits de Better Auth pasaron `npm run check`, build y presupuesto en local.
 
 ### Fase 2 — Import CAFE (F1, F2)
 
@@ -261,7 +263,7 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 | D1 | Auth: Cloudflare Access o Better Auth | ✅ **Better Auth** con Google: el login redirige directo al dominio de la app (§6.2) |
 | D2 | ¿Usuarios en v1: solo yo, o yo + familia? | Lista cerrada en `ALLOWED_EMAILS` (§6.2). El modelo ya es multiusuario |
 | D3 | ¿Migrar las compras manuales de v0? | **No.** Solo se reimportan CUFEs |
-| D4 | Dominio propio o `workers.dev` | `workers.dev` hasta cumplir las métricas de §2 |
+| D4 | Dominio propio o `workers.dev` | ✅ **Dominio propio** `prexiopa.com` (lo pide el login con Better Auth); `workers.dev` desactivado |
 | D5 | Estilos: CSS Modules o mantener styled-components | ✅ **CSS Modules** (decidido en la Fase 1) |
 | D6 | ¿Los productos (`products`) se comparten entre usuarios? | **No** en v1. Compartirlos vuelve a traer la moderación |
 
