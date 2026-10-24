@@ -5,6 +5,9 @@
   "compatibility_date": "2026-10-01",
   // Better Auth usa AsyncLocalStorage (node:async_hooks).
   "compatibility_flags": ["nodejs_compat"],
+  // Dominio propio: wrangler deploy lo conecta al Worker (la zona debe estar en esta cuenta).
+  "routes": [{ "pattern": "prexiopa.com", "custom_domain": true }],
+  "workers_dev": false,
   "assets": {
     "not_found_handling": "single-page-application",
     "run_worker_first": ["/api/*"]
@@ -19,9 +22,9 @@
   ],
   "vars": {
     "ENVIRONMENT": "production",
-    // URL pública de la app, sin barra final. Ej: "https://prexiopa.example.com".
+    // URL pública de la app, sin barra final.
     // Google redirige a {BETTER_AUTH_URL}/api/auth/callback/google.
-    "BETTER_AUTH_URL": ""
+    "BETTER_AUTH_URL": "https://prexiopa.com"
   }
   // Secrets (`npx wrangler secret put <NOMBRE>`), no van en este archivo:
   // BETTER_AUTH_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET y
