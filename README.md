@@ -27,7 +27,7 @@ npm run build && npm run budget  # build + presupuesto de bundle
 
 ## Deploy (manual, primera vez)
 
-1. `npx wrangler d1 create prexiopa` y copiar el `database_id` a `wrangler.jsonc`.
+1. ~~`npx wrangler d1 create prexiopa`~~ (hecho; el id ya está en `wrangler.jsonc`).
 2. `npx wrangler d1 migrations apply prexiopa --remote`
 3. `npm run build && npx wrangler deploy`
 4. En Cloudflare Zero Trust, crear una aplicación Access (self-hosted) para el dominio

@@ -11,8 +11,7 @@
     {
       "binding": "DB",
       "database_name": "prexiopa",
-      // Reemplazar con el id de `npx wrangler d1 create prexiopa` antes del primer deploy.
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "8b83fa76-a363-4637-b173-ce7c11456214",
       "migrations_dir": "worker/db/migrations"
     }
   ],
