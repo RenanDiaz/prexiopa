@@ -1,3 +1,11 @@
 # Copiar a .dev.vars (no se commitea). Solo para desarrollo local.
 ENVIRONMENT=development
+# Con DEV_USER_EMAIL no hace falta Google: cada request entra como este correo.
 DEV_USER_EMAIL=tu-correo@example.com
+
+# Para probar el login real con Google en local, borra DEV_USER_EMAIL y define:
+# BETTER_AUTH_URL=http://localhost:5173
+# BETTER_AUTH_SECRET=   # openssl rand -base64 32
+# GOOGLE_CLIENT_ID=
+# GOOGLE_CLIENT_SECRET=
+# ALLOWED_EMAILS=tu-correo@example.com

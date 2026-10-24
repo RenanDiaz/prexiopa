@@ -16,7 +16,7 @@ Requiere **npm 11** (Node 24). npm 10 falla resolviendo peer deps (`edgesOut`).
 
 ## Estructura
 - `worker/index.ts` — app Hono (`createApp`), rutas `/api/*`
-- `worker/auth.ts` — middleware de Cloudflare Access (+ bypass solo en development)
+- `worker/auth.ts` — Better Auth + Google en `/api/auth/*` y middleware de sesión (+ bypass solo en development)
 - `worker/db/schema.ts` — schema Drizzle; `worker/db/migrations/` — SQL generado
 - `worker/db/scoped.ts` — ÚNICA puerta a datos del usuario (filtra por userId)
 - `src/` — SPA · `test/` — tests de Worker · `scripts/` — utilidades de CI

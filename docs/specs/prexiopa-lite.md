@@ -173,12 +173,13 @@ precio_efectivo_unitario = line_total_cents / quantity
 | Íconos | `lucide-react` | Se elimina `react-icons` |
 | Tests | Vitest + `@cloudflare/vitest-plugin` | Integración real contra D1 local. Antes se llamaba `vitest-pool-workers` |
 
-### 6.2 Autenticación — recomendación: Cloudflare Access
+### 6.2 Autenticación — decisión: Better Auth con Google (D1)
 
-- Access (con Google como IdP) protege todo el Worker. El Worker valida el header `Cf-Access-Jwt-Assertion` contra los certs del team, comprobando `aud` e `iss`, y hace upsert de `users` por email.
-- **Pros:** no hay que escribir código de login ni manejar sesiones o contraseñas, y es gratis para pocos usuarios.
-- **Contras:** la pantalla de login no se puede personalizar, y no sirve si un día la app se abre al público.
-- **Salida futura:** si se vuelve pública, se migra a Better Auth sobre D1. El modelo ya tiene `user_id`, así que el cambio queda acotado a un middleware.
+- Better Auth corre dentro del Worker en `/api/auth/*`, con Google como único proveedor. El login redirige directo al dominio de la app (`BETTER_AUTH_URL`), sin pantalla intermedia de Cloudflare.
+- Better Auth guarda usuarios, cuentas, sesiones y verificaciones en sus propias tablas `auth_*` (D1, vía el adapter de Drizzle). La identidad de la app sigue siendo `users`: el middleware lee la sesión y hace upsert de `users` por email.
+- **Acceso restringido (D2):** solo entran los correos de `ALLOWED_EMAILS` (secret, separado por comas). Se valida al crear el usuario y en cada request, así que quitar un correo de la lista corta también sus sesiones abiertas. Lista vacía = nadie entra.
+- **Fail closed:** sin `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, `GOOGLE_CLIENT_ID` o `GOOGLE_CLIENT_SECRET`, el Worker responde 500 y no acepta sesiones.
+- **Contras frente a Access:** el login y las sesiones son código propio (mitigado con tests en `test/auth.test.ts`), y los secrets hay que rotarlos a mano.
 - **Dev local:** `DEV_USER_EMAIL` en `.dev.vars` salta la validación. **Solo** si `ENVIRONMENT=development`, y debe haber un test que lo verifique.
 
 ### 6.3 Import CAFE
@@ -229,12 +230,12 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 **Salida:** si las facturas no traen el detalle por línea, o la DGI bloquea Cloudflare, **se detiene el plan** y se replantea.
 
-### Fase 1 — Esqueleto — ✅ local (rama `feat/lite-skeleton`); falta el deploy detrás de Access
+### Fase 1 — Esqueleto — ✅ local; falta el deploy con Better Auth
 
 - Taguear el estado actual como `v0-supabase` y eliminar el código v0 (queda en el historial de git).
-- Scaffold: Worker + Hono + D1 + Drizzle + Vite SPA, con auth Access y el middleware de §6.2.
+- Scaffold: Worker + Hono + D1 + Drizzle + Vite SPA, con auth Better Auth + Google y el middleware de §6.2.
 - CI en GitHub Actions: lint, typecheck, test y build, más el check de presupuesto de bundle.
-- Deploy a `*.workers.dev` detrás de Access.
+- Deploy con login de Google vía Better Auth (§6.2).
 - Reemplazar `CLAUDE.md` por el del Anexo A.
 
 **Salida:** una pantalla "Hola, {email}" en producción, CI en verde y el test de aislamiento (§6.4) pasando con un endpoint de ejemplo.
@@ -257,8 +258,8 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 | # | Decisión | Recomendación |
 |---|---|---|
-| D1 | Auth: Cloudflare Access o Better Auth | **Access** (§6.2) |
-| D2 | ¿Usuarios en v1: solo yo, o yo + familia? | Hasta ~5 personas con Access. El modelo ya es multiusuario |
+| D1 | Auth: Cloudflare Access o Better Auth | ✅ **Better Auth** con Google: el login redirige directo al dominio de la app (§6.2) |
+| D2 | ¿Usuarios en v1: solo yo, o yo + familia? | Lista cerrada en `ALLOWED_EMAILS` (§6.2). El modelo ya es multiusuario |
 | D3 | ¿Migrar las compras manuales de v0? | **No.** Solo se reimportan CUFEs |
 | D4 | Dominio propio o `workers.dev` | `workers.dev` hasta cumplir las métricas de §2 |
 | D5 | Estilos: CSS Modules o mantener styled-components | ✅ **CSS Modules** (decidido en la Fase 1) |

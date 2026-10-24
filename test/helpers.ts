@@ -1,41 +1,38 @@
 import { env } from 'cloudflare:workers';
-import { createLocalJWKSet, exportJWK, generateKeyPair, SignJWT } from 'jose';
+import { testUtils } from 'better-auth/plugins';
+import { createAuth } from '../worker/auth';
 import { getDb } from '../worker/db/client';
 import { purchaseLines, purchases, storeItems, stores } from '../worker/db/schema';
 import { upsertUserByEmail } from '../worker/db/users';
 import { createApp } from '../worker/index';
 
-export const TEAM = 'prexiopa-test.cloudflareaccess.com';
-export const AUD = 'test-aud';
+export const ALLOWED = 'renan@example.com, familia@example.com';
 
 export const prodEnv = (overrides: Partial<Env> = {}): Env => ({
   ...env,
   ENVIRONMENT: 'production',
-  ACCESS_TEAM_DOMAIN: TEAM,
-  ACCESS_AUD: AUD,
+  BETTER_AUTH_URL: 'https://prexiopa.test',
+  BETTER_AUTH_SECRET: 'secreto-de-prueba-con-al-menos-32-caracteres',
+  GOOGLE_CLIENT_ID: 'google-client-id',
+  GOOGLE_CLIENT_SECRET: 'google-client-secret',
+  ALLOWED_EMAILS: ALLOWED,
   DEV_USER_EMAIL: undefined,
   ...overrides,
 });
 
 export const devEnv = (email: string): Env => ({ ...env, ENVIRONMENT: 'development', DEV_USER_EMAIL: email });
 
-/** Llaves locales que imitan los certs de Cloudflare Access. */
-export async function accessKeys() {
-  const { privateKey, publicKey } = await generateKeyPair('RS256');
-  const jwk = { ...(await exportJWK(publicKey)), kid: 'test', alg: 'RS256' };
-  const getKey = createLocalJWKSet({ keys: [jwk] });
-
-  const sign = (claims: { email?: string; aud?: string; iss?: string; exp?: string } = {}) => {
-    const jwt = new SignJWT(claims.email === undefined ? {} : { email: claims.email })
-      .setProtectedHeader({ alg: 'RS256', kid: 'test' })
-      .setIssuer(claims.iss ?? `https://${TEAM}`)
-      .setAudience(claims.aud ?? AUD)
-      .setIssuedAt()
-      .setExpirationTime(claims.exp ?? '5m');
-    return jwt.sign(privateKey);
-  };
-
-  return { getKey, sign, app: createApp({ getKey }) };
+/**
+ * Crea un usuario de Better Auth con una sesión abierta y devuelve los headers
+ * (cookie firmada) para usarla. Evita pasar por Google en los tests.
+ */
+export async function sessionHeaders(email: string, envOverrides: Partial<Env> = {}): Promise<Headers> {
+  const auth = createAuth(prodEnv(envOverrides), { plugins: [testUtils()] });
+  const { test, internalAdapter } = await auth.$context;
+  // El almacenamiento D1 se comparte entre tests: se reutiliza el usuario si ya existe.
+  const existing = await internalAdapter.findUserByEmail(email);
+  const user = existing?.user ?? (await test.saveUser(test.createUser({ email, name: 'Prueba' })));
+  return test.getAuthHeaders({ userId: user.id });
 }
 
 /** App con bypass de desarrollo: cada request actúa como `email`. */

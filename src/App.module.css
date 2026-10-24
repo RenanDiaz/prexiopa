@@ -16,3 +16,18 @@
 .error {
   color: var(--danger);
 }
+
+.button {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--text-muted);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

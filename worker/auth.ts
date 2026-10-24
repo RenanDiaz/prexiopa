@@ -1,62 +1,86 @@
+import { betterAuth, type BetterAuthPlugin } from 'better-auth';
+import { APIError } from 'better-auth/api';
 import { createMiddleware } from 'hono/factory';
 import { HTTPException } from 'hono/http-exception';
-import { createRemoteJWKSet, jwtVerify, type JWTVerifyGetKey } from 'jose';
+import { authAdapter } from './db/auth-adapter';
 import { upsertUserByEmail, type User } from './db/users';
+import { newId } from './lib/id';
 
-// Auth con Cloudflare Access (spec §6.2). Access protege todo el Worker; aquí
-// validamos su JWT de todos modos para no confiar en que nadie lo saltó.
+// Auth con Better Auth + Google (spec §6.2). Better Auth guarda sus sesiones en
+// las tablas auth_*; la app sigue identificando al usuario por email en `users`.
 
 export type AppEnv = {
   Bindings: Env;
   Variables: { user: User };
 };
 
-export type AuthOptions = {
-  /** Para tests: llaves locales en vez de los certs remotos del team. */
-  getKey?: JWTVerifyGetKey;
+export type AuthOptions<Plugins extends BetterAuthPlugin[] = BetterAuthPlugin[]> = {
+  /** Para tests: plugins extra, p. ej. `testUtils()` para crear sesiones. */
+  plugins?: Plugins;
 };
 
-const remoteKeySets = new Map<string, JWTVerifyGetKey>();
+const normalizeEmail = (email: string) => email.trim().toLowerCase();
 
-function keysFor(teamDomain: string): JWTVerifyGetKey {
-  let keys = remoteKeySets.get(teamDomain);
-  if (!keys) {
-    keys = createRemoteJWKSet(new URL(`https://${teamDomain}/cdn-cgi/access/certs`));
-    remoteKeySets.set(teamDomain, keys);
-  }
-  return keys;
+/** ALLOWED_EMAILS es una lista separada por comas. Vacía = nadie entra. */
+export function isAllowedEmail(env: Env, email: string): boolean {
+  const allowed = (env.ALLOWED_EMAILS ?? '').split(',').map(normalizeEmail).filter(Boolean);
+  return allowed.includes(normalizeEmail(email));
 }
 
-async function emailFromAccessJwt(env: Env, token: string, options: AuthOptions): Promise<string> {
-  const { ACCESS_TEAM_DOMAIN: team, ACCESS_AUD: aud } = env;
-  // Fail closed: sin configuración no se acepta ningún token.
-  if (!team || !aud) throw new HTTPException(500, { message: 'Access no está configurado' });
-
-  try {
-    const { payload } = await jwtVerify(token, options.getKey ?? keysFor(team), {
-      issuer: `https://${team}`,
-      audience: aud,
-    });
-    if (typeof payload.email !== 'string' || !payload.email) throw new Error('JWT sin email');
-    return payload.email;
-  } catch {
-    throw new HTTPException(401, { message: 'Token de Access inválido' });
+export function createAuth<Plugins extends BetterAuthPlugin[] = []>(env: Env, options: AuthOptions<Plugins> = {}) {
+  const {
+    BETTER_AUTH_URL: baseURL,
+    BETTER_AUTH_SECRET: secret,
+    GOOGLE_CLIENT_ID: clientId,
+    GOOGLE_CLIENT_SECRET: clientSecret,
+  } = env;
+  // Fail closed: sin configuración no se acepta ninguna sesión.
+  if (!baseURL || !secret || !clientId || !clientSecret) {
+    throw new HTTPException(500, { message: 'Auth no está configurado' });
   }
+
+  return betterAuth({
+    baseURL,
+    basePath: '/api/auth',
+    secret,
+    database: authAdapter(env.DB),
+    socialProviders: {
+      google: { clientId, clientSecret, prompt: 'select_account' },
+    },
+    advanced: { database: { generateId: () => newId() } },
+    // Los errores del login (p. ej. correo sin acceso) vuelven a la SPA con ?error=.
+    onAPIError: { errorURL: '/' },
+    databaseHooks: {
+      user: {
+        create: {
+          // Solo se registran los correos de ALLOWED_EMAILS (spec D2).
+          before: async (user) => {
+            if (!isAllowedEmail(env, user.email)) {
+              throw new APIError('FORBIDDEN', { message: 'Este correo no tiene acceso a Prexiopá' });
+            }
+          },
+        },
+      },
+    },
+    plugins: options.plugins ?? ([] as unknown as Plugins),
+  });
 }
 
-export function accessAuth(options: AuthOptions = {}) {
+export function sessionAuth(options: AuthOptions = {}) {
   return createMiddleware<AppEnv>(async (c, next) => {
     let email: string;
     // El bypass de desarrollo solo existe con ENVIRONMENT=development explícito.
     if (c.env.ENVIRONMENT === 'development' && c.env.DEV_USER_EMAIL) {
       email = c.env.DEV_USER_EMAIL;
     } else {
-      const token = c.req.header('Cf-Access-Jwt-Assertion');
-      if (!token) throw new HTTPException(401, { message: 'Falta el token de Access' });
-      email = await emailFromAccessJwt(c.env, token, options);
+      const session = await createAuth(c.env, options).api.getSession({ headers: c.req.raw.headers });
+      if (!session) throw new HTTPException(401, { message: 'Inicia sesión para continuar' });
+      email = session.user.email;
+      // Quitar un correo de ALLOWED_EMAILS corta también las sesiones abiertas.
+      if (!isAllowedEmail(c.env, email)) throw new HTTPException(403, { message: 'Este correo no tiene acceso' });
     }
 
-    c.set('user', await upsertUserByEmail(c.env.DB, email.trim().toLowerCase()));
+    c.set('user', await upsertUserByEmail(c.env.DB, normalizeEmail(email)));
     await next();
   });
 }

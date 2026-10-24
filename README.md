@@ -29,7 +29,17 @@ npm run build && npm run budget  # build + presupuesto de bundle
 
 1. ~~`npx wrangler d1 create prexiopa`~~ (hecho; el id ya está en `wrangler.jsonc`).
 2. `npx wrangler d1 migrations apply prexiopa --remote`
-3. `npm run build && npx wrangler deploy`
-4. En Cloudflare Zero Trust, crear una aplicación Access (self-hosted) para el dominio
-   del Worker con Google como IdP, y copiar `ACCESS_TEAM_DOMAIN` y `ACCESS_AUD`
-   a `wrangler.jsonc`. Volver a desplegar.
+3. En Google Cloud Console → APIs y servicios → Credenciales, crear (o reutilizar) un
+   cliente OAuth de tipo "Aplicación web" con:
+   - Orígenes autorizados: `https://<tu-dominio>`
+   - URI de redireccionamiento: `https://<tu-dominio>/api/auth/callback/google`
+4. Poner `BETTER_AUTH_URL` (`https://<tu-dominio>`, sin barra final) en `wrangler.jsonc`.
+5. Cargar los secrets:
+   ```bash
+   openssl rand -base64 32 | npx wrangler secret put BETTER_AUTH_SECRET
+   npx wrangler secret put GOOGLE_CLIENT_ID
+   npx wrangler secret put GOOGLE_CLIENT_SECRET
+   npx wrangler secret put ALLOWED_EMAILS   # correos separados por coma
+   ```
+6. `npm run build && npx wrangler deploy`
+7. Si usas dominio propio, agregarlo en Workers → prexiopa → Settings → Domains & Routes.

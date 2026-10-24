@@ -17,3 +17,17 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export type Me = { email: string };
+
+/** Inicia el login con Google: Better Auth devuelve la URL de Google a la que redirigir. */
+export async function signInWithGoogle(): Promise<void> {
+  const { url } = await api<{ url: string }>('/auth/sign-in/social', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ provider: 'google', callbackURL: '/' }),
+  });
+  window.location.assign(url);
+}
+
+export async function signOut(): Promise<void> {
+  await api('/auth/sign-out', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+}

@@ -20,6 +20,85 @@ export const users = sqliteTable('users', {
   createdAt: createdAt(),
 });
 
+// Tablas de Better Auth (spec §6.2). Las fechas son timestamps en ms porque
+// Better Auth lee y escribe Date. `users` sigue siendo la identidad de la app;
+// se enlaza con `auth_users` por email.
+
+const authTimestamp = (name: string) => integer(name, { mode: 'timestamp_ms' });
+
+const authCreatedAt = () =>
+  authTimestamp('created_at')
+    .notNull()
+    .$defaultFn(() => new Date());
+
+const authUpdatedAt = () =>
+  authTimestamp('updated_at')
+    .notNull()
+    .$defaultFn(() => new Date())
+    .$onUpdate(() => new Date());
+
+export const authUsers = sqliteTable('auth_users', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  email: text('email').notNull().unique(),
+  emailVerified: integer('email_verified', { mode: 'boolean' }).notNull().default(false),
+  image: text('image'),
+  createdAt: authCreatedAt(),
+  updatedAt: authUpdatedAt(),
+});
+
+export const authSessions = sqliteTable(
+  'auth_sessions',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => authUsers.id, { onDelete: 'cascade' }),
+    token: text('token').notNull().unique(),
+    expiresAt: authTimestamp('expires_at').notNull(),
+    ipAddress: text('ip_address'),
+    userAgent: text('user_agent'),
+    createdAt: authCreatedAt(),
+    updatedAt: authUpdatedAt(),
+  },
+  (t) => [index('auth_sessions_user_idx').on(t.userId)],
+);
+
+export const authAccounts = sqliteTable(
+  'auth_accounts',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => authUsers.id, { onDelete: 'cascade' }),
+    accountId: text('account_id').notNull(),
+    providerId: text('provider_id').notNull(),
+    accessToken: text('access_token'),
+    refreshToken: text('refresh_token'),
+    idToken: text('id_token'),
+    accessTokenExpiresAt: authTimestamp('access_token_expires_at'),
+    refreshTokenExpiresAt: authTimestamp('refresh_token_expires_at'),
+    scope: text('scope'),
+    password: text('password'),
+    createdAt: authCreatedAt(),
+    updatedAt: authUpdatedAt(),
+  },
+  (t) => [index('auth_accounts_user_idx').on(t.userId)],
+);
+
+export const authVerifications = sqliteTable(
+  'auth_verifications',
+  {
+    id: text('id').primaryKey(),
+    identifier: text('identifier').notNull(),
+    value: text('value').notNull(),
+    expiresAt: authTimestamp('expires_at').notNull(),
+    createdAt: authCreatedAt(),
+    updatedAt: authUpdatedAt(),
+  },
+  (t) => [index('auth_verifications_identifier_idx').on(t.identifier)],
+);
+
 export const CODE_FORMATS = ['gtin', 'gtin_no_check', 'internal'] as const;
 
 // Una fila por cadena (RUC), no por sucursal. Las tiendas no son datos del usuario.

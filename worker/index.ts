@@ -1,12 +1,16 @@
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
-import { accessAuth, type AppEnv, type AuthOptions } from './auth';
+import { createAuth, sessionAuth, type AppEnv, type AuthOptions } from './auth';
 import { scoped } from './db/scoped';
 
 export function createApp(authOptions: AuthOptions = {}) {
   const app = new Hono<AppEnv>().basePath('/api');
 
-  app.use('*', accessAuth(authOptions));
+  // Rutas de Better Auth (login con Google, callback, logout). Van antes del
+  // middleware: responden sin llamar a next(), así que no exigen sesión.
+  app.on(['GET', 'POST'], '/auth/*', (c) => createAuth(c.env, authOptions).handler(c.req.raw));
+
+  app.use('*', sessionAuth(authOptions));
 
   app.get('/me', (c) => c.json({ email: c.var.user.email }));
 
