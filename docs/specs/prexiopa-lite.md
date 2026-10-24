@@ -169,9 +169,9 @@ precio_efectivo_unitario = line_total_cents / quantity
 | Frontend | React + TypeScript + Vite (`@cloudflare/vite-plugin`) | El dev local corre el Worker y D1 dentro de Vite |
 | Estado del servidor | TanStack Query | **Sin Zustand.** El estado de UI va en `useState` o en la URL |
 | Escáner | `@zxing/browser`, cargado con lazy load | Una sola librería. Se elimina `jsqr` solo si zxing lee las facturas reales de la Fase 0 |
-| Estilos | Se decide en la Fase 1; por defecto, CSS Modules | Pocas pantallas; no hace falta un design system |
+| Estilos | CSS Modules | Pocas pantallas; no hace falta un design system |
 | Íconos | `lucide-react` | Se elimina `react-icons` |
-| Tests | Vitest + `@cloudflare/vitest-pool-workers` | Integración real contra D1 local |
+| Tests | Vitest + `@cloudflare/vitest-plugin` | Integración real contra D1 local. Antes se llamaba `vitest-pool-workers` |
 
 ### 6.2 Autenticación — recomendación: Cloudflare Access
 
@@ -229,7 +229,7 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 **Salida:** si las facturas no traen el detalle por línea, o la DGI bloquea Cloudflare, **se detiene el plan** y se replantea.
 
-### Fase 1 — Esqueleto
+### Fase 1 — Esqueleto — ✅ local (rama `feat/lite-skeleton`); falta el deploy detrás de Access
 
 - Taguear el estado actual como `v0-supabase` y eliminar el código v0 (queda en el historial de git).
 - Scaffold: Worker + Hono + D1 + Drizzle + Vite SPA, con auth Access y el middleware de §6.2.
@@ -261,7 +261,7 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 | D2 | ¿Usuarios en v1: solo yo, o yo + familia? | Hasta ~5 personas con Access. El modelo ya es multiusuario |
 | D3 | ¿Migrar las compras manuales de v0? | **No.** Solo se reimportan CUFEs |
 | D4 | Dominio propio o `workers.dev` | `workers.dev` hasta cumplir las métricas de §2 |
-| D5 | Estilos: CSS Modules o mantener styled-components | **CSS Modules** (runtime cero, menos JS) |
+| D5 | Estilos: CSS Modules o mantener styled-components | ✅ **CSS Modules** (decidido en la Fase 1) |
 | D6 | ¿Los productos (`products`) se comparten entre usuarios? | **No** en v1. Compartirlos vuelve a traer la moderación |
 
 ## 9. Riesgos
@@ -323,7 +323,7 @@ El HTML trae la cédula, el nombre y el teléfono del receptor. Los fixtures **d
 
 ---
 
-## Anexo A — `CLAUDE.md` propuesto (reemplaza al actual en la Fase 1)
+## Anexo A — `CLAUDE.md` (aplicado en la Fase 1; la versión vigente es `/CLAUDE.md`)
 
 ```markdown
 # Prexiopá

@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node 24 trae npm 11; npm 10 falla resolviendo los peer deps de este repo.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Tipos de Worker al día con wrangler.jsonc
+        run: npx wrangler types --strict-vars=false --check
+
+      - name: Migraciones al día con el schema
+        run: |
+          npx drizzle-kit generate
+          git diff --exit-code -- worker/db/migrations
+          test -z "$(git status --porcelain -- worker/db/migrations)"
+
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npm run budget

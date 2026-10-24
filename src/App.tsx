@@ -1,31 +1,16 @@
-/**
- * App - Componente raíz de Prexiopá
- * Configura el RouterProvider con todas las rutas de la aplicación
- */
+import { useQuery } from '@tanstack/react-query';
+import { api, type Me } from './api';
+import styles from './App.module.css';
 
-import { RouterProvider } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { router } from './routes';
+export function App() {
+  const me = useQuery({ queryKey: ['me'], queryFn: () => api<Me>('/me') });
 
-function App() {
   return (
-    <>
-      <RouterProvider router={router} />
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
-    </>
+    <main className={styles.page}>
+      <h1 className={styles.title}>Prexiopá</h1>
+      {me.isPending && <p className={styles.muted}>Cargando…</p>}
+      {me.isError && <p className={styles.error}>No se pudo cargar tu sesión: {me.error.message}</p>}
+      {me.data && <p>Hola, {me.data.email}</p>}
+    </main>
   );
 }
-
-export default App;

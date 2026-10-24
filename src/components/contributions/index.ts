@@ -1,1 +1,0 @@
-export { ContributeDataModal } from './ContributeDataModal';

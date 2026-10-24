@@ -1,0 +1,3 @@
+# Copiar a .dev.vars (no se commitea). Solo para desarrollo local.
+ENVIRONMENT=development
+DEV_USER_EMAIL=tu-correo@example.com
