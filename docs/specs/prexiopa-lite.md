@@ -96,7 +96,8 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 
 - **CA5.1** Desde una línea de factura se puede asignar un nombre legible (por ejemplo, "LCH EST AZ 1L" → "Leche Estrella Azul 1 L").
 - **CA5.2** Se pueden vincular ítems de tiendas distintas al mismo producto para que F3 los compare.
-- **CA5.3** Si el código de la línea de factura es un EAN/UPC válido, el vínculo se hace automáticamente (depende de lo que confirme la Fase 0).
+- **CA5.3** Si el código de la línea, normalizado según el `code_format` de la tienda (§10.2), es un GTIN válido, el vínculo con `products` se hace automáticamente.
+- **CA5.4** Se puede editar el nombre visible de una tienda. La DGI entrega la razón social (por ejemplo, "Inmobiliaria Don Antonio, S.A."), no el nombre comercial.
 
 ### F6 — Resumen mensual (Could)
 
@@ -117,25 +118,32 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 ```text
 users          id, email UNIQUE, created_at
 
-stores         id, ruc UNIQUE NULL, dv, name, display_name NULL, created_at
+stores         id, ruc UNIQUE NULL, dv, legal_name, display_name NULL,
+               code_format ('gtin'|'gtin_no_check'|'internal'), created_at
+               -- una fila por CADENA (RUC), no por sucursal (ver §10)
                -- ruc NULL solo para tiendas creadas a mano (F4)
 
-products       id, user_id, name, barcode NULL, created_at
-               UNIQUE(user_id, barcode)
+products       id, user_id, name, gtin NULL, created_at
+               UNIQUE(user_id, gtin)
                -- producto "canónico" del usuario, el que F3 compara entre tiendas
+               -- gtin: GTIN-13 normalizado (§10.2)
 
 store_items    id, user_id, store_id, code NULL, description, product_id NULL, created_at
                UNIQUE(user_id, store_id, code)
                -- cómo llama cada tienda a un producto (texto y código de la factura)
 
 purchases      id, user_id, store_id, source ('cafe'|'manual'), cufe NULL,
-               issued_at, subtotal_cents, tax_cents, discount_cents, total_cents,
+               issued_at, branch_address NULL,
+               subtotal_cents, tax_cents, discount_cents, total_cents, paid_cents,
                source_url NULL, raw_json NULL, created_at
                UNIQUE(user_id, cufe)
+               -- totales tomados del ENCABEZADO de la factura, nunca sumando líneas (§10.3)
 
-purchase_lines id, purchase_id, line_no, store_item_id, description, quantity, unit,
-               unit_price_cents, discount_cents, line_total_cents,
+purchase_lines id, purchase_id, line_no, store_item_id, description, quantity,
+               list_price_cents, discount_cents, line_total_cents,
                tax_rate_bp, tax_cents
+               -- list_price = columna "Precio"; discount = columna "Descuento";
+               -- line_total = columna "Total" (incluye ITBMS)
                -- tax_rate_bp: puntos base (700 = 7 %)
 ```
 
@@ -147,7 +155,7 @@ Se eliminan todas las tablas de v0 que no aparecen aquí.
 precio_efectivo_unitario = line_total_cents / quantity
 ```
 
-`line_total_cents` es lo que **realmente se pagó** por la línea, después de descuentos. Un 2x1, un "Ahorra 4" o un cupón ya quedan reflejados en ese número. F3 compara siempre el precio efectivo, nunca el precio de lista. La Fase 0 confirma cómo vienen los descuentos en la factura: como campo de la línea o como líneas negativas aparte.
+`line_total_cents` es lo que **realmente se pagó** por la línea, después de descuentos. Un 2x1, un "Ahorra 4" o un cupón ya quedan reflejados en ese número. F3 compara siempre el precio efectivo, nunca el precio de lista. Confirmado en la Fase 0: el descuento viene como columna de cada línea (§10.1).
 
 ## 6. Arquitectura
 
@@ -207,7 +215,7 @@ wrangler.jsonc
 
 Cada fase se puede desplegar sola y tiene un criterio de salida.
 
-### Fase 0 — Validación (spike, ≤ 1 día) ⚠️ Gate
+### Fase 0 — Validación (spike, ≤ 1 día) ⚠️ Gate — preguntas 1–2 ✅, prueba de salida desde Cloudflare pendiente (ver §10)
 
 Sirve para saber si el producto tiene sentido antes de construir nada.
 
@@ -265,6 +273,53 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 | Fuga de datos entre usuarios sin RLS | §6.4: módulo scoped, regla de lint y test de aislamiento obligatorio |
 | Scope creep (repetir v0) | §3 "Fuera de alcance". Toda funcionalidad nueva requiere actualizar este spec primero |
 | Fixtures con datos personales en el repo | Redactar el nombre y RUC del receptor antes de commitear |
+
+## 10. Resultados de la Fase 0 (2026-10-24)
+
+**Muestra:** 7 facturas reales de 3 cadenas (razones sociales TAMEK, S.A.; Inmobiliaria Don Antonio, S.A.; CITY MALL, S.A.), de 1 a 87 líneas cada una, entre nov 2025 y oct 2026. El parser v0 (`supabase/functions/fetch-cafe`) leyó las 7 sin errores.
+
+| Pregunta | Resultado |
+|---|---|
+| ¿Traen detalle por línea? | **Sí.** Código, descripción, cantidad, precio, descuento, ITBMS y total en todas. Las descripciones de Don Antonio vienen truncadas a 18 caracteres ("ESTRELLA AZUL YOGU") |
+| ¿El código es EAN/UPC? | **Depende de la cadena** (§10.2). Con solo 7 facturas ya hay 8 productos que coinciden entre dos cadenas distintas |
+| ¿Cómo vienen los descuentos? | **Como columna "Descuento" de cada línea.** 33 líneas con descuento, $23.37 en total. "Total" ya es el neto con ITBMS |
+| ¿Precisión decimal? | Inconsistente: TAMEK manda 6 decimales con ruido de float (`1.639999`) y CITY MALL totales sin redondear (`3.53875`) |
+| ¿La DGI responde desde Cloudflare? | **Pendiente.** Hay que desplegar `spikes/dgi-egress` |
+
+**Veredicto:** el producto es viable. Queda pendiente solo la prueba de salida desde Cloudflare.
+
+### 10.1 Columnas de la tabla de líneas (HTML de la DGI)
+
+`Linea, Código, Descripción, Información de interés, Cantidad, Precio, Descuento, Monto, Impuesto, ISC, Acarreo, Seguro, Total`
+
+Encabezado: `Valor Total`, `ITBMS Total`, `Forma de Pago`, `TOTAL PAGADO`, `Vuelto`.
+
+### 10.2 Normalización de códigos (`stores.code_format`)
+
+| Formato | Ejemplo | Cadena observada | Regla |
+|---|---|---|---|
+| `gtin` | `7411000222904` | CITY MALL (60 de 77 válidos) | Validar el dígito verificador y rellenar con ceros a 13 |
+| `gtin_no_check` | `741100022290` → `7411000222904` | Don Antonio | **Le falta el dígito verificador y los ceros iniciales.** Calcular el dígito y rellenar a 13 |
+| `internal` | `10085482` | TAMEK (5 de 81 válidos, al azar) | No hay GTIN; el vínculo es manual (F5) |
+
+- **Detección automática al crear la tienda:** si ≥ 60 % de los códigos numéricos de 8 a 14 dígitos tienen un dígito verificador válido, el formato es `gtin`. Si no, y la mayoría tienen 10–12 dígitos, es `gtin_no_check`. En otro caso, `internal`. El usuario puede corregirlo.
+- Los códigos de pesables (PLU de 4 dígitos, prefijo `2` de circulación restringida) nunca generan GTIN. Se vinculan a mano.
+- Al cambiar el `code_format` de una tienda se recalculan los vínculos automáticos de sus `store_items`.
+
+### 10.3 Montos
+
+- Los números se parsean **como string a centavos enteros** (redondeo half-up). Nunca se usa `parseFloat` para dinero.
+- Los totales de la compra salen del **encabezado** (`Valor Total`, `ITBMS Total`, `TOTAL PAGADO`). La suma de las líneas puede diferir en algunos centavos: en CITY MALL suman $156.2381, el encabezado dice $156.22 y se pagó $156.24. Solo se registra un warning si la diferencia es mayor a $0.05.
+
+### 10.4 Bugs del parser v0 que se corrigen al portarlo
+
+- Ignora la columna `Descuento`.
+- Calcula los totales sumando floats en lugar de leer el encabezado.
+- `invoiceNumber` sale vacío en las 7 facturas. No bloquea, porque el CUFE es el identificador.
+
+### 10.5 Privacidad
+
+El HTML trae la cédula, el nombre y el teléfono del receptor. Los fixtures **deben** redactar el bloque `RECEPTOR` antes de commitearse, y `raw_json` no guarda el receptor.
 
 ---
 
