@@ -36,6 +36,7 @@ Requiere **npm 11** (Node 24). npm 10 falla resolviendo peer deps (`edgesOut`).
 - Todo endpoint nuevo con datos de usuario agrega su caso a `test/isolation.test.ts`.
 - El parser CAFE es una función pura; todo cambio va con fixture + test.
 - Sin Zustand, sin Recharts, sin librerías de UI nuevas sin justificar en el PR.
-- NO ejecutar `wrangler d1 migrations apply --remote` ni `wrangler deploy`:
-  los hace el humano o el CI.
+- NO ejecutar `wrangler d1 migrations apply --remote` ni `wrangler deploy`.
+  El deploy lo hace Workers Builds en cada push a `main`. Las migraciones remotas
+  las aplica el humano antes del merge, y deben ser compatibles con la versión anterior.
 - Fixtures de facturas: redactar el bloque RECEPTOR (cédula, nombre, teléfono).
