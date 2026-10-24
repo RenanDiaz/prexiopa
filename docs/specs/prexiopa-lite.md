@@ -79,7 +79,7 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 
 **Flujo:** Inicio → "¿Cuánto cuesta?" → escanear código de barras o escribir texto → resultado.
 
-- **CA3.1** Al escanear un EAN/UPC, se muestran todas las veces que compré ese producto: tienda, fecha y **precio efectivo unitario**.
+- **CA3.1** Al escanear un EAN/UPC, se muestran todas las veces que compré ese producto: tienda, fecha y **precio efectivo unitario**. Si la cantidad de esa línea no es confiable (§10.6), se muestra el **precio pagado por la línea**, marcado como tal, y no entra en el "más bajo" de CA3.2.
 - **CA3.2** Arriba se destaca el último precio pagado y el precio más bajo de los últimos 90 días, cada uno con su tienda.
 - **CA3.3** La búsqueda por texto encuentra coincidencias parciales en el nombre del producto y en la descripción de la línea de factura (por ejemplo, "leche estrella" encuentra "LECHE ESTRELLA AZUL 1L").
 - **CA3.4** Si no hay resultados, se muestra "Aún no has comprado esto". No se ofrece crear el producto.
@@ -98,6 +98,8 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 - **CA5.2** Se pueden vincular ítems de tiendas distintas al mismo producto para que F3 los compare.
 - **CA5.3** Si el código de la línea, normalizado según el `code_format` de la tienda (§10.2), es un GTIN válido, el vínculo con `products` se hace automáticamente.
 - **CA5.4** Se puede editar el nombre visible de una tienda. La DGI entrega la razón social (por ejemplo, "Inmobiliaria Don Antonio, S.A."), no el nombre comercial.
+- **CA5.5** En el detalle de una compra de una tienda con cantidades no confiables (§10.6), cada línea permite corregir la cantidad con "+ / −" (1 tap por unidad) o, si es pesable, anotar el peso. Es opcional: la compra queda guardada aunque no se corrija nada.
+- **CA5.6** Las cantidades inferidas (§10.6) se muestran marcadas como "inferida" y se pueden corregir igual que en CA5.5.
 
 ### F6 — Resumen mensual (Could)
 
@@ -119,7 +121,9 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 users          id, email UNIQUE, created_at
 
 stores         id, ruc UNIQUE NULL, dv, legal_name, display_name NULL,
-               code_format ('gtin'|'gtin_no_check'|'internal'), created_at
+               code_format ('gtin'|'gtin_no_check'|'internal'),
+               quantities ('reliable'|'always_one'), created_at
+               -- quantities: si la cadena manda la cantidad real o siempre 1 (§10.6)
                -- una fila por CADENA (RUC), no por sucursal (ver §10)
                -- ruc NULL solo para tiendas creadas a mano (F4)
 
@@ -128,9 +132,11 @@ products       id, user_id, name, gtin NULL, created_at
                -- producto "canónico" del usuario, el que F3 compara entre tiendas
                -- gtin: GTIN-13 normalizado (§10.2)
 
-store_items    id, user_id, store_id, code NULL, description, product_id NULL, created_at
+store_items    id, user_id, store_id, code NULL, description, product_id NULL,
+               is_weighed (0|1), created_at
                UNIQUE(user_id, store_id, code)
                -- cómo llama cada tienda a un producto (texto y código de la factura)
+               -- is_weighed: pesable (PLU con prefijo 2 o "KG" en la descripción, §10.6)
 
 purchases      id, user_id, store_id, source ('cafe'|'manual'), cufe NULL,
                issued_at, branch_address NULL,
@@ -141,7 +147,9 @@ purchases      id, user_id, store_id, source ('cafe'|'manual'), cufe NULL,
 
 purchase_lines id, purchase_id, line_no, store_item_id, description, quantity,
                list_price_cents, discount_cents, line_total_cents,
-               tax_rate_bp, tax_cents
+               tax_rate_bp, tax_cents,
+               quantity_source ('invoice'|'inferred'|'user')
+               -- quantity_source: de dónde sale `quantity` (§10.6)
                -- list_price = columna "Precio"; discount = columna "Descuento";
                -- line_total = columna "Total" (incluye ITBMS)
                -- tax_rate_bp: puntos base (700 = 7 %)
@@ -156,6 +164,8 @@ precio_efectivo_unitario = line_total_cents / quantity
 ```
 
 `line_total_cents` es lo que **realmente se pagó** por la línea, después de descuentos. Un 2x1, un "Ahorra 4" o un cupón ya quedan reflejados en ese número. F3 compara siempre el precio efectivo, nunca el precio de lista. Confirmado en la Fase 0: el descuento viene como columna de cada línea (§10.1).
+
+El precio efectivo unitario solo es comparable si `quantity` es real: cuando `quantity_source` es `invoice` en una tienda `reliable`, o es `inferred` o `user`. En los demás casos (cantidad 1 de una tienda `always_one`, sin corregir) F3 usa el precio de la línea y lo marca como tal (§10.6). Para pesables con peso conocido, el precio efectivo es por kg.
 
 ## 6. Arquitectura
 
@@ -250,6 +260,8 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 ### Fase 3 — Consulta de precios (F3, F5)
 
+- Incluye el manejo de cantidades no confiables (§10.6): migración de `stores.quantities`, `store_items.is_weighed` y `purchase_lines.quantity_source`; detección por tienda; inferencia de cantidades; y corrección rápida (CA5.5, CA5.6).
+
 **Salida:** se cumplen CA3.x y CA5.x, y lo uso en tienda.
 
 ### Fase 4 — Manual, migración de datos y apagado de Supabase (F4, F6, F7)
@@ -340,6 +352,27 @@ Encabezado: `Valor Total`, `ITBMS Total`, `Forma de Pago`, `TOTAL PAGADO`, `Vuel
 ### 10.5 Privacidad
 
 El HTML trae la cédula, el nombre y el teléfono del receptor. Los fixtures **deben** redactar el bloque `RECEPTOR` antes de commitearse, y `raw_json` no guarda el receptor.
+
+### 10.6 Cantidades no confiables (Inmobiliaria Don Antonio)
+
+**Hallazgo (2026-10-24):** las facturas de Inmobiliaria Don Antonio, S.A. (RUC 541-81-118009; El Rey, Romero, Mr. Precio, Farmacias Metro y Farma Ahorro) traen **cantidad 1 en todas las líneas**:
+
+- Si se llevan varias unidades del mismo producto, sale **una sola línea** con cantidad 1, y "Precio" y "Total" corresponden a todas las unidades. Ningún código se repite dentro de una factura.
+- Los pesables también salen con cantidad 1: "ZANAHORIA 1 KG" cuesta $0.82 en una compra y $0.94 en otra, según el peso real, pero el peso no aparece.
+- 191 de 191 líneas en las 5 facturas de muestra. En TAMEK y CITY MALL las cantidades son reales (`1.937008` kg, `0.745` kg, `6` unidades).
+- El XML oculto de la página (`facturaXML`) viene cifrado, y el HTML se genera de ese mismo XML: no hay otra fuente de la cantidad real.
+
+**Contexto normativo:** según la Ficha Técnica de la FE v1.10 de la DGI, `dCantCodInt` (C06) es obligatorio y es la "cantidad del producto o servicio, en la unidad de medida del código interno". La validación automática solo exige que `dPrItem` = `dCantCodInt × (dPrUnit − dPrUnitDesc)`, así que una línea con cantidad 1 y "precio unitario" igual al total de varias unidades pasa la validación. Que la cantidad no sea la real no lo detecta el sistema de la DGI.
+
+**Reglas:**
+
+1. **Detección por tienda.** `stores.quantities = 'always_one'` si, en las facturas importadas de esa cadena con ≥ 10 líneas, el 100 % de las cantidades es 1 y hay al menos un pesable (§10.2) con cantidad 1. Si no, es `reliable`. Se recalcula al importar y el usuario lo puede corregir. Para Inmobiliaria Don Antonio queda `always_one` desde la primera factura grande.
+2. **Pesables.** `store_items.is_weighed` si el código es un PLU o tiene prefijo `2` de circulación restringida, o si la descripción contiene `KG`, `KILO` o `LB`. En tiendas `always_one`, un pesable sin peso anotado nunca genera precio por kg.
+3. **Inferencia automática de unidades** (solo tiendas `always_one`, no pesables): si el mismo `store_item`, o el mismo `product` en Fase 3, tiene un precio unitario conocido de los últimos 60 días (de una línea con `quantity_source` `invoice` en tienda `reliable`, `user` o `inferred`), y `line_total_cents / precio_unitario` está a ≤ 1 centavo por unidad de un entero `k` entre 2 y 24, entonces `quantity = k` y `quantity_source = 'inferred'`. Si el cociente es ≈ 1, la cantidad 1 se acepta como real y la línea queda como precio unitario conocido. En cualquier otro caso no se infiere nada.
+4. **Corrección opcional** (CA5.5): "+ / −" para unidades y un campo de peso para pesables. Guarda `quantity_source = 'user'` y no cambia `line_total_cents` ni los totales de la compra, que siempre son los de la factura.
+5. **F3 nunca mezcla:** el "más bajo de los últimos 90 días" (CA3.2) solo considera líneas con cantidad real (regla de §5.3).
+
+**Fuera de alcance:** reclamarle a la DGI o a la cadena, y leer el ticket impreso (OCR) para sacar la cantidad.
 
 ---
 
