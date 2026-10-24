@@ -3,6 +3,10 @@
   --text: #1a1a1a;
   --text-muted: #5f6368;
   --danger: #c5221f;
+  --success: #188038;
+  --border: #dadce0;
+  --accent: #1a73e8;
+  --on-accent: #ffffff;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.5;
 }
@@ -13,6 +17,10 @@
     --text: #e8eaed;
     --text-muted: #9aa0a6;
     --danger: #f28b82;
+    --success: #81c995;
+    --border: #3c4043;
+    --accent: #8ab4f8;
+    --on-accent: #202124;
   }
 }
 

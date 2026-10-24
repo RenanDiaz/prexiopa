@@ -1,6 +1,14 @@
 import { env } from 'cloudflare:workers';
 import { describe, expect, it } from 'vitest';
-import { as, seedPurchase } from './helpers';
+import { as, fakeDgi, seedPurchase } from './helpers';
+import oneLine from './fixtures/don-antonio-1-linea.html?raw';
+
+const CUFE = 'FE0120000000541-81-118009-0610192025120300001102620310312027507502';
+const post = (input: string) => ({
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ input }),
+});
 
 // Spec §6.4: D1 no tiene RLS. Cada endpoint con datos de usuario debe tener
 // aquí un caso que pruebe que otro usuario no puede leerlo, cambiarlo ni borrarlo.
@@ -42,5 +50,25 @@ describe('aislamiento entre usuarios', () => {
       .bind(purchase.id)
       .first<{ n: number }>();
     expect(lines?.n).toBe(0);
+  });
+
+  it('POST /purchases/cafe: la misma factura importada por otro usuario es una compra aparte', async () => {
+    const dgi = fakeDgi(oneLine);
+    const carla = await (await as('carla@example.com', dgi.options)('/purchases/cafe', post(CUFE))).json<{ id: string }>();
+
+    const dani = as('dani@example.com', dgi.options);
+    const preview = await (await dani('/purchases/cafe/preview', post(CUFE))).json<{ existingPurchaseId: string | null }>();
+    expect(preview.existingPurchaseId).toBeNull();
+
+    const res = await dani('/purchases/cafe', post(CUFE));
+    expect(res.status).toBe(201);
+    const daniPurchase = await res.json<{ id: string }>();
+    expect(daniPurchase.id).not.toBe(carla.id);
+
+    expect((await dani(`/purchases/${carla.id}`)).status).toBe(404);
+    const store_items = await env.DB.prepare(
+      "SELECT COUNT(DISTINCT user_id) AS n FROM store_items WHERE code = '8964613281'",
+    ).first<{ n: number }>();
+    expect(store_items?.n).toBe(2);
   });
 });

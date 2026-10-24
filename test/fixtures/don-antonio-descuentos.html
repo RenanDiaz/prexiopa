@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html>
+
+<html lang="es-pa">
+<head>
+    <link rel="icon" type="image/png" href="/Images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" /><title>
+	
+    Buscar Facturas Por CUFE
+
+</title>
+
+    
+
+    <link href="/Scripts/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="/Content/Site.css" rel="stylesheet"/>
+
+<link href="/Content/Semantic-UI/semantic.min.css" rel="stylesheet"/>
+
+
+
+
+
+
+<link href="/Content/jquery-ui/jquery-ui.css" rel="stylesheet"/>
+
+
+    
+
+
+    
+<link href="/Content/footable/footable.bootstrap.min.css" rel="stylesheet"/>
+
+<link href="/Content/bootstrap-datepicker3.min.css" rel="stylesheet"/>
+
+
+
+
+
+
+
+    
+
+    
+    
+    <link rel="stylesheet" href="/Content/icomoon/style.css">
+
+    
+    
+
+
+     
+
+    
+
+    
+
+
+    
+</head>
+<body>
+
+   
+
+    <div class="header-background">
+        
+<!--- TFS 582 -->
+
+<!--- FIN TFS 582 -->
+
+<!-- INICIO MODAL DE SEGURIDAD (PHISHING) -->
+
+    <div class="modal fade" id="modalPhishing" tabindex="-1" role="dialog" aria-labelledby="modalPhishingLabel" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <!-- Cabecera con color Naranja de Alerta -->
+                <div class="modal-header" style="background-color: #FF0000; color: white;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" style="color: white; opacity: 1;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="modalPhishingLabel" style="font-weight: bold;">
+                        ⚠️ Alerta de Seguridad: Prevención de Phishing
+                    </h4>
+                </div>
+                <div class="modal-body" style="font-size: 15px;">
+                    <p><strong>Estimado contribuyente,</strong></p>
+                    <p>DGI advierte sobre correos fraudulentos:</p>
+                    <ul>
+                        <li>La DGI advierte sobre la circulación de correos electrónicos fraudulentos relacionados con devoluciones de impuestos. No abra enlaces, descargue archivos ni comparta información personal, financiera o bancaria.</li>
+                        <li>Verifique que las comunicaciones oficiales provengan del dominio @mef.gob.pa</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Entendido, cerrar alerta</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script para abrir el modal solo una vez por sesión -->
+    
+
+<!-- FIN MODAL DE SEGURIDAD -->
+
+
+<nav class="navbar navbar-default">
+    <div>
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#MenuPrincipal" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">
+                <img alt="brand" src="/Images/log_gobierno_color.svg" /></a>
+            
+        </div>
+
+        <!--
+            /// <summary>
+            // ***********************************************************************
+            // Clase          : Menu Principal
+            // Autor          : CIAT - Jaime Chung
+            // Fecha          : 24/11/2017
+            // ***********************************************************************
+            /// </summary>
+        -->
+        <div class="collapse navbar-collapse" id="MenuPrincipal">
+            <ul id="2_MainMenu" class="nav navbar-nav"><li><a href='/Sesion/LoginFEP'>Iniciar Sesión</a></li><li class='dropdown'><a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>Consultas<span class='caret'></span></a><ul class='dropdown-menu'><li><a tabindex='-1' href='/Consultas/FacturasPorCUFE' >Facturas por CUFE</a></li><li><a tabindex='-1' href='/Consultas/EmpresasEnFacturaElectronica' >Facturadores Electrónicos</a></li></ul></li></ul> 
+                       
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+
+    <!-- /.container-fluid -->
+</nav>
+        
+
+
+
+
+    </div>
+   
+    
+
+    <div class="container-fluid">
+        <!-- contenido -->
+        <div class="row">
+            
+                  
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                
+            </div>
+        </div>
+        <div class="row">
+            
+
+    <form action="/Consultas/ConsultarFacturasPorCUFE?Length=9" data-ajax="true" data-ajax-failure="OnFailure" data-ajax-success="OnSuccessBuscar" id="criterioBusqueda" method="post">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Criterio de Búsqueda</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="CUFE">CUFE</label>
+                        <input class="form-control" data-val="true" data-val-length="El número de caracteres del CUFE debe ser igual a 66." data-val-length-max="66" data-val-length-min="66" data-val-regex="CUFE mal formado" data-val-regex-pattern="^(FE[0-9]{2}[1-2]{1}([0-9A-Z]|[-]){20}-[0-9A-Z]{6}([12]\d{3}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01]))\d{13}0[1-4]{1}[1-2]{1}\d{10})$" data-val-required="The CUFE field is required." id="CUFE" maxlength="66" name="CUFE" type="text" value="FE0120000000541-81-118009-0610192025112400001055650310311336416413" />
+                        <span class="text-danger">
+                            <span class="field-validation-valid" data-valmsg-for="CUFE" data-valmsg-replace="true"></span>  
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="row">
+                <div class="col-md-8" >
+                    
+
+                    <button id="btnConsultar" style="margin-top: 10px;" class="g-recaptcha btn btn-default" data-sitekey="6LeukHQUAAAAABeb1kJnVsj9NieVyfjmUVvup7dD" data-callback="ConsultarCUFE" data-badge="inline">
+                        Consultar
+                    </button>
+
+                     
+
+
+                    <button style="margin-top: 10px;" type="reset" class="btn btn-default" onclick="limpiarFormularios();">Cancelar</button>
+                </div>
+
+            </div>
+
+
+            <div id="validacionMensajeCriterio" class="row" style="display:none; margin-top:10px;">
+                <div class="col-md-12">
+                    <div id="validacionMensajeCriterioResultado" class="alert alert-warning" role="alert"></div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+        
+
+    </form>
+
+
+    <div id="facturaHTML">
+        <div class="row" xmlns:def="http://dgi-fep.mef.gob.pa"><div class="col-sm-12"><div class="panel panel-default"><div class="panel-heading"><div class="row"><div class="col-sm-4 text-left"><h5>
+                    No. 0000105565</h5></div><div class="col-sm-4 text-center"><h4><strong>
+                          FACTURA
+                        </strong></h4></div><div class="col-sm-4 text-right"><h5>24/11/2025 13:36:41</h5></div></div></div><div class="panel-body"><div class="row"><div class="col-sm-2"></div><div class="col-sm-10"><div class="row"><div class="col-sm-8"><dl class="dl-vertical"><dt class="small">CÓDIGO ÚNICO DE FACTURA ELECTRÓNICA [CUFE]</dt><dd style="word-wrap: break-word;">FE0120000000541-81-118009-0610192025112400001055650310311336416413</dd></dl></div><div class="col-sm-4"><dl class="dl-vertical"><dt class="small">PROTOCOLO DE AUTORIZACIÓN</dt><dd>20250000001609157375</dd></dl></div></div><div class="row"><div class="col-sm-8"><dl class="dl-vertical"><dt class="small">MODALIDAD EMISIÓN</dt><dd>
+                          Autorización de uso Posterior, Operación normal
+                        </dd></dl></div><div class="col-sm-4"><dl class="dl-vertical"><dt class="small">FECHA AUTORIZACIÓN</dt><dd>24/11/2025 13:44:51</dd></dl></div></div></div></div></div><div class="panel-footer text-right"><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Eventos</button></div></div></div></div><div class="row" xmlns:def="http://dgi-fep.mef.gob.pa"><div class="col-sm-6"><div class="panel panel-default"><div class="panel-heading">
+              EMISOR
+            </div><div class="panel-body"><div class="row"><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">RUC</dt><dd>541-81-118009</dd></dl></div><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">DV</dt><dd>06</dd></dl></div><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">NOMBRE</dt><dd>Inmobiliaria Don Antonio, S.A.</dd></dl></div></div><div class="row"><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">DIRECCIÓN</dt><dd>PANAMA,PANAMA,SAN FRANCISCO</dd></dl></div><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">TELÉFONO</dt><dd>9876-5432</dd></dl></div></div></div></div></div><div class="col-sm-6"><div class="panel panel-default"><div class="panel-heading"><div class="row"><div class="col-sm-4">
+                  RECEPTOR
+                </div><div class="col-sm-4"><kbd>
+                          CONSUMIDOR FINAL
+                        </kbd></div></div></div><div class="panel-body"><div class="row"><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">
+                          CÉDULA DE IDENTIDAD
+                        </dt><dd>REDACTADO</dd></dl></div><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">DV</dt><dd>REDACTADO</dd></dl></div><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">NOMBRE</dt><dd>REDACTADO</dd></dl></div></div><div class="row"><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">DIRECCIÓN</dt><dd>REDACTADO</dd></dl></div><div class="col-sm-6"><dl class="dl-vertical"><dt class="small">TELÉFONO</dt><dd>REDACTADO</dd></dl></div></div></div></div></div></div><div class="row" xmlns:def="http://dgi-fep.mef.gob.pa"><div class="col-sm-12"><div class="panel panel-default"><div class="panel-heading"><div data-toggle="collapse" data-target="#detalle">
+                Detalle <span class="glyphicon glyphicon-th-list"></span></div></div><div class="panel-body collapse in" id="detalle"><table class="table table-striped table-hover"><thead><tr><th data-breakpoints="xs" data-classes="text-center">Linea</th><th data-breakpoints="all" data-classes="text-center">Código</th><th>Descripción</th><th>Información de interés</th><th data-breakpoints="xs" data-classes="text-center">Cantidad</th><th data-breakpoints="xs sm" data-classes="text-right">Precio Unitario</th><th data-breakpoints="xs sm" data-classes="text-right">Descuento Unitario</th><th data-breakpoints="xs sm md" data-classes="text-right">Monto</th><th data-breakpoints="xs sm md" data-classes="text-right">ITBMS</th><th data-breakpoints="all" data-classes="text-right">ISC</th><th data-breakpoints="all" data-classes="text-right">Acarreo</th><th data-breakpoints="all" data-classes="text-right">Seguro</th><th data-classes="text-right">Total</th></tr></thead><tbody><tr><td data-title="Linea" class="text-center">1</td><td data-title="Código" class="text-center">71711300000</td><td data-title="Descripción" class="text-left">C PUNTA CEBOLLINA</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">1.09</td><td data-title="Descuento" class="text-right">0.00</td><td data-title="Monto" class="text-right">1.09</td><td data-title="Impuesto" class="text-right">0.00</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">1.09</td></tr><tr><td data-title="Linea" class="text-center">2</td><td data-title="Código" class="text-center">8820975139</td><td data-title="Descripción" class="text-left">ESTRELLA AZUL YOGU</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">0.80</td><td data-title="Descuento" class="text-right">0.00</td><td data-title="Monto" class="text-right">0.80</td><td data-title="Impuesto" class="text-right">0.00</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">0.80</td></tr><tr><td data-title="Linea" class="text-center">3</td><td data-title="Código" class="text-center">8820973135</td><td data-title="Descripción" class="text-left">ESTRELLA AZUL YOGU</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">0.96</td><td data-title="Descuento" class="text-right">0.00</td><td data-title="Monto" class="text-right">0.96</td><td data-title="Impuesto" class="text-right">0.00</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">0.96</td></tr><tr><td data-title="Linea" class="text-center">4</td><td data-title="Código" class="text-center">880110412347</td><td data-title="Descripción" class="text-left">MELONA DE MELON 70</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">2.10</td><td data-title="Descuento" class="text-right">0.00</td><td data-title="Monto" class="text-right">2.10</td><td data-title="Impuesto" class="text-right">0.00</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">2.10</td></tr><tr><td data-title="Linea" class="text-center">5</td><td data-title="Código" class="text-center">76982830193</td><td data-title="Descripción" class="text-left">MELONA DE COCO 70</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">1.05</td><td data-title="Descuento" class="text-right">0.00</td><td data-title="Monto" class="text-right">1.05</td><td data-title="Impuesto" class="text-right">0.00</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">1.05</td></tr><tr><td data-title="Linea" class="text-center">6</td><td data-title="Código" class="text-center">76982812086</td><td data-title="Descripción" class="text-left">MELONA DE MANGO 70</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">1.05</td><td data-title="Descuento" class="text-right">0.00</td><td data-title="Monto" class="text-right">1.05</td><td data-title="Impuesto" class="text-right">0.00</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">1.05</td></tr><tr><td data-title="Linea" class="text-center">7</td><td data-title="Código" class="text-center">8820997316</td><td data-title="Descripción" class="text-left">LECH DESL UHT946ML</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">6.84</td><td data-title="Descuento" class="text-right">0.08</td><td data-title="Monto" class="text-right">6.76</td><td data-title="Impuesto" class="text-right">0.00</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">6.76</td></tr><tr><td data-title="Linea" class="text-center">8</td><td data-title="Código" class="text-center">745107951151</td><td data-title="Descripción" class="text-left">LA ITALIANA MINI S</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">4.71</td><td data-title="Descuento" class="text-right">0.00</td><td data-title="Monto" class="text-right">4.71</td><td data-title="Impuesto" class="text-right">0.00</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">4.71</td></tr><tr><td data-title="Linea" class="text-center">9</td><td data-title="Código" class="text-center">8820975145</td><td data-title="Descripción" class="text-left">ESTRELLA AZUL YOGU</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">1.62</td><td data-title="Descuento" class="text-right">0.00</td><td data-title="Monto" class="text-right">1.62</td><td data-title="Impuesto" class="text-right">0.00</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">1.62</td></tr><tr><td data-title="Linea" class="text-center">10</td><td data-title="Código" class="text-center">745111010019</td><td data-title="Descripción" class="text-left">FRESAS CONGELADAS</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">3.20</td><td data-title="Descuento" class="text-right">0.00</td><td data-title="Monto" class="text-right">3.20</td><td data-title="Impuesto" class="text-right">0.00</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">3.20</td></tr><tr><td data-title="Linea" class="text-center">11</td><td data-title="Código" class="text-center">4238</td><td data-title="Descripción" class="text-left">GUINEO 1 KG</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">0.80</td><td data-title="Descuento" class="text-right">0.00</td><td data-title="Monto" class="text-right">0.80</td><td data-title="Impuesto" class="text-right">0.00</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">0.80</td></tr><tr><td data-title="Linea" class="text-center">12</td><td data-title="Código" class="text-center">750954670009</td><td data-title="Descripción" class="text-left">SUAVITEL PRI 800ML</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">4.40</td><td data-title="Descuento" class="text-right">2.20</td><td data-title="Monto" class="text-right">2.20</td><td data-title="Impuesto" class="text-right">0.15</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">2.35</td></tr><tr><td data-title="Linea" class="text-center">13</td><td data-title="Código" class="text-center">744102950670</td><td data-title="Descripción" class="text-left">BIMBO RAPIDITAS WR</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">5.70</td><td data-title="Descuento" class="text-right">1.14</td><td data-title="Monto" class="text-right">4.56</td><td data-title="Impuesto" class="text-right">0.00</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">4.56</td></tr><tr><td data-title="Linea" class="text-center">14</td><td data-title="Código" class="text-center">20474900000</td><td data-title="Descripción" class="text-left">P FRESH ESPINACA H</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">1.83</td><td data-title="Descuento" class="text-right">0.00</td><td data-title="Monto" class="text-right">1.83</td><td data-title="Impuesto" class="text-right">0.00</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">1.83</td></tr><tr><td data-title="Linea" class="text-center">15</td><td data-title="Código" class="text-center">20786500000</td><td data-title="Descripción" class="text-left">DON PEDRO MOZZAREL</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">6.48</td><td data-title="Descuento" class="text-right">0.00</td><td data-title="Monto" class="text-right">6.48</td><td data-title="Impuesto" class="text-right">0.00</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">6.48</td></tr><tr><td data-title="Linea" class="text-center">16</td><td data-title="Código" class="text-center">20202200000</td><td data-title="Descripción" class="text-left">POLLO ROSTIZADO EN</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">5.60</td><td data-title="Descuento" class="text-right">0.00</td><td data-title="Monto" class="text-right">5.60</td><td data-title="Impuesto" class="text-right">0.00</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">5.60</td></tr><tr><td data-title="Linea" class="text-center">17</td><td data-title="Código" class="text-center">20047700000</td><td data-title="Descripción" class="text-left">FRES FILE1KG</td><td data-title="Información de interés" class="text-left"></td><td data-title="Cantidad" class="text-center">1</td><td data-title="Precio" class="text-right">2.75</td><td data-title="Descuento" class="text-right">0.00</td><td data-title="Monto" class="text-right">2.75</td><td data-title="Impuesto" class="text-right">0.00</td><td data-title="ISC" class="text-right"></td><td data-title="Acarreo" class="text-right">0.00</td><td data-title="Seguro" class="text-right">0.00</td><td data-title="Total" class="text-right">2.75</td></tr></tbody><tfoot><tr><td class="text-right" colspan="12">
+                        Descuentos: <div style="width: 100px;display: inline-block;">0.00</div></td></tr><tr><td class="text-right" colspan="12">
+                      Valor Total: <div style="width: 100px;display: inline-block;">47.71</div></td></tr><tr><td class="text-right" colspan="12">
+                      ITBMS Total: <div style="width: 100px;display: inline-block;">0.15</div></td></tr><tr><td class="text-right" colspan="12"><kbd>Forma de Pago</kbd><div style="width: 100px;display: inline-block;"></div></td></tr><tr><td class="text-right" colspan="12">
+                            Tarjeta Débito: <div style="width: 100px;display: inline-block;">36.71</div></td></tr><tr><td class="text-right" colspan="12">
+                            Tarjeta Fidelización: <div style="width: 100px;display: inline-block;">11.00</div></td></tr><tr><td class="text-right" colspan="12">
+                            TOTAL PAGADO: <div style="width: 100px;display: inline-block;">47.71</div></td></tr><tr><td class="text-right" colspan="12">
+                            Vuelto: <div style="width: 100px;display: inline-block;">0.00</div></td></tr></tfoot></table></div></div></div></div><div class="row" xmlns:def="http://dgi-fep.mef.gob.pa"><div class="col-sm-12"><div class="panel panel-default"><div class="panel-heading">
+              INFORMACION COMERCIAL GENERAL
+            </div><div class="panel-body"><div class="row"><div class="col-sm-2"><dl class="dl-vertical"><dt class="small">No. Pedido o Referencia</dt><dd></dd></dl></div><div class="col-sm-8"><dl class="dl-vertical"><dt class="small">Información del Pedido</dt><dd></dd></dl></div></div></div></div></div></div><div class="row" xmlns:def="http://dgi-fep.mef.gob.pa"><div class="col-md-5"></div><div class="col-md-2" style="text-align: center;"><a class="btn btn-primary btn-lg" onclick="imprimirFactura(); return false;"><span class="icon-pdf" style="font-size: 30px;"></span><br>Descargar CAFE
+        </a></div><div class="col-md-5"></div></div><div id="myModal" class="modal fade" role="dialog" xmlns:def="http://dgi-fep.mef.gob.pa"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal"></button><h4 class="modal-title">Eventos</h4></div><div class="modal-body"><div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Lista de Eventos</h3></div><div class="panel-body"><table class="table table-striped table-hover"><thead><tr><th>Fecha Autorización</th><th>Tipo Evento</th><th data-breakpoints="xs sm md">Ver</th></tr></thead><tbody id="tbodyResultado"><tr><td>24/11/2025 13:44:51</td><td>
+                              Autorización
+                            </td><td><a href="#" onclick="MostrarEvento('pa_1'); return false;"><i class="glyphicon glyphicon-eye-open"></i></a></td></tr></tbody></table></div></div><div class="panel panel-default listaEventos" id="pa_1" style="display: none;"><div class="panel-heading"><h3 class="panel-title">Evento</h3></div><div class="panel-body"><div class="row"><div class="col-md-6"><label>Fecha Autorización</label><div>24/11/2025 13:44:51</div></div><div class="col-md-6"><label>Tipo Evento</label><div>
+                          Autorización
+                        </div></div></div></div></div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button></div></div></div></div>
+    </div>
+
+
+    <form action="/Consultas/DescargarFacturaPDF" id="fImprimir" method="post" target="ifImprimir">
+           <input id="facturaXML" name="facturaXML" type="hidden" value="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" />
+    </form>
+    <iframe id="ifImprimir" name="ifImprimir" style="width: 0px; height: 0px; display: none;"/>
+
+   
+
+
+
+        </div>
+        
+    </div>
+    <div class="footer pieMenu">
+            <div>
+                <div class="text-right" style="padding-right: 1em;">
+                    <p>Ministerio de Economía y Finanzas</p>
+                    <p><a href="http://disclaimer.innovacion.gob.pa/">Limitación de Responsabilidad</a> | <a href="https://dgi.mef.gob.pa/Condicion.php">Condiciones de Uso</a> - DGI - WB BETA | <strong>Versión:</strong> 1.0.0.0</p>
+                </div>
+            </div>
+        </div>
+     <div id="modalEspera" class="modalEspera"></div>
+
+
+    <div id="ventanaMensajes" class="modal modal-wide" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="tituloVentanaMensajes"></h4>
+          </div>
+          <div class="modal-body">
+            <p id="cuerpoVentanaMensajes" style="text-align:justify;"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    
+</body>
+</html>

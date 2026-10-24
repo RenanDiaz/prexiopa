@@ -242,9 +242,11 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 **Resultado:** en producción en `https://prexiopa.com` con login de Google (Better Auth) verificado. Migraciones `0000` y `0001` aplicadas en D1. CI en verde en el PR del esqueleto; los commits de Better Auth pasaron `npm run check`, build y presupuesto en local.
 
-### Fase 2 — Import CAFE (F1, F2)
+### Fase 2 — Import CAFE (F1, F2) — 🟡 implementada; falta validar en el teléfono
 
 **Salida:** se cumplen CA1.x y CA2.x, y yo importo mis compras reales de 2 semanas.
+
+**Estado (2026-10-24):** parser, endpoints, guardado atómico, historial paginado, detalle y escáner implementados. CA1.2–CA1.6 y CA2.1–CA2.4 tienen tests y se probaron en local contra la DGI real. Quedan sin verificar CA1.1 y CA1.7 (escanear el QR con la cámara de un teléfono) y las 2 semanas de uso real.
 
 ### Fase 3 — Consulta de precios (F3, F5)
 
@@ -322,6 +324,18 @@ Encabezado: `Valor Total`, `ITBMS Total`, `Forma de Pago`, `TOTAL PAGADO`, `Vuel
 - Ignora la columna `Descuento`.
 - Calcula los totales sumando floats en lugar de leer el encabezado.
 - `invoiceNumber` sale vacío en las 7 facturas. No bloquea, porque el CUFE es el identificador.
+
+### 10.4.1 Hallazgos al portar el parser (Fase 2)
+
+- La columna es **"Descuento Unitario"**: el descuento es por unidad. `purchase_lines.discount_cents` guarda el descuento total de la línea (`Descuento × Cantidad`).
+- El "Descuentos" del pie de la factura es un descuento global y casi siempre viene en `0.00`, aunque haya líneas con descuento. `purchases.discount_cents` = suma de los descuentos de línea + el del pie.
+- `Valor Total` **incluye** ITBMS. `subtotal_cents = Valor Total − ITBMS Total`.
+- La tasa de ITBMS de cada línea no viene en el HTML: se infiere de `Impuesto / Monto` y se redondea a la tasa más cercana (0, 7, 10 o 15 %).
+- El número de factura sí viene, en el encabezado ("No. 0000110262"). La fecha del encabezado está en hora de Panamá (UTC-5) y se guarda en UTC.
+- Algunas descripciones traen `\/` escapado ("D\/ARROZ").
+- Los paneles EMISOR y RECEPTOR usan las mismas etiquetas (`RUC`, `NOMBRE`…): el parser solo lee el panel del emisor.
+- Si el CUFE no existe, la DGI responde **200** con el contenedor `facturaHTML` vacío. La API lo devuelve como 404 `not_found`.
+- El preview deja el HTML en la caché del Worker por 15 minutos, para que "Guardar" no espere otros 12 s a la DGI.
 
 ### 10.5 Privacidad
 

@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm';
 import { index, integer, real, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import { newId } from '../lib/id';
 
@@ -202,3 +203,8 @@ export const purchaseLines = sqliteTable(
     index('purchase_lines_store_item_idx').on(t.storeItemId),
   ],
 );
+
+// Relaciones para `db.query` (no generan SQL ni migraciones).
+export const purchasesRelations = relations(purchases, ({ one }) => ({
+  store: one(stores, { fields: [purchases.storeId], references: [stores.id] }),
+}));

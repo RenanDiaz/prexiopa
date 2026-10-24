@@ -4,7 +4,7 @@ import { createAuth } from '../worker/auth';
 import { getDb } from '../worker/db/client';
 import { purchaseLines, purchases, storeItems, stores } from '../worker/db/schema';
 import { upsertUserByEmail } from '../worker/db/users';
-import { createApp } from '../worker/index';
+import { createApp, type AppOptions } from '../worker/index';
 
 export const ALLOWED = 'renan@example.com, familia@example.com';
 
@@ -36,8 +36,8 @@ export async function sessionHeaders(email: string, envOverrides: Partial<Env> =
 }
 
 /** App con bypass de desarrollo: cada request actúa como `email`. */
-export function as(email: string) {
-  const app = createApp();
+export function as(email: string, options: AppOptions = {}) {
+  const app = createApp(options);
   return (path: string, init?: RequestInit) => app.request(`/api${path}`, init, devEnv(email));
 }
 
@@ -86,4 +86,14 @@ export async function seedPurchase(email: string) {
     lineTotalCents: 260,
   });
   return { user, purchase };
+}
+
+/** DGI falsa: responde con `html` (o con `status`) y cuenta las llamadas. */
+export function fakeDgi(html: string, status = 200) {
+  const calls: string[] = [];
+  const fetch = async (url: string) => {
+    calls.push(url);
+    return new Response(html, { status });
+  };
+  return { calls, options: { dgi: { fetch, retries: 0 } } satisfies AppOptions };
 }
