@@ -53,9 +53,6 @@ Thumbs.db
 *.cache
 .temp/
 
-# Supabase (local development)
-supabase/.branches
-supabase/.temp
 
 # TypeScript
 *.tsbuildinfo
@@ -74,3 +71,7 @@ supabase/.temp
 *.css.map
 *.sass.map
 *.scss.map
+
+# Cloudflare
+.wrangler/
+.dev.vars

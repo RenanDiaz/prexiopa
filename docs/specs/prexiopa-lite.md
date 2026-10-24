@@ -96,7 +96,8 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 
 - **CA5.1** Desde una línea de factura se puede asignar un nombre legible (por ejemplo, "LCH EST AZ 1L" → "Leche Estrella Azul 1 L").
 - **CA5.2** Se pueden vincular ítems de tiendas distintas al mismo producto para que F3 los compare.
-- **CA5.3** Si el código de la línea de factura es un EAN/UPC válido, el vínculo se hace automáticamente (depende de lo que confirme la Fase 0).
+- **CA5.3** Si el código de la línea, normalizado según el `code_format` de la tienda (§10.2), es un GTIN válido, el vínculo con `products` se hace automáticamente.
+- **CA5.4** Se puede editar el nombre visible de una tienda. La DGI entrega la razón social (por ejemplo, "Inmobiliaria Don Antonio, S.A."), no el nombre comercial.
 
 ### F6 — Resumen mensual (Could)
 
@@ -117,25 +118,32 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 ```text
 users          id, email UNIQUE, created_at
 
-stores         id, ruc UNIQUE NULL, dv, name, display_name NULL, created_at
+stores         id, ruc UNIQUE NULL, dv, legal_name, display_name NULL,
+               code_format ('gtin'|'gtin_no_check'|'internal'), created_at
+               -- una fila por CADENA (RUC), no por sucursal (ver §10)
                -- ruc NULL solo para tiendas creadas a mano (F4)
 
-products       id, user_id, name, barcode NULL, created_at
-               UNIQUE(user_id, barcode)
+products       id, user_id, name, gtin NULL, created_at
+               UNIQUE(user_id, gtin)
                -- producto "canónico" del usuario, el que F3 compara entre tiendas
+               -- gtin: GTIN-13 normalizado (§10.2)
 
 store_items    id, user_id, store_id, code NULL, description, product_id NULL, created_at
                UNIQUE(user_id, store_id, code)
                -- cómo llama cada tienda a un producto (texto y código de la factura)
 
 purchases      id, user_id, store_id, source ('cafe'|'manual'), cufe NULL,
-               issued_at, subtotal_cents, tax_cents, discount_cents, total_cents,
+               issued_at, branch_address NULL,
+               subtotal_cents, tax_cents, discount_cents, total_cents, paid_cents,
                source_url NULL, raw_json NULL, created_at
                UNIQUE(user_id, cufe)
+               -- totales tomados del ENCABEZADO de la factura, nunca sumando líneas (§10.3)
 
-purchase_lines id, purchase_id, line_no, store_item_id, description, quantity, unit,
-               unit_price_cents, discount_cents, line_total_cents,
+purchase_lines id, purchase_id, line_no, store_item_id, description, quantity,
+               list_price_cents, discount_cents, line_total_cents,
                tax_rate_bp, tax_cents
+               -- list_price = columna "Precio"; discount = columna "Descuento";
+               -- line_total = columna "Total" (incluye ITBMS)
                -- tax_rate_bp: puntos base (700 = 7 %)
 ```
 
@@ -147,7 +155,7 @@ Se eliminan todas las tablas de v0 que no aparecen aquí.
 precio_efectivo_unitario = line_total_cents / quantity
 ```
 
-`line_total_cents` es lo que **realmente se pagó** por la línea, después de descuentos. Un 2x1, un "Ahorra 4" o un cupón ya quedan reflejados en ese número. F3 compara siempre el precio efectivo, nunca el precio de lista. La Fase 0 confirma cómo vienen los descuentos en la factura: como campo de la línea o como líneas negativas aparte.
+`line_total_cents` es lo que **realmente se pagó** por la línea, después de descuentos. Un 2x1, un "Ahorra 4" o un cupón ya quedan reflejados en ese número. F3 compara siempre el precio efectivo, nunca el precio de lista. Confirmado en la Fase 0: el descuento viene como columna de cada línea (§10.1).
 
 ## 6. Arquitectura
 
@@ -161,16 +169,17 @@ precio_efectivo_unitario = line_total_cents / quantity
 | Frontend | React + TypeScript + Vite (`@cloudflare/vite-plugin`) | El dev local corre el Worker y D1 dentro de Vite |
 | Estado del servidor | TanStack Query | **Sin Zustand.** El estado de UI va en `useState` o en la URL |
 | Escáner | `@zxing/browser`, cargado con lazy load | Una sola librería. Se elimina `jsqr` solo si zxing lee las facturas reales de la Fase 0 |
-| Estilos | Se decide en la Fase 1; por defecto, CSS Modules | Pocas pantallas; no hace falta un design system |
+| Estilos | CSS Modules | Pocas pantallas; no hace falta un design system |
 | Íconos | `lucide-react` | Se elimina `react-icons` |
-| Tests | Vitest + `@cloudflare/vitest-pool-workers` | Integración real contra D1 local |
+| Tests | Vitest + `@cloudflare/vitest-plugin` | Integración real contra D1 local. Antes se llamaba `vitest-pool-workers` |
 
-### 6.2 Autenticación — recomendación: Cloudflare Access
+### 6.2 Autenticación — decisión: Better Auth con Google (D1)
 
-- Access (con Google como IdP) protege todo el Worker. El Worker valida el header `Cf-Access-Jwt-Assertion` contra los certs del team, comprobando `aud` e `iss`, y hace upsert de `users` por email.
-- **Pros:** no hay que escribir código de login ni manejar sesiones o contraseñas, y es gratis para pocos usuarios.
-- **Contras:** la pantalla de login no se puede personalizar, y no sirve si un día la app se abre al público.
-- **Salida futura:** si se vuelve pública, se migra a Better Auth sobre D1. El modelo ya tiene `user_id`, así que el cambio queda acotado a un middleware.
+- Better Auth corre dentro del Worker en `/api/auth/*`, con Google como único proveedor. El login redirige directo al dominio de la app (`BETTER_AUTH_URL`), sin pantalla intermedia de Cloudflare.
+- Better Auth guarda usuarios, cuentas, sesiones y verificaciones en sus propias tablas `auth_*` (D1, vía el adapter de Drizzle). La identidad de la app sigue siendo `users`: el middleware lee la sesión y hace upsert de `users` por email.
+- **Acceso restringido (D2):** solo entran los correos de `ALLOWED_EMAILS` (secret, separado por comas). Se valida al crear el usuario y en cada request, así que quitar un correo de la lista corta también sus sesiones abiertas. Lista vacía = nadie entra.
+- **Fail closed:** sin `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, `GOOGLE_CLIENT_ID` o `GOOGLE_CLIENT_SECRET`, el Worker responde 500 y no acepta sesiones.
+- **Contras frente a Access:** el login y las sesiones son código propio (mitigado con tests en `test/auth.test.ts`), y los secrets hay que rotarlos a mano.
 - **Dev local:** `DEV_USER_EMAIL` en `.dev.vars` salta la validación. **Solo** si `ENVIRONMENT=development`, y debe haber un test que lo verifique.
 
 ### 6.3 Import CAFE
@@ -207,7 +216,7 @@ wrangler.jsonc
 
 Cada fase se puede desplegar sola y tiene un criterio de salida.
 
-### Fase 0 — Validación (spike, ≤ 1 día) ⚠️ Gate
+### Fase 0 — Validación (spike, ≤ 1 día) ✅ Cerrada (ver §10)
 
 Sirve para saber si el producto tiene sentido antes de construir nada.
 
@@ -221,15 +230,17 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 **Salida:** si las facturas no traen el detalle por línea, o la DGI bloquea Cloudflare, **se detiene el plan** y se replantea.
 
-### Fase 1 — Esqueleto
+### Fase 1 — Esqueleto — ✅ completada (24 Oct 2026)
 
 - Taguear el estado actual como `v0-supabase` y eliminar el código v0 (queda en el historial de git).
-- Scaffold: Worker + Hono + D1 + Drizzle + Vite SPA, con auth Access y el middleware de §6.2.
+- Scaffold: Worker + Hono + D1 + Drizzle + Vite SPA, con auth Better Auth + Google y el middleware de §6.2.
 - CI en GitHub Actions: lint, typecheck, test y build, más el check de presupuesto de bundle.
-- Deploy a `*.workers.dev` detrás de Access.
+- Deploy con login de Google vía Better Auth (§6.2).
 - Reemplazar `CLAUDE.md` por el del Anexo A.
 
 **Salida:** una pantalla "Hola, {email}" en producción, CI en verde y el test de aislamiento (§6.4) pasando con un endpoint de ejemplo.
+
+**Resultado:** en producción en `https://prexiopa.com` con login de Google (Better Auth) verificado. Migraciones `0000` y `0001` aplicadas en D1. CI en verde en el PR del esqueleto; los commits de Better Auth pasaron `npm run check`, build y presupuesto en local.
 
 ### Fase 2 — Import CAFE (F1, F2)
 
@@ -249,11 +260,11 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 | # | Decisión | Recomendación |
 |---|---|---|
-| D1 | Auth: Cloudflare Access o Better Auth | **Access** (§6.2) |
-| D2 | ¿Usuarios en v1: solo yo, o yo + familia? | Hasta ~5 personas con Access. El modelo ya es multiusuario |
+| D1 | Auth: Cloudflare Access o Better Auth | ✅ **Better Auth** con Google: el login redirige directo al dominio de la app (§6.2) |
+| D2 | ¿Usuarios en v1: solo yo, o yo + familia? | Lista cerrada en `ALLOWED_EMAILS` (§6.2). El modelo ya es multiusuario |
 | D3 | ¿Migrar las compras manuales de v0? | **No.** Solo se reimportan CUFEs |
-| D4 | Dominio propio o `workers.dev` | `workers.dev` hasta cumplir las métricas de §2 |
-| D5 | Estilos: CSS Modules o mantener styled-components | **CSS Modules** (runtime cero, menos JS) |
+| D4 | Dominio propio o `workers.dev` | ✅ **Dominio propio** `prexiopa.com` (lo pide el login con Better Auth); `workers.dev` desactivado |
+| D5 | Estilos: CSS Modules o mantener styled-components | ✅ **CSS Modules** (decidido en la Fase 1) |
 | D6 | ¿Los productos (`products`) se comparten entre usuarios? | **No** en v1. Compartirlos vuelve a traer la moderación |
 
 ## 9. Riesgos
@@ -266,9 +277,59 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 | Scope creep (repetir v0) | §3 "Fuera de alcance". Toda funcionalidad nueva requiere actualizar este spec primero |
 | Fixtures con datos personales en el repo | Redactar el nombre y RUC del receptor antes de commitear |
 
+## 10. Resultados de la Fase 0 (2026-10-24)
+
+**Muestra:** 7 facturas reales de 3 cadenas (razones sociales TAMEK, S.A.; Inmobiliaria Don Antonio, S.A.; CITY MALL, S.A.), de 1 a 87 líneas cada una, entre nov 2025 y oct 2026. El parser v0 (`supabase/functions/fetch-cafe`) leyó las 7 sin errores.
+
+| Pregunta | Resultado |
+|---|---|
+| ¿Traen detalle por línea? | **Sí.** Código, descripción, cantidad, precio, descuento, ITBMS y total en todas. Las descripciones de Don Antonio vienen truncadas a 18 caracteres ("ESTRELLA AZUL YOGU") |
+| ¿El código es EAN/UPC? | **Depende de la cadena** (§10.2). Con solo 7 facturas ya hay 8 productos que coinciden entre dos cadenas distintas |
+| ¿Cómo vienen los descuentos? | **Como columna "Descuento" de cada línea.** 33 líneas con descuento, $23.37 en total. "Total" ya es el neto con ITBMS |
+| ¿Precisión decimal? | Inconsistente: TAMEK manda 6 decimales con ruido de float (`1.639999`) y CITY MALL totales sin redondear (`3.53875`) |
+| ¿La DGI responde desde Cloudflare? | **Sí.** 7 de 7 respondieron 200 con líneas y total, desde el colo `MIA`. Latencia: 0.6–1.5 s para el emisor `541-81`, y **11–12 s** para TAMEK y CITY MALL |
+
+**Veredicto:** el producto es viable. La Fase 0 quedó cerrada el 2026-10-24.
+
+- Las 2 facturas que el spike reportó con `lines: 1` son compras reales de un solo producto (ATLAS LATA 355 ML por $4.62 y VALUE507 CREMA 400 por $2.60). Los totales cuadran con el encabezado; no se trata de otro formato de página.
+- **Por la latencia:** el fetch a la DGI usa un timeout de 30 s con 1 reintento, y el preview de F1 muestra un estado de "Consultando la DGI…". CA1.1 se cumple aunque el preview tarde 12 s.
+
+### 10.1 Columnas de la tabla de líneas (HTML de la DGI)
+
+`Linea, Código, Descripción, Información de interés, Cantidad, Precio, Descuento, Monto, Impuesto, ISC, Acarreo, Seguro, Total`
+
+Encabezado: `Valor Total`, `ITBMS Total`, `Forma de Pago`, `TOTAL PAGADO`, `Vuelto`.
+
+### 10.2 Normalización de códigos (`stores.code_format`)
+
+| Formato | Ejemplo | Cadena observada | Regla |
+|---|---|---|---|
+| `gtin` | `7411000222904` | CITY MALL (60 de 77 válidos) | Validar el dígito verificador y rellenar con ceros a 13 |
+| `gtin_no_check` | `741100022290` → `7411000222904` | Don Antonio | **Le falta el dígito verificador y los ceros iniciales.** Calcular el dígito y rellenar a 13 |
+| `internal` | `10085482` | TAMEK (5 de 81 válidos, al azar) | No hay GTIN; el vínculo es manual (F5) |
+
+- **Detección automática al crear la tienda:** si ≥ 60 % de los códigos numéricos de 8 a 14 dígitos tienen un dígito verificador válido, el formato es `gtin`. Si no, y la mayoría tienen 10–12 dígitos, es `gtin_no_check`. En otro caso, `internal`. El usuario puede corregirlo.
+- Los códigos de pesables (PLU de 4 dígitos, prefijo `2` de circulación restringida) nunca generan GTIN. Se vinculan a mano.
+- Al cambiar el `code_format` de una tienda se recalculan los vínculos automáticos de sus `store_items`.
+
+### 10.3 Montos
+
+- Los números se parsean **como string a centavos enteros** (redondeo half-up). Nunca se usa `parseFloat` para dinero.
+- Los totales de la compra salen del **encabezado** (`Valor Total`, `ITBMS Total`, `TOTAL PAGADO`). La suma de las líneas puede diferir en algunos centavos: en CITY MALL suman $156.2381, el encabezado dice $156.22 y se pagó $156.24. Solo se registra un warning si la diferencia es mayor a $0.05.
+
+### 10.4 Bugs del parser v0 que se corrigen al portarlo
+
+- Ignora la columna `Descuento`.
+- Calcula los totales sumando floats en lugar de leer el encabezado.
+- `invoiceNumber` sale vacío en las 7 facturas. No bloquea, porque el CUFE es el identificador.
+
+### 10.5 Privacidad
+
+El HTML trae la cédula, el nombre y el teléfono del receptor. Los fixtures **deben** redactar el bloque `RECEPTOR` antes de commitearse, y `raw_json` no guarda el receptor.
+
 ---
 
-## Anexo A — `CLAUDE.md` propuesto (reemplaza al actual en la Fase 1)
+## Anexo A — `CLAUDE.md` (aplicado en la Fase 1; la versión vigente es `/CLAUDE.md`)
 
 ```markdown
 # Prexiopá
