@@ -169,9 +169,9 @@ precio_efectivo_unitario = line_total_cents / quantity
 | Frontend | React + TypeScript + Vite (`@cloudflare/vite-plugin`) | El dev local corre el Worker y D1 dentro de Vite |
 | Estado del servidor | TanStack Query | **Sin Zustand.** El estado de UI va en `useState` o en la URL |
 | Escáner | `@zxing/browser`, cargado con lazy load | Una sola librería. Se elimina `jsqr` solo si zxing lee las facturas reales de la Fase 0 |
-| Estilos | Se decide en la Fase 1; por defecto, CSS Modules | Pocas pantallas; no hace falta un design system |
+| Estilos | CSS Modules | Pocas pantallas; no hace falta un design system |
 | Íconos | `lucide-react` | Se elimina `react-icons` |
-| Tests | Vitest + `@cloudflare/vitest-pool-workers` | Integración real contra D1 local |
+| Tests | Vitest + `@cloudflare/vitest-plugin` | Integración real contra D1 local. Antes se llamaba `vitest-pool-workers` |
 
 ### 6.2 Autenticación — recomendación: Cloudflare Access
 
@@ -215,7 +215,7 @@ wrangler.jsonc
 
 Cada fase se puede desplegar sola y tiene un criterio de salida.
 
-### Fase 0 — Validación (spike, ≤ 1 día) ⚠️ Gate — preguntas 1–2 ✅, prueba de salida desde Cloudflare pendiente (ver §10)
+### Fase 0 — Validación (spike, ≤ 1 día) ✅ Cerrada (ver §10)
 
 Sirve para saber si el producto tiene sentido antes de construir nada.
 
@@ -229,7 +229,7 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 **Salida:** si las facturas no traen el detalle por línea, o la DGI bloquea Cloudflare, **se detiene el plan** y se replantea.
 
-### Fase 1 — Esqueleto
+### Fase 1 — Esqueleto — ✅ local (rama `feat/lite-skeleton`); falta el deploy detrás de Access
 
 - Taguear el estado actual como `v0-supabase` y eliminar el código v0 (queda en el historial de git).
 - Scaffold: Worker + Hono + D1 + Drizzle + Vite SPA, con auth Access y el middleware de §6.2.
@@ -261,7 +261,7 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 | D2 | ¿Usuarios en v1: solo yo, o yo + familia? | Hasta ~5 personas con Access. El modelo ya es multiusuario |
 | D3 | ¿Migrar las compras manuales de v0? | **No.** Solo se reimportan CUFEs |
 | D4 | Dominio propio o `workers.dev` | `workers.dev` hasta cumplir las métricas de §2 |
-| D5 | Estilos: CSS Modules o mantener styled-components | **CSS Modules** (runtime cero, menos JS) |
+| D5 | Estilos: CSS Modules o mantener styled-components | ✅ **CSS Modules** (decidido en la Fase 1) |
 | D6 | ¿Los productos (`products`) se comparten entre usuarios? | **No** en v1. Compartirlos vuelve a traer la moderación |
 
 ## 9. Riesgos
@@ -284,9 +284,12 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 | ¿El código es EAN/UPC? | **Depende de la cadena** (§10.2). Con solo 7 facturas ya hay 8 productos que coinciden entre dos cadenas distintas |
 | ¿Cómo vienen los descuentos? | **Como columna "Descuento" de cada línea.** 33 líneas con descuento, $23.37 en total. "Total" ya es el neto con ITBMS |
 | ¿Precisión decimal? | Inconsistente: TAMEK manda 6 decimales con ruido de float (`1.639999`) y CITY MALL totales sin redondear (`3.53875`) |
-| ¿La DGI responde desde Cloudflare? | **Pendiente.** Hay que desplegar `spikes/dgi-egress` |
+| ¿La DGI responde desde Cloudflare? | **Sí.** 7 de 7 respondieron 200 con líneas y total, desde el colo `MIA`. Latencia: 0.6–1.5 s para el emisor `541-81`, y **11–12 s** para TAMEK y CITY MALL |
 
-**Veredicto:** el producto es viable. Queda pendiente solo la prueba de salida desde Cloudflare.
+**Veredicto:** el producto es viable. La Fase 0 quedó cerrada el 2026-10-24.
+
+- Las 2 facturas que el spike reportó con `lines: 1` son compras reales de un solo producto (ATLAS LATA 355 ML por $4.62 y VALUE507 CREMA 400 por $2.60). Los totales cuadran con el encabezado; no se trata de otro formato de página.
+- **Por la latencia:** el fetch a la DGI usa un timeout de 30 s con 1 reintento, y el preview de F1 muestra un estado de "Consultando la DGI…". CA1.1 se cumple aunque el preview tarde 12 s.
 
 ### 10.1 Columnas de la tabla de líneas (HTML de la DGI)
 
@@ -323,7 +326,7 @@ El HTML trae la cédula, el nombre y el teléfono del receptor. Los fixtures **d
 
 ---
 
-## Anexo A — `CLAUDE.md` propuesto (reemplaza al actual en la Fase 1)
+## Anexo A — `CLAUDE.md` (aplicado en la Fase 1; la versión vigente es `/CLAUDE.md`)
 
 ```markdown
 # Prexiopá

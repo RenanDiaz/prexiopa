@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "prexiopa",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "prexiopa",
+      "database_id": "8b83fa76-a363-4637-b173-ce7c11456214",
+      "migrations_dir": "worker/db/migrations"
+    }
+  ],
+  "vars": {
+    "ENVIRONMENT": "production",
+    // Ej: "prexiopa.cloudflareaccess.com"
+    "ACCESS_TEAM_DOMAIN": "",
+    // Application Audience (AUD) Tag de la app en Cloudflare Access
+    "ACCESS_AUD": ""
+  }
+}

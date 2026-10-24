@@ -1,7 +1,0 @@
-// Spike descartable de la Fase 0: ¿la DGI responde a fetch desde Cloudflare?
-// Desplegar, probar y borrar con `npx wrangler delete`.
-{
-  "name": "prexiopa-dgi-egress-spike",
-  "main": "index.ts",
-  "compatibility_date": "2025-10-01"
-}
