@@ -71,4 +71,44 @@ describe('aislamiento entre usuarios', () => {
     ).first<{ n: number }>();
     expect(store_items?.n).toBe(2);
   });
+
+  it('catálogo, líneas y tiendas: otro usuario no puede leer ni cambiar nada (F3, F5)', async () => {
+    const dgi = fakeDgi(oneLine);
+    const ema = as('ema@example.com', dgi.options);
+    const { id } = await (await ema('/purchases/cafe', post(CUFE))).json<{ id: string }>();
+    const detail = await (await ema(`/purchases/${id}`)).json<{
+      storeId: string;
+      lines: { id: string; storeItemId: string; productId: string }[];
+    }>();
+    const line = detail.lines[0]!;
+    const json = (method: string, body: unknown) => ({
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    const fer = as('fer@example.com', dgi.options);
+    expect((await (await fer('/catalog/search?q=atlas')).json<{ results: unknown[] }>()).results).toEqual([]);
+    expect((await (await fer('/catalog/search?code=8964613281')).json<{ results: unknown[] }>()).results).toEqual([]);
+    expect((await fer(`/catalog/products/${line.productId}`)).status).toBe(404);
+    expect((await fer(`/catalog/items/${line.storeItemId}`)).status).toBe(404);
+    expect((await fer(`/catalog/products/${line.productId}`, json('PATCH', { name: 'Hackeado' }))).status).toBe(404);
+    expect((await fer(`/catalog/items/${line.storeItemId}`, json('PATCH', { name: 'Hackeado' }))).status).toBe(404);
+    expect((await fer(`/catalog/items/${line.storeItemId}/product`, { method: 'DELETE' })).status).toBe(404);
+    expect((await fer(`/catalog/items/${line.storeItemId}/weighed`, json('PATCH', { isWeighed: true }))).status).toBe(404);
+    expect((await fer(`/purchase-lines/${line.id}`, json('PATCH', { quantity: 5 }))).status).toBe(404);
+    expect((await fer(`/stores/${detail.storeId}`)).status).toBe(404);
+    expect((await fer(`/stores/${detail.storeId}`, json('PATCH', { displayName: 'Hackeado' }))).status).toBe(404);
+
+    // Fer importa la misma factura: no puede vincular su ítem al producto de Ema.
+    const ferPurchase = await (await fer('/purchases/cafe', post(CUFE))).json<{ id: string }>();
+    const ferLine = (await (await fer(`/purchases/${ferPurchase.id}`)).json<{ lines: { storeItemId: string }[] }>()).lines[0]!;
+    expect((await fer(`/catalog/items/${ferLine.storeItemId}/product`, json('PUT', { productId: line.productId }))).status).toBe(404);
+
+    const after = await (await ema(`/catalog/products/${line.productId}`)).json<{ name: string; items: unknown[] }>();
+    expect(after.name).toBe('ATLAS LATA 355 ML');
+    expect(after.items).toHaveLength(1);
+    const lineAfter = (await (await ema(`/purchases/${id}`)).json<{ lines: { quantity: number }[] }>()).lines[0]!;
+    expect(lineAfter.quantity).toBe(1);
+  });
 });

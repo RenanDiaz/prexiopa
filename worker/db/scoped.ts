@@ -1,8 +1,9 @@
-import { and, count, desc, eq, inArray, isNotNull, lt, or } from 'drizzle-orm';
+import { and, count, desc, eq, getTableColumns, inArray, isNotNull, lt, or } from 'drizzle-orm';
 import type { BatchItem } from 'drizzle-orm/batch';
 import { detectCodeFormat } from '../cafe/codes';
 import type { CafeInvoice } from '../cafe/parse';
 import { newId } from '../lib/id';
+import { catalogRepo, refreshStoreQuantities } from './catalog';
 import { getDb, type Db } from './client';
 import { purchaseLines, purchases, storeItems, stores } from './schema';
 
@@ -59,6 +60,7 @@ async function ensureStore(db: Db, invoice: CafeInvoice): Promise<string> {
 
 export function scoped(d1: D1Database, userId: string) {
   const db = getDb(d1);
+  const catalog = catalogRepo(db, userId);
   const ownPurchase = (id: string) => and(eq(purchases.id, id), eq(purchases.userId, userId));
 
   async function findIdByCufe(cufe: string): Promise<string | null> {
@@ -90,6 +92,7 @@ export function scoped(d1: D1Database, userId: string) {
   }
 
   return {
+    catalog,
     purchases: {
       async list(options: { cursor?: string; limit?: number } = {}): Promise<PurchasePage> {
         const limit = Math.min(Math.max(options.limit ?? 30, 1), 100);
@@ -134,12 +137,17 @@ export function scoped(d1: D1Database, userId: string) {
         const purchase = await db.query.purchases.findFirst({
           where: ownPurchase(id),
           columns: { rawJson: false, userId: false },
-          with: { store: { columns: { legalName: true, displayName: true, ruc: true } } },
+          with: { store: { columns: { id: true, legalName: true, displayName: true, ruc: true, quantities: true } } },
         });
         if (!purchase) return null;
         const lines = await db
-          .select()
+          .select({
+            ...getTableColumns(purchaseLines),
+            productId: storeItems.productId,
+            isWeighed: storeItems.isWeighed,
+          })
           .from(purchaseLines)
+          .innerJoin(storeItems, eq(storeItems.id, purchaseLines.storeItemId))
           .where(eq(purchaseLines.purchaseId, purchase.id))
           .orderBy(purchaseLines.lineNo);
 
@@ -156,6 +164,7 @@ export function scoped(d1: D1Database, userId: string) {
           ...rest,
           storeName: store.displayName ?? store.legalName,
           storeRuc: store.ruc,
+          storeQuantities: store.quantities,
           taxBreakdown: [...byRate.values()].sort((a, b) => a.rateBp - b.rateBp),
           lines,
         };
@@ -232,6 +241,12 @@ export function scoped(d1: D1Database, userId: string) {
           if (winner) return { id: winner, created: false };
           throw error;
         }
+
+        // Catálogo (§10.2, §10.6): pesables y vínculos por GTIN, cantidades de la
+        // tienda e inferencia de unidades. Si falla, la compra ya quedó guardada.
+        await catalog.reindexItems(storeId);
+        await refreshStoreQuantities(db, storeId);
+        await catalog.inferQuantities();
         return { id: purchaseId, created: true };
       },
 

@@ -1,8 +1,16 @@
-.video {
+.square,
+.wide {
   display: block;
   width: 100%;
-  aspect-ratio: 1;
   object-fit: cover;
   border-radius: 0.75rem;
   background: #000;
+}
+
+.square {
+  aspect-ratio: 1;
+}
+
+.wide {
+  aspect-ratio: 16 / 9;
 }

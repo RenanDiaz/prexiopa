@@ -18,6 +18,8 @@ const createdAt = () =>
 export const users = sqliteTable('users', {
   id: id(),
   email: text('email').notNull().unique(),
+  /** Versión de las reglas de catálogo ya aplicadas a sus datos (vínculos, pesables, cantidades). */
+  catalogVersion: integer('catalog_version').notNull().default(0),
   createdAt: createdAt(),
 });
 
@@ -101,6 +103,9 @@ export const authVerifications = sqliteTable(
 );
 
 export const CODE_FORMATS = ['gtin', 'gtin_no_check', 'internal'] as const;
+export const STORE_QUANTITIES = ['reliable', 'always_one'] as const;
+export const LINK_SOURCES = ['auto', 'user'] as const;
+export const QUANTITY_SOURCES = ['invoice', 'inferred', 'user'] as const;
 
 // Una fila por cadena (RUC), no por sucursal. Las tiendas no son datos del usuario.
 export const stores = sqliteTable('stores', {
@@ -110,6 +115,10 @@ export const stores = sqliteTable('stores', {
   legalName: text('legal_name').notNull(),
   displayName: text('display_name'),
   codeFormat: text('code_format', { enum: CODE_FORMATS }).notNull().default('internal'),
+  /** Si la cadena manda la cantidad real o siempre 1 (spec §10.6). */
+  quantities: text('quantities', { enum: STORE_QUANTITIES }).notNull().default('reliable'),
+  /** Si el usuario corrigió code_format o quantities: la detección automática ya no los cambia. */
+  configuredByUser: integer('configured_by_user', { mode: 'boolean' }).notNull().default(false),
   createdAt: createdAt(),
 });
 
@@ -140,6 +149,11 @@ export const storeItems = sqliteTable(
     code: text('code'),
     description: text('description').notNull(),
     productId: text('product_id').references(() => products.id, { onDelete: 'set null' }),
+    /** Quién hizo el vínculo con `products`: el GTIN (auto) o el usuario (F5). */
+    linkSource: text('link_source', { enum: LINK_SOURCES }),
+    isWeighed: integer('is_weighed', { mode: 'boolean' }).notNull().default(false),
+    /** Corrección del usuario a `is_weighed` (p. ej. un PLU que se vende por unidad); null = automático. */
+    weighedByUser: integer('weighed_by_user', { mode: 'boolean' }),
     createdAt: createdAt(),
   },
   (t) => [
@@ -197,6 +211,8 @@ export const purchaseLines = sqliteTable(
     lineTotalCents: integer('line_total_cents').notNull(),
     taxRateBp: integer('tax_rate_bp').notNull().default(0),
     taxCents: integer('tax_cents').notNull().default(0),
+    /** De dónde sale `quantity` (spec §10.6). */
+    quantitySource: text('quantity_source', { enum: QUANTITY_SOURCES }).notNull().default('invoice'),
   },
   (t) => [
     index('purchase_lines_purchase_idx').on(t.purchaseId),
@@ -207,4 +223,9 @@ export const purchaseLines = sqliteTable(
 // Relaciones para `db.query` (no generan SQL ni migraciones).
 export const purchasesRelations = relations(purchases, ({ one }) => ({
   store: one(stores, { fields: [purchases.storeId], references: [stores.id] }),
+}));
+
+export const storeItemsRelations = relations(storeItems, ({ one }) => ({
+  store: one(stores, { fields: [storeItems.storeId], references: [stores.id] }),
+  product: one(products, { fields: [storeItems.productId], references: [products.id] }),
 }));

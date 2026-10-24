@@ -118,12 +118,14 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 ### 5.2 Tablas
 
 ```text
-users          id, email UNIQUE, created_at
+users          id, email UNIQUE, catalog_version, created_at
+               -- catalog_version: reglas de catálogo ya aplicadas a sus datos
 
 stores         id, ruc UNIQUE NULL, dv, legal_name, display_name NULL,
                code_format ('gtin'|'gtin_no_check'|'internal'),
-               quantities ('reliable'|'always_one'), created_at
+               quantities ('reliable'|'always_one'), configured_by_user, created_at
                -- quantities: si la cadena manda la cantidad real o siempre 1 (§10.6)
+               -- configured_by_user: el usuario corrigió code_format/quantities y la detección ya no los cambia
                -- una fila por CADENA (RUC), no por sucursal (ver §10)
                -- ruc NULL solo para tiendas creadas a mano (F4)
 
@@ -133,10 +135,11 @@ products       id, user_id, name, gtin NULL, created_at
                -- gtin: GTIN-13 normalizado (§10.2)
 
 store_items    id, user_id, store_id, code NULL, description, product_id NULL,
-               is_weighed (0|1), created_at
+               link_source ('auto'|'user') NULL, is_weighed (0|1), weighed_by_user NULL, created_at
                UNIQUE(user_id, store_id, code)
                -- cómo llama cada tienda a un producto (texto y código de la factura)
-               -- is_weighed: pesable (PLU con prefijo 2 o "KG" en la descripción, §10.6)
+               -- link_source: 'auto' = vínculo por GTIN (CA5.3); 'user' = el usuario vinculó o desvinculó
+               -- is_weighed: pesable (§10.6 regla 2); weighed_by_user: corrección del usuario, gana sobre la detección
 
 purchases      id, user_id, store_id, source ('cafe'|'manual'), cufe NULL,
                issued_at, branch_address NULL,
@@ -258,11 +261,16 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 **Estado (2026-10-24):** parser, endpoints, guardado atómico, historial paginado, detalle y escáner implementados. CA1.2–CA1.6 y CA2.1–CA2.4 tienen tests y se probaron en local contra la DGI real. Quedan sin verificar CA1.1 y CA1.7 (escanear el QR con la cámara de un teléfono) y las 2 semanas de uso real.
 
-### Fase 3 — Consulta de precios (F3, F5)
+### Fase 3 — Consulta de precios (F3, F5) — 🟡 implementada; falta usarla en tienda
 
 - Incluye el manejo de cantidades no confiables (§10.6): migración de `stores.quantities`, `store_items.is_weighed` y `purchase_lines.quantity_source`; detección por tienda; inferencia de cantidades; y corrección rápida (CA5.5, CA5.6).
 
 **Salida:** se cumplen CA3.x y CA5.x, y lo uso en tienda.
+
+**Estado (2026-10-24):** migración `0002`, catálogo (`worker/catalog/rules.ts`, `worker/db/catalog.ts`), búsqueda por texto y código, historial de precios con último y más bajo de 90 días, renombrar, vincular y desvincular, nombre y formatos de la tienda, corrección de cantidad/peso y pesable por ítem. Con las 7 facturas reales: Don Antonio se detecta como `always_one`, CITY MALL y TAMEK como `reliable`, 6 productos quedan vinculados por GTIN entre Don Antonio y CITY MALL, y confirmar una cantidad en Don Antonio la vuelve comparable. Sin verificar: escanear códigos de barras con la cámara del teléfono, y el sparkline opcional (CA3.5) no se hizo.
+
+- Al subir `CATALOG_VERSION`, los datos de cada usuario se recalculan una vez al abrir la app (`GET /api/me`). Así se aplican las reglas a las compras importadas antes de la Fase 3.
+- Los PLU se marcan como pesables, pero algunos se venden por unidad (un mazo de culantro). Por eso cada ítem tiene "Se vende por peso / por unidad" (`weighed_by_user`).
 
 ### Fase 4 — Manual, migración de datos y apagado de Supabase (F4, F6, F7)
 
@@ -368,7 +376,8 @@ El HTML trae la cédula, el nombre y el teléfono del receptor. Los fixtures **d
 **Reglas:**
 
 1. **Detección por tienda.** `stores.quantities = 'always_one'` si, en las facturas importadas de esa cadena con ≥ 10 líneas, el 100 % de las cantidades es 1 y hay al menos un pesable (§10.2) con cantidad 1. Si no, es `reliable`. Se recalcula al importar y el usuario lo puede corregir. Para Inmobiliaria Don Antonio queda `always_one` desde la primera factura grande.
-2. **Pesables.** `store_items.is_weighed` si el código es un PLU o tiene prefijo `2` de circulación restringida, o si la descripción contiene `KG`, `KILO` o `LB`. En tiendas `always_one`, un pesable sin peso anotado nunca genera precio por kg.
+2. **Pesables.** `store_items.is_weighed` si el código es un PLU (≤ 5 dígitos) o una etiqueta de balanza (prefijo `2` de circulación restringida, 11–14 dígitos), o si la descripción contiene `KG`, `KILO` o `LB`. En tiendas `always_one`, un pesable sin peso anotado nunca genera precio por kg.
+   - Las carnes, quesos y embutidos los pesa el dependiente y les pone una etiqueta cuyo código incluye el producto y el peso o el precio; la caja lee el peso de ahí. Don Antonio transmite ese código sin dígito verificador y con el peso en ceros (`20786500000` = DON PEDRO MOZZAREL), así que el código identifica el producto en la tienda pero no trae el peso. Sirve para el historial del ítem, no para vincular entre cadenas.
 3. **Inferencia automática de unidades** (solo tiendas `always_one`, no pesables): si el mismo `store_item`, o el mismo `product` en Fase 3, tiene un precio unitario conocido de los últimos 60 días (de una línea con `quantity_source` `invoice` en tienda `reliable`, `user` o `inferred`), y `line_total_cents / precio_unitario` está a ≤ 1 centavo por unidad de un entero `k` entre 2 y 24, entonces `quantity = k` y `quantity_source = 'inferred'`. Si el cociente es ≈ 1, la cantidad 1 se acepta como real y la línea queda como precio unitario conocido. En cualquier otro caso no se infiere nada.
 4. **Corrección opcional** (CA5.5): "+ / −" para unidades y un campo de peso para pesables. Guarda `quantity_source = 'user'` y no cambia `line_total_cents` ni los totales de la compra, que siempre son los de la factura.
 5. **F3 nunca mezcla:** el "más bajo de los últimos 90 días" (CA3.2) solo considera líneas con cantidad real (regla de §5.3).

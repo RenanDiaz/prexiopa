@@ -20,3 +20,10 @@ export const formatDate = (iso: string) => date.format(new Date(iso));
 export const formatDateTime = (iso: string) => dateTime.format(new Date(iso));
 export const formatQuantity = (value: number) => quantity.format(value);
 export const formatRate = (basisPoints: number) => `${basisPoints / 100} %`;
+
+/** "$0.80 c/u", "$4.75/kg" o, si la cantidad no es real, "$2.40 la línea" (§10.6). */
+export function formatEntryPrice(entry: { unitPriceCents: number | null; lineTotalCents: number; unit: 'kg' | 'lb' | 'u' }) {
+  if (entry.unitPriceCents === null) return `${formatCents(entry.lineTotalCents)} la línea`;
+  const suffix = entry.unit === 'u' ? ' c/u' : `/${entry.unit}`;
+  return `${formatCents(entry.unitPriceCents)}${suffix}`;
+}

@@ -16,9 +16,14 @@ export function History() {
 
   return (
     <>
-      <Link href="/importar" className={styles.primary}>
-        Escanear factura
-      </Link>
+      <div className={styles.actions}>
+        <Link href="/importar" className={styles.primary}>
+          Escanear factura
+        </Link>
+        <Link href="/precios" className={styles.button}>
+          ¿Cuánto cuesta?
+        </Link>
+      </div>
 
       <h2 className={styles.subtitle}>Compras</h2>
       {purchases.isPending && <p className={styles.muted}>Cargando…</p>}

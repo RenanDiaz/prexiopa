@@ -5,7 +5,7 @@ import styles from '../App.module.css';
 import { formatCents, formatDateTime, formatQuantity } from '../format';
 import { Link, navigate } from '../router';
 
-const QrScanner = lazy(() => import('../scanner/QrScanner'));
+const Scanner = lazy(() => import('../scanner/Scanner'));
 
 // F1 — Importar compra (CA1.1–CA1.7): escanear → preview automático → Guardar.
 export function ImportInvoice() {
@@ -27,7 +27,7 @@ export function ImportInvoice() {
         <p className={styles.error}>{cameraError} Pega el CUFE o la URL del QR abajo.</p>
       ) : (
         <Suspense fallback={<p className={styles.muted}>Abriendo la cámara…</p>}>
-          <QrScanner onResult={setInput} onError={setCameraError} />
+          <Scanner mode="qr" onResult={setInput} onError={setCameraError} />
         </Suspense>
       )}
 
