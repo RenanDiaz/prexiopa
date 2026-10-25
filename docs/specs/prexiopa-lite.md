@@ -40,6 +40,7 @@ Si a los 60 días no se cumplen, se archiva el proyecto sin culpa.
 | F5 | Nombrar y vincular productos entre tiendas | Should |
 | F6 | Resumen de gasto mensual | Could |
 | F7 | Instalable en el teléfono (manifest PWA, sin modo offline) | Could |
+| F8 | Exportar compras y líneas a CSV (descarga manual) | Could |
 
 ### Fuera de alcance (explícito)
 
@@ -105,6 +106,34 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 ### F6 — Resumen mensual (Could)
 
 - **CA6.1** Muestra el total gastado por mes en los últimos 12 meses y el total por tienda del mes actual.
+
+### F8 — Exportar a CSV (Could)
+
+**Para qué:** alimentar el proyecto de finanzas personales del dueño (Claude Cowork sobre una carpeta de iCloud) con el **detalle** de las compras de supermercado. **No sustituye a los estados de cuenta:** las mismas compras aparecen como cargos de tarjeta, así que sumar ambas fuentes cuenta el gasto dos veces. Prexiopá aporta qué se compró, no cuánto se gastó en el mes.
+
+**Flujo:** Inicio → "Exportar" → dos enlaces de descarga → "Guardar en Archivos" → carpeta de iCloud. Es manual: no hay token, script ni sincronización.
+
+- **CA8.1** `GET /api/export/compras.csv` y `GET /api/export/lineas.csv` responden con `Content-Disposition: attachment` y los nombres fijos `prexiopa-compras.csv` y `prexiopa-lineas.csv`. Se descargan con un enlace normal, que usa la sesión existente. Cada descarga es un **snapshot completo** de los datos del usuario, sin paginar ni filtrar por fecha.
+- **CA8.2** `compras.csv` tiene una fila por compra, ordenada por fecha ascendente, con estas columnas:
+  `id_compra, fecha, emitida_utc, tienda, ruc, sucursal, origen, subtotal, itbms, descuento, total, pagado, cufe`
+  - `fecha` es la fecha local de Panamá (`YYYY-MM-DD`); `emitida_utc` es el ISO-8601 guardado.
+  - `tienda` es el nombre visible (§5.2, `display_name` o, si no hay, `legal_name`); `ruc` y `sucursal` van vacíos en compras manuales.
+  - `origen` es `cafe` o `manual`.
+  - Los montos salen del **encabezado** de la factura, no de la suma de las líneas (§10.3).
+- **CA8.3** `lineas.csv` tiene una fila por línea, ordenada por fecha de la compra y luego `linea`, con estas columnas:
+  `id_compra, linea, fecha, tienda, codigo, descripcion, producto, cantidad, cantidad_origen, cantidad_confiable, es_pesable, precio_lista, descuento, total_linea, tasa_itbms, itbms`
+  - `producto` es el nombre del producto vinculado (F5) o vacío.
+  - `cantidad_origen` es `invoice`, `inferred` o `user` (§10.6). `cantidad_confiable` (`si`/`no`) aplica la regla de §5.3, la misma que usa F3, con una sola implementación compartida. Así Cowork no calcula precios unitarios falsos con las cantidades de Inmobiliaria Don Antonio.
+  - `total_linea` incluye ITBMS y es lo realmente pagado (§5.3). `tasa_itbms` va en porcentaje (`7`).
+  - `id_compra` une ambos archivos. Los totales de la compra **no** se repiten en las líneas, para que sumar `total_linea` no duplique nada.
+- **CA8.4** Formato: UTF-8 con BOM, separador coma, saltos `CRLF` y comillas según RFC 4180. Montos en dólares con 2 decimales y punto decimal, sin separador de miles, formateados desde los centavos con aritmética entera (nunca con floats). `cantidad` lleva hasta 3 decimales, sin ceros sobrantes.
+- **CA8.5** Los textos que vienen de la DGI (`descripcion`, `tienda`, `sucursal`, `producto`) que empiezan con `=`, `+`, `-`, `@`, tabulador o retorno de carro se prefijan con `'`, para que una hoja de cálculo no los interprete como fórmula. Los montos negativos no se tocan.
+- **CA8.6** Privacidad: el export **nunca** incluye `raw_json`, datos del receptor, correos ni identificadores de otros usuarios (§10.5). Solo exporta los datos del usuario autenticado.
+- **CA8.7** Con una cuenta sin compras, ambos archivos se descargan solo con la fila de encabezados. Con 500 compras y sus líneas, la descarga completa y se prueba con datos sintéticos; si no cumple el p95 de §6.6 queda excluida de ese presupuesto, igual que el preview CAFE.
+
+**Fuera de alcance de F8:** exportación automática o programada, tokens de API, categorías de gasto (Cowork clasifica a partir de `descripcion`), filtros por rango de fechas, otros formatos y la forma de pago de la factura. Esta última habría que agregarla al parser (hoy no se guarda) y solo vale la pena si hace falta para conciliar con los estados de cuenta.
+
+**Tests:** aislamiento entre usuarios para ambos endpoints en `test/isolation.test.ts`; fixtures con descuentos, líneas inferidas, compra manual, una descripción con `=`/`"`/coma y una tienda `always_one`.
 
 ## 5. Modelo de datos (D1 / SQLite)
 
@@ -289,6 +318,8 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 ### Fase 5 — Uso y decisión (sin funciones nuevas) — ⏳ pendiente
 
 **Regla:** durante esta fase solo se corrigen bugs y fricciones que aparezcan al usar la app. No se agregan funciones, y todo lo de "Fuera de alcance" sigue fuera.
+
+**Excepción aprobada (2026-10-25): F8, exportar a CSV.** Es de solo lectura, no cambia el esquema ni el flujo de importación, y por eso no puede alterar las métricas del día 60. Cualquier otra función sigue sujeta a la regla.
 
 **Calendario:** día 0 = **2026-10-25**. Revisión el **2026-12-24** (día 60). Si no se cumplen las métricas de §2, se archiva el proyecto sin culpa.
 
