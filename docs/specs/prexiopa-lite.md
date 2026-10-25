@@ -272,11 +272,16 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 - Al subir `CATALOG_VERSION`, los datos de cada usuario se recalculan una vez al abrir la app (`GET /api/me`). Así se aplican las reglas a las compras importadas antes de la Fase 3.
 - Los PLU se marcan como pesables, pero algunos se venden por unidad (un mazo de culantro). Por eso cada ítem tiene "Se vende por peso / por unidad" (`weighed_by_user`).
 
-### Fase 4 — Manual, migración de datos y apagado de Supabase (F4, F6, F7)
+### Fase 4 — Manual, migración de datos y apagado de Supabase (F4, F6, F7) — 🟡 implementada; falta migrar y apagar la v0
+
+**Estado (2026-10-24):** compra manual (tienda nueva solo con nombre o autocompletado, líneas con producto existente, código escaneado o texto libre, cantidad y total; se vincula por GTIN si se escaneó), resumen mensual de 12 meses y por tienda del mes en hora de Panamá, importar varios, y manifest PWA con íconos. Probado en local. Pendiente del dueño: exportar los CUFEs de Supabase e importarlos, pausar Supabase y desconectar Vercel.
 
 - Migración de datos: exportar los **CUFEs** de `imported_invoices` y **reimportarlos con el pipeline nuevo**, sin transformar datos viejos.
+  - Export en el SQL Editor de Supabase: `select cufe from imported_invoices order by issue_date;`
+  - **Importar varios** (pantalla de importar): se pega una lista de CUFEs o URLs del QR, uno por línea. Se importan de a uno, con el estado de cada uno a la vista: guardada, ya importada o error con "Reintentar". Usa el mismo `POST /api/purchases/cafe`, así que las facturas ya importadas no se duplican (CA1.5).
 - Las sesiones manuales de v0 se descartan, salvo que se decida lo contrario (ver §8).
 - Pausar el proyecto de Supabase. Se borra a los 30 días sin incidentes.
+- Desconectar del repo el proyecto de Vercel de la v0, que falla en cada PR desde la Fase 1.
 
 ## 8. Decisiones abiertas
 

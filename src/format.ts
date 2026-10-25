@@ -27,3 +27,21 @@ export function formatEntryPrice(entry: { unitPriceCents: number | null; lineTot
   const suffix = entry.unit === 'u' ? ' c/u' : `/${entry.unit}`;
   return `${formatCents(entry.unitPriceCents)}${suffix}`;
 }
+
+const monthName = new Intl.DateTimeFormat('es-PA', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+
+/** "2026-10" → "oct 2026". */
+export const formatMonth = (month: string) => monthName.format(new Date(`${month}-01T00:00:00Z`));
+
+/** Fecha de hoy en Panamá como "AAAA-MM-DD" (para <input type="date">). */
+export const todayInPanama = () => new Date(Date.now() - 5 * 3_600_000).toISOString().slice(0, 10);
+
+/**
+ * "2.5" → 250, "1,99" → 199. Sin floats para dinero (igual que el parser CAFE).
+ * Devuelve null si no es un monto válido.
+ */
+export function parseMoneyToCents(text: string): number | null {
+  const match = /^\s*\$?\s*(\d{0,7})(?:[.,](\d{0,2}))?\s*$/.exec(text);
+  if (!match || (!match[1] && !match[2])) return null;
+  return Number(match[1] || '0') * 100 + Number((match[2] ?? '').padEnd(2, '0'));
+}

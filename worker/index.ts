@@ -6,6 +6,7 @@ import { DgiUnavailableError, fetchCafe, type FetchCafeOptions } from './cafe/fe
 import type { CodeFormat } from './cafe/codes';
 import { CafeNotFoundError, CafeParseError } from './cafe/parse';
 import type { StoreQuantities } from './catalog/rules';
+import { ManualPurchaseError, type ManualLineInput, type ManualPurchaseInput } from './db/manual';
 import { scoped } from './db/scoped';
 
 export type AppOptions = AuthOptions & {
@@ -37,6 +38,47 @@ function cleanName(value: unknown): string {
 
 const CODE_FORMATS: CodeFormat[] = ['gtin', 'gtin_no_check', 'internal'];
 const STORE_QUANTITIES: StoreQuantities[] = ['reliable', 'always_one'];
+
+const bad = (message: string) => new HTTPException(400, { message });
+
+/** Valida el body de POST /purchases/manual (CA4.1, CA4.2). */
+function parseManualPurchase(body: Record<string, unknown>): ManualPurchaseInput {
+  const store = body.store as Record<string, unknown> | undefined;
+  let parsedStore: ManualPurchaseInput['store'];
+  if (store && typeof store.id === 'string') parsedStore = { id: store.id };
+  else if (store && typeof store.name === 'string') parsedStore = { name: cleanName(store.name) };
+  else throw bad('Falta la tienda');
+
+  let issuedAt: string | undefined;
+  if (body.date !== undefined) {
+    // "AAAA-MM-DD" del selector de fecha → mediodía de Panamá (17:00 UTC).
+    if (typeof body.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(body.date)) throw bad('Fecha inválida');
+    const date = new Date(`${body.date}T17:00:00.000Z`);
+    if (Number.isNaN(date.getTime()) || date.getTime() > Date.now() + 86_400_000) throw bad('Fecha inválida');
+    issuedAt = date.toISOString();
+  }
+
+  if (!Array.isArray(body.lines) || body.lines.length === 0 || body.lines.length > 200) {
+    throw bad('La compra debe tener entre 1 y 200 líneas');
+  }
+  const lines = body.lines.map((raw, i): ManualLineInput => {
+    const line = (raw ?? {}) as Record<string, unknown>;
+    const { quantity, lineTotalCents } = line;
+    if (typeof quantity !== 'number' || !(quantity > 0) || quantity > 10_000) throw bad(`Cantidad inválida en la línea ${i + 1}`);
+    if (typeof lineTotalCents !== 'number' || !Number.isInteger(lineTotalCents) || lineTotalCents < 0 || lineTotalCents > 10_000_000) {
+      throw bad(`Total inválido en la línea ${i + 1}`);
+    }
+    const code = typeof line.code === 'string' && /^\d{6,14}$/.test(line.code) ? line.code : undefined;
+    return {
+      productId: typeof line.productId === 'string' ? line.productId : undefined,
+      code,
+      description: cleanName(line.description),
+      quantity: Math.round(quantity * 1000) / 1000,
+      lineTotalCents,
+    };
+  });
+  return { store: parsedStore, issuedAt, lines };
+}
 
 /** Errores de la DGI con el CUFE visible, para poder reintentar (CA1.6). */
 function dgiError(error: unknown, cufe: string) {
@@ -218,6 +260,26 @@ export function createApp(options: AppOptions = {}) {
       return c.json(failure.body, failure.status);
     }
   });
+
+  // F4 — Compra manual.
+  app.get('/stores', async (c) => {
+    const items = await scoped(c.env.DB, c.var.user.id).stores.list(c.req.query('q') ?? '');
+    return c.json({ items });
+  });
+
+  app.post('/purchases/manual', async (c) => {
+    const input = parseManualPurchase(await jsonBody(c.req.raw));
+    try {
+      const { id } = await scoped(c.env.DB, c.var.user.id).purchases.createManual(input);
+      return c.json({ id }, 201);
+    } catch (error) {
+      if (error instanceof ManualPurchaseError) return c.json({ error: error.message }, 400);
+      throw error;
+    }
+  });
+
+  // F6 — Resumen mensual.
+  app.get('/summary', async (c) => c.json(await scoped(c.env.DB, c.var.user.id).summary.monthly()));
 
   app.get('/purchases/:id', async (c) => {
     const purchase = await scoped(c.env.DB, c.var.user.id).purchases.get(c.req.param('id'));
