@@ -183,7 +183,7 @@ El precio efectivo unitario solo es comparable si `quantity` es real: cuando `qu
 | Estado del servidor | TanStack Query | **Sin Zustand.** El estado de UI va en `useState` o en la URL |
 | Escáner | `@zxing/browser`, cargado con lazy load | Una sola librería. Se elimina `jsqr` solo si zxing lee las facturas reales de la Fase 0 |
 | Estilos | CSS Modules | Pocas pantallas; no hace falta un design system |
-| Íconos | `lucide-react` | Se elimina `react-icons` |
+| Íconos | Ninguna librería | `react-icons` se eliminó; la UI no necesita íconos |
 | Tests | Vitest + `@cloudflare/vitest-plugin` | Integración real contra D1 local. Antes se llamaba `vitest-pool-workers` |
 
 ### 6.2 Autenticación — decisión: Better Auth con Google (D1)
@@ -255,11 +255,11 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 **Resultado:** en producción en `https://prexiopa.com` con login de Google (Better Auth) verificado. Migraciones `0000` y `0001` aplicadas en D1. CI en verde en el PR del esqueleto; los commits de Better Auth pasaron `npm run check`, build y presupuesto en local.
 
-### Fase 2 — Import CAFE (F1, F2) — 🟡 implementada; falta validar en el teléfono
+### Fase 2 — Import CAFE (F1, F2) — 🟡 implementada y probada en el teléfono; falta el uso real
 
 **Salida:** se cumplen CA1.x y CA2.x, y yo importo mis compras reales de 2 semanas.
 
-**Estado (2026-10-24):** parser, endpoints, guardado atómico, historial paginado, detalle y escáner implementados. CA1.2–CA1.6 y CA2.1–CA2.4 tienen tests y se probaron en local contra la DGI real. Quedan sin verificar CA1.1 y CA1.7 (escanear el QR con la cámara de un teléfono) y las 2 semanas de uso real.
+**Estado (2026-10-24):** parser, endpoints, guardado atómico, historial paginado, detalle y escáner implementados. CA1.2–CA1.6 y CA2.1–CA2.4 tienen tests y se probaron en local contra la DGI real. CA1.1 y CA1.7 se verificaron con la cámara de un teléfono (2026-10-25). Queda el uso real de 2 semanas.
 
 ### Fase 3 — Consulta de precios (F3, F5) — 🟡 implementada; falta usarla en tienda
 
@@ -272,7 +272,7 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 - Al subir `CATALOG_VERSION`, los datos de cada usuario se recalculan una vez al abrir la app (`GET /api/me`). Así se aplican las reglas a las compras importadas antes de la Fase 3.
 - Los PLU se marcan como pesables, pero algunos se venden por unidad (un mazo de culantro). Por eso cada ítem tiene "Se vende por peso / por unidad" (`weighed_by_user`).
 
-### Fase 4 — Manual, migración de datos y apagado de Supabase (F4, F6, F7) — 🟡 implementada; falta migrar y apagar la v0
+### Fase 4 — Manual, migración de datos y apagado de Supabase (F4, F6, F7) — 🟡 implementada; falta apagar la v0
 
 **Estado (2026-10-24):** compra manual (tienda nueva solo con nombre o autocompletado, líneas con producto existente, código escaneado o texto libre, cantidad y total; se vincula por GTIN si se escaneó), resumen mensual de 12 meses y por tienda del mes en hora de Panamá, importar varios, y manifest PWA con íconos. Probado en local. Pendiente del dueño: borrar el proyecto de Supabase y desconectar Vercel.
 
