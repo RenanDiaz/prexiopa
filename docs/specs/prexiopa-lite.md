@@ -67,6 +67,7 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 - **CA1.5** Si el CUFE ya fue importado por el usuario, no se duplica la compra: se muestra "Ya importaste esta factura" con un enlace a ella.
 - **CA1.6** Si la DGI no responde o devuelve un formato desconocido, se muestra un error con el CUFE visible y la opción "Reintentar". No se guarda nada parcial.
 - **CA1.7** Las interacciones entre abrir la cámara y ver la compra guardada son, como máximo, **2 taps**: "Escanear" y "Guardar".
+- **CA1.8** Cada compra importada guarda `scan_ms`: los milisegundos entre que el cliente detecta el QR (o se envía el CUFE pegado) y que el usuario toca "Guardar". Se mide en el cliente con `performance.now()` (reloj monotónico, así el desfase del reloj del teléfono no afecta) y viaja en el body de `POST /api/purchases/cafe`. Incluye la espera de la DGI y el tiempo que el usuario mira el preview, porque eso es lo que vive en la caja. No se sobrescribe si la compra ya existía (CA1.5). Si falta, queda en `NULL` y no cuenta para la métrica.
 
 ### F2 — Historial de compras
 
@@ -144,8 +145,9 @@ store_items    id, user_id, store_id, code NULL, description, product_id NULL,
 purchases      id, user_id, store_id, source ('cafe'|'manual'), cufe NULL,
                issued_at, branch_address NULL,
                subtotal_cents, tax_cents, discount_cents, total_cents, paid_cents,
-               source_url NULL, raw_json NULL, created_at
+               source_url NULL, raw_json NULL, scan_ms INTEGER NULL, created_at
                UNIQUE(user_id, cufe)
+               -- scan_ms: CA1.8, solo compras 'cafe'; NULL en manuales y en las anteriores a la Fase 5
                -- totales tomados del ENCABEZADO de la factura, nunca sumando líneas (§10.3)
 
 purchase_lines id, purchase_id, line_no, store_item_id, description, quantity,
@@ -284,6 +286,37 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 - Pausar el proyecto de Supabase. Se borra a los 30 días sin incidentes. Como no había datos que migrar, se puede borrar sin esperar.
 - Desconectar del repo el proyecto de Vercel de la v0, que falla en cada PR desde la Fase 1.
 
+### Fase 5 — Uso y decisión (sin funciones nuevas) — ⏳ pendiente
+
+**Regla:** durante esta fase solo se corrigen bugs y fricciones que aparezcan al usar la app. No se agregan funciones, y todo lo de "Fuera de alcance" sigue fuera.
+
+**Calendario:** día 0 = **2026-10-25**. Revisión el **2026-12-24** (día 60). Si no se cumplen las métricas de §2, se archiva el proyecto sin culpa.
+
+**Trabajo previo (antes de contar los 60 días en serio):**
+
+1. Implementar CA1.8 (`scan_ms`): columna nullable en `purchases` y migración aditiva, compatible con la versión anterior del Worker. El cliente envía `scan_ms` al guardar, y la lista, el detalle y el resto de la API no cambian. Va con test del endpoint y de que una compra duplicada no pisa el valor.
+2. Verificar con la cámara del teléfono el escaneo de códigos de barras (CA3.1), único criterio de las fases 3 y 4 sin probar en un dispositivo.
+3. Borrar el proyecto de Supabase y desconectar Vercel (dueño).
+4. Confirmar que D1 Time Travel está disponible en el plan antes de acumular historial.
+
+**Cómo se miden las métricas del día 60** (consultas de solo lectura, sin pantalla ni endpoint nuevo):
+
+| Métrica | Consulta |
+|---|---|
+| Mediana de `scan_ms` ≤ 30 000 | `SELECT scan_ms FROM purchases WHERE source='cafe' AND scan_ms IS NOT NULL ORDER BY scan_ms LIMIT 1 OFFSET (SELECT (COUNT(*)-1)/2 FROM purchases WHERE source='cafe' AND scan_ms IS NOT NULL);` |
+| ≥ 80 % de compras de súper registradas | Autorreporte: el usuario anota cuántas idas al súper hizo y se compara con `COUNT(*)` de `purchases` en el periodo |
+| Consulta de precio ≥ 1 vez por semana | Autorreporte. No se registran consultas, para no agregar telemetría |
+
+SQLite no tiene `MEDIAN`, por eso la consulta usa `OFFSET`. Se corre con `wrangler d1 execute --remote --command` (solo `SELECT`).
+
+**Preguntas que el uso debe responder** (se anotan en §10.7 durante la fase):
+
+- Don Antonio: ¿la inferencia de unidades y la corrección con +/− alcanzan, o corregir cantidades se vuelve una carga? (§10.6)
+- DGI: ¿qué parte de `scan_ms` es espera de la DGI? Si la mediana pasa de 30 s por esa espera, se evalúa guardar en segundo plano.
+- ¿Se consulta el precio en tienda antes de comprar?
+
+**Decisión del día 60:** cumple las métricas → seguir y evaluar solo lo que los datos justifiquen (D2 familia, sparkline, OCR). No las cumple → archivar.
+
 ## 8. Decisiones abiertas
 
 | # | Decisión | Recomendación |
@@ -388,7 +421,15 @@ El HTML trae la cédula, el nombre y el teléfono del receptor. Los fixtures **d
 4. **Corrección opcional** (CA5.5): "+ / −" para unidades y un campo de peso para pesables. Guarda `quantity_source = 'user'` y no cambia `line_total_cents` ni los totales de la compra, que siempre son los de la factura.
 5. **F3 nunca mezcla:** el "más bajo de los últimos 90 días" (CA3.2) solo considera líneas con cantidad real (regla de §5.3).
 
-**Fuera de alcance:** reclamarle a la DGI o a la cadena, y leer el ticket impreso (OCR) para sacar la cantidad. Si la inferencia y la corrección manual no alcanzan en la práctica, el OCR del ticket es la alternativa a evaluar.
+**Fuera de alcance:** reclamarle a la DGI o a la cadena, y leer el ticket impreso (OCR) para sacar la cantidad.
+
+**OCR: dudoso, no es el plan.** Los tickets de súper son muy largos y de papel térmico, lo que da fotos difíciles de leer, y habría que fotografiar uno por compra, lo que contradice el objetivo de "sin escribir nada" y los 30 s. Solo se reconsidera si la inferencia y la corrección manual fallan en la práctica **y** no aparece una alternativa mejor.
+
+**Pendiente de investigar (dueño):** preguntar en la tienda por qué el ticket impreso trae la cantidad real y la factura electrónica no (¿configuración del punto de venta, o decisión de la cadena?). Si la respuesta es una configuración, la solución es de la cadena y no de la app. Se anota la respuesta en §10.7.
+
+### 10.7 Notas de uso (Fase 5)
+
+_Se llena durante la fase: respuestas de la tienda, fricciones, y las respuestas a las preguntas de §7 Fase 5._
 
 ---
 
