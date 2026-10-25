@@ -111,4 +111,28 @@ describe('aislamiento entre usuarios', () => {
     const lineAfter = (await (await ema(`/purchases/${id}`)).json<{ lines: { quantity: number }[] }>()).lines[0]!;
     expect(lineAfter.quantity).toBe(1);
   });
+
+  it('compra manual, tiendas y resumen: solo ve lo propio (F4, F6)', async () => {
+    const gabi = as('gabi@example.com');
+    const created = await (
+      await gabi(
+        '/purchases/manual',
+        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ store: { name: 'Fonda de Gabi' }, lines: [{ description: 'Almuerzo', quantity: 1, lineTotalCents: 450 }] }) },
+      )
+    ).json<{ id: string }>();
+    const { storeId } = await (await gabi(`/purchases/${created.id}`)).json<{ storeId: string }>();
+
+    const hugo = as('hugo@example.com');
+    expect((await (await hugo('/stores?q=gabi')).json<{ items: unknown[] }>()).items).toEqual([]);
+    const summary = await (await hugo('/summary')).json<{ months: { totalCents: number }[]; byStore: unknown[] }>();
+    expect(summary.months.every((month) => month.totalCents === 0)).toBe(true);
+    expect(summary.byStore).toEqual([]);
+    // No puede agregar compras a la tienda de Gabi por id.
+    const res = await hugo('/purchases/manual', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ store: { id: storeId }, lines: [{ description: 'x', quantity: 1, lineTotalCents: 1 }] }),
+    });
+    expect(res.status).toBe(400);
+  });
 });

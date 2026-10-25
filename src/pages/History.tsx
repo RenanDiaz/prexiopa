@@ -24,6 +24,10 @@ export function History() {
           ¿Cuánto cuesta?
         </Link>
       </div>
+      <div className={styles.secondaryLinks}>
+        <Link href="/manual">Compra manual</Link>
+        <Link href="/resumen">Resumen del mes</Link>
+      </div>
 
       <h2 className={styles.subtitle}>Compras</h2>
       {purchases.isPending && <p className={styles.muted}>Cargando…</p>}

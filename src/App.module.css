@@ -282,3 +282,79 @@
   align-self: flex-start;
   padding: 0;
 }
+
+.secondaryLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0.75rem 0;
+  font-size: 0.95rem;
+}
+
+.secondaryLinks a {
+  color: var(--text-muted);
+}
+
+.inlineField {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.inlineField .input {
+  width: auto;
+}
+
+.lineEditor {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lineEditor .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.textarea {
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  resize: vertical;
+}
+
+.bars {
+  margin: 0.5rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bar {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr 6rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+}
+
+.barLabel {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.barTrack {
+  height: 0.75rem;
+  border-radius: 0.25rem;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+.bar .amount {
+  text-align: right;
+}

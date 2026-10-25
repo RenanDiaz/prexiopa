@@ -79,15 +79,20 @@ export function PurchaseDetail({ id }: { id: string }) {
       </ul>
 
       <dl className={styles.totals}>
-        <dt>Subtotal</dt>
-        <dd>{formatCents(p.subtotalCents)}</dd>
-        {p.taxBreakdown
-          .filter((rate) => rate.rateBp > 0)
-          .map((rate) => (
-            <Row key={rate.rateBp} label={`ITBMS ${formatRate(rate.rateBp)} (${rate.lineCount})`} cents={rate.taxCents} />
-          ))}
-        <dt>ITBMS total</dt>
-        <dd>{formatCents(p.taxCents)}</dd>
+        {/* Una compra manual no pide ITBMS (spec §3): solo hay total. */}
+        {p.source === 'cafe' && (
+          <>
+            <dt>Subtotal</dt>
+            <dd>{formatCents(p.subtotalCents)}</dd>
+            {p.taxBreakdown
+              .filter((rate) => rate.rateBp > 0)
+              .map((rate) => (
+                <Row key={rate.rateBp} label={`ITBMS ${formatRate(rate.rateBp)} (${rate.lineCount})`} cents={rate.taxCents} />
+              ))}
+            <dt>ITBMS total</dt>
+            <dd>{formatCents(p.taxCents)}</dd>
+          </>
+        )}
         <dt className={styles.strong}>Total</dt>
         <dd className={styles.strong}>{formatCents(p.totalCents)}</dd>
         {p.paidCents !== null && p.paidCents !== p.totalCents && <Row label="Pagado" cents={p.paidCents} />}

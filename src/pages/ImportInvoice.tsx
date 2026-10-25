@@ -48,9 +48,10 @@ export function ImportInvoice() {
           Consultar
         </button>
       </form>
-      <Link href="/" className={styles.back}>
-        Cancelar
-      </Link>
+      <div className={styles.secondaryLinks}>
+        <Link href="/importar/varios">Importar varias facturas</Link>
+        <Link href="/">Cancelar</Link>
+      </div>
     </>
   );
 }

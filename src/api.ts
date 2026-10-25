@@ -216,3 +216,32 @@ export const updateStore = (
 
 export const setItemWeighed = (itemId: string, isWeighed: boolean) =>
   apiNoContent(`/catalog/items/${encodeURIComponent(itemId)}/weighed`, sendJson('PATCH', { isWeighed }));
+
+// F4 — Compra manual. F6 — Resumen.
+
+export type StoreOption = { id: string; name: string; lastPurchasedAt: string | null };
+
+export type ManualLine = {
+  productId?: string;
+  code?: string;
+  description: string;
+  quantity: number;
+  lineTotalCents: number;
+};
+
+export type MonthlySummary = {
+  months: { month: string; totalCents: number; count: number }[];
+  currentMonth: string;
+  byStore: { storeId: string; storeName: string; totalCents: number; count: number }[];
+};
+
+export const listStores = (q: string) =>
+  api<{ items: StoreOption[] }>(`/stores?${new URLSearchParams({ q })}`).then((r) => r.items);
+
+export const createManualPurchase = (input: {
+  store: { id: string } | { name: string };
+  date: string;
+  lines: ManualLine[];
+}) => api<{ id: string }>('/purchases/manual', sendJson('POST', input));
+
+export const getSummary = () => api<MonthlySummary>('/summary');

@@ -1,12 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, ApiError, signInWithGoogle, signOut, type Me } from './api';
 import styles from './App.module.css';
+import { BulkImport } from './pages/BulkImport';
 import { History } from './pages/History';
 import { ImportInvoice } from './pages/ImportInvoice';
+import { ManualPurchase } from './pages/ManualPurchase';
 import { PriceHistory } from './pages/PriceHistory';
 import { PriceSearch } from './pages/PriceSearch';
 import { PurchaseDetail } from './pages/PurchaseDetail';
 import { StoreSettings } from './pages/StoreSettings';
+import { Summary } from './pages/Summary';
 import { Link, matchPath, usePath } from './router';
 
 // Better Auth vuelve a "/?error=<código>" si el login falla.
@@ -65,6 +68,9 @@ export function App() {
 function Routes() {
   const path = usePath();
   if (path === '/importar') return <ImportInvoice />;
+  if (path === '/importar/varios') return <BulkImport />;
+  if (path === '/manual') return <ManualPurchase />;
+  if (path === '/resumen') return <Summary />;
   if (path === '/precios') return <PriceSearch />;
   const detail = matchPath('/compras/:id', path);
   if (detail?.id) return <PurchaseDetail key={detail.id} id={detail.id} />;

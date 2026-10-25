@@ -5,6 +5,8 @@ import type { CafeInvoice } from '../cafe/parse';
 import { newId } from '../lib/id';
 import { catalogRepo, refreshStoreQuantities } from './catalog';
 import { getDb, type Db } from './client';
+import { manualRepo, type ManualPurchaseInput } from './manual';
+import { summaryRepo } from './summary';
 import { purchaseLines, purchases, storeItems, stores } from './schema';
 
 // D1 no tiene RLS: este módulo es la única puerta a los datos del usuario y
@@ -91,8 +93,12 @@ export function scoped(d1: D1Database, userId: string) {
     return known;
   }
 
+  const manual = manualRepo(db, userId);
+
   return {
     catalog,
+    summary: summaryRepo(db, userId),
+    stores: { list: manual.listStores },
     purchases: {
       async list(options: { cursor?: string; limit?: number } = {}): Promise<PurchasePage> {
         const limit = Math.min(Math.max(options.limit ?? 30, 1), 100);
@@ -248,6 +254,13 @@ export function scoped(d1: D1Database, userId: string) {
         await refreshStoreQuantities(db, storeId);
         await catalog.inferQuantities();
         return { id: purchaseId, created: true };
+      },
+
+      /** F4: compra manual. Después vincula por GTIN lo escaneado. */
+      async createManual(input: ManualPurchaseInput): Promise<{ id: string }> {
+        const { id, storeId } = await manual.create(input);
+        await catalog.reindexItems(storeId);
+        return { id };
       },
 
       /** Devuelve false si la compra no existe o no es del usuario. */
