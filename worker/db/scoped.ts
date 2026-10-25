@@ -270,6 +270,24 @@ export function scoped(d1: D1Database, userId: string) {
         return { id };
       },
 
+      /**
+       * CA4.5: cambia la fecha de una compra manual. Las importadas no se tocan: su fecha es la de la DGI.
+       * Después recalcula las cantidades inferidas, que dependen de la ventana de 60 días (§10.6).
+       */
+      async setManualDate(id: string, issuedAt: string): Promise<'ok' | 'not_found' | 'not_manual'> {
+        const updated = await db
+          .update(purchases)
+          .set({ issuedAt })
+          .where(and(ownPurchase(id), eq(purchases.source, 'manual')))
+          .returning({ id: purchases.id });
+        if (updated.length > 0) {
+          await catalog.inferQuantities();
+          return 'ok';
+        }
+        const exists = await db.query.purchases.findFirst({ where: ownPurchase(id), columns: { id: true } });
+        return exists ? 'not_manual' : 'not_found';
+      },
+
       /** Devuelve false si la compra no existe o no es del usuario. */
       async delete(id: string): Promise<boolean> {
         const deleted = await db.delete(purchases).where(ownPurchase(id)).returning({ id: purchases.id });

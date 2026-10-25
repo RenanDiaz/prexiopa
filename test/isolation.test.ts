@@ -148,4 +148,28 @@ describe('aislamiento entre usuarios', () => {
       expect(other.trimEnd().split('\r\n')).toHaveLength(1); // solo los encabezados
     }
   });
+
+  it('PATCH /purchases/:id no cambia la fecha de compras ajenas (CA4.5)', async () => {
+    const ana = as('ana@example.com');
+    const created = await ana('/purchases/manual', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        store: { name: 'Chino de la esquina' },
+        date: '2026-10-10',
+        lines: [{ description: 'Pan de molde', quantity: 1, lineTotalCents: 250 }],
+      }),
+    });
+    const { id } = await created.json<{ id: string }>();
+
+    const attempt = await as('beto@example.com')(`/purchases/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date: '2026-10-01' }),
+    });
+    expect(attempt.status).toBe(404);
+
+    const row = await env.DB.prepare('SELECT issued_at FROM purchases WHERE id = ?').bind(id).first<{ issued_at: string }>();
+    expect(row?.issued_at).toBe('2026-10-10T17:00:00.000Z');
+  });
 });
