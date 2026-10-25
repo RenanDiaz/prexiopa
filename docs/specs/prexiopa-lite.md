@@ -315,7 +315,7 @@ SQLite no tiene `MEDIAN`, por eso la consulta usa `OFFSET`. Se corre con `wrangl
 - DGI: ¿qué parte de `scan_ms` es espera de la DGI? Si la mediana pasa de 30 s por esa espera, se evalúa guardar en segundo plano.
 - ¿Se consulta el precio en tienda antes de comprar?
 
-**Decisión del día 60:** cumple las métricas → seguir y evaluar solo lo que los datos justifiquen (D2 familia, sparkline, OCR). No las cumple → archivar.
+**Decisión del día 60:** cumple las métricas → seguir y evaluar solo lo que los datos justifiquen (D2 familia, sparkline, OCR, backfill desde Shopi §10.7). No las cumple → archivar.
 
 ## 8. Decisiones abiertas
 
@@ -430,6 +430,13 @@ El HTML trae la cédula, el nombre y el teléfono del receptor. Los fixtures **d
 ### 10.7 Notas de uso (Fase 5)
 
 _Se llena durante la fase: respuestas de la tienda, fricciones, y las respuestas a las preguntas de §7 Fase 5._
+
+**2026-10-25 — Shopi (app de lealtad de El Fuerte).** Guarda las compras desde 2023 con líneas (descripción, cantidad, precio), fecha y tienda. Se comparó con la factura 5230050305 (TAMEK, 10/07/2026):
+
+- **No sirve para obtener el CUFE.** El código de barras del ticket (Code 39, `74505184000050305F`) trae el consecutivo `50305`. Ese número aparece en el número de factura (`523` + `0050305`) y en "Información de interés" (`J23T-50305-N`). Con eso se conocen el emisor, la sucursal, la fecha y el número, pero el CUFE también lleva un código de seguridad aleatorio de 9 dígitos que no se puede derivar. El "Ticket ID" del listado de Shopi es otro identificador, sin relación con el CUFE.
+- **El total de Shopi es el "Total Neto" (sin ITBMS).** $101.46 en Shopi contra $101.60 pagados ($0.14 de ITBMS). En la factura de marzo (`tamek.html`) pasa lo mismo, con 1 ¢ de diferencia por redondeo. Coincide con nuestro `subtotal_cents`.
+- **No aporta nada sobre la factura de la DGI.** La factura de TAMEK ya trae los pesos reales (6 decimales) y los descuentos por línea, así que El Fuerte no tiene el problema de §10.6. Shopi no trae código de producto ni ITBMS.
+- **Único valor posible:** historial de compras anteriores a la factura electrónica o sin ella. Sería un import único como compras `manual`, sin vinculación automática por falta de código. No se construye en la Fase 5 (función nueva y fuera de alcance). Se evalúa el día 60 solo si se decide seguir y el historial viejo hace falta. La API de Shopi no es pública: es frágil y probablemente va contra sus términos.
 
 ---
 
