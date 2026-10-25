@@ -27,6 +27,7 @@ export function History() {
       <div className={styles.secondaryLinks}>
         <Link href="/manual">Compra manual</Link>
         <Link href="/resumen">Resumen del mes</Link>
+        <Link href="/exportar">Exportar</Link>
       </div>
 
       <h2 className={styles.subtitle}>Compras</h2>
