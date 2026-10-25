@@ -1,17 +1,28 @@
-import { BrowserQRCodeReader, type IScannerControls } from '@zxing/browser';
-import { DecodeHintType } from '@zxing/library';
+import { BrowserMultiFormatReader, BrowserQRCodeReader, type IScannerControls } from '@zxing/browser';
+import { BarcodeFormat, DecodeHintType } from '@zxing/library';
 import { useEffect, useEffectEvent, useRef } from 'react';
-import styles from './QrScanner.module.css';
+import styles from './Scanner.module.css';
 
-// Chunk lazy (spec §6.6): se carga solo al abrir la pantalla de importar.
+// Chunk lazy (spec §6.6): se carga solo al abrir una pantalla con cámara.
 
 type Props = {
-  /** Se llama una sola vez, con el texto del primer QR leído. */
+  /** `qr`: factura CAFE (F1). `barcode`: EAN/UPC de un producto (F3). */
+  mode: 'qr' | 'barcode';
+  /** Se llama una sola vez, con el texto del primer código leído. */
   onResult: (text: string) => void;
   onError: (message: string) => void;
 };
 
-export default function QrScanner({ onResult, onError }: Props) {
+function createReader(mode: Props['mode']) {
+  if (mode === 'qr') {
+    // TRY_HARDER: los QR de la DGI son de alta densidad (CA1.1).
+    return new BrowserQRCodeReader(new Map([[DecodeHintType.TRY_HARDER, true]]));
+  }
+  const formats = [BarcodeFormat.EAN_13, BarcodeFormat.EAN_8, BarcodeFormat.UPC_A, BarcodeFormat.UPC_E];
+  return new BrowserMultiFormatReader(new Map([[DecodeHintType.POSSIBLE_FORMATS, formats]]));
+}
+
+export default function Scanner({ mode, onResult, onError }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const handleResult = useEffectEvent(onResult);
   const handleError = useEffectEvent(onError);
@@ -19,8 +30,7 @@ export default function QrScanner({ onResult, onError }: Props) {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    // TRY_HARDER: los QR de la DGI son de alta densidad (CA1.1).
-    const reader = new BrowserQRCodeReader(new Map([[DecodeHintType.TRY_HARDER, true]]));
+    const reader = createReader(mode);
     let controls: IScannerControls | undefined;
     let stopped = false;
 
@@ -48,7 +58,7 @@ export default function QrScanner({ onResult, onError }: Props) {
       stopped = true;
       controls?.stop();
     };
-  }, []);
+  }, [mode]);
 
-  return <video ref={videoRef} className={styles.video} muted playsInline />;
+  return <video ref={videoRef} className={mode === 'qr' ? styles.square : styles.wide} muted playsInline />;
 }

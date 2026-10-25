@@ -3,7 +3,10 @@ import { api, ApiError, signInWithGoogle, signOut, type Me } from './api';
 import styles from './App.module.css';
 import { History } from './pages/History';
 import { ImportInvoice } from './pages/ImportInvoice';
+import { PriceHistory } from './pages/PriceHistory';
+import { PriceSearch } from './pages/PriceSearch';
 import { PurchaseDetail } from './pages/PurchaseDetail';
+import { StoreSettings } from './pages/StoreSettings';
 import { Link, matchPath, usePath } from './router';
 
 // Better Auth vuelve a "/?error=<código>" si el login falla.
@@ -62,7 +65,14 @@ export function App() {
 function Routes() {
   const path = usePath();
   if (path === '/importar') return <ImportInvoice />;
+  if (path === '/precios') return <PriceSearch />;
   const detail = matchPath('/compras/:id', path);
   if (detail?.id) return <PurchaseDetail key={detail.id} id={detail.id} />;
+  const product = matchPath('/precios/producto/:id', path);
+  if (product?.id) return <PriceHistory key={product.id} kind="product" id={product.id} />;
+  const item = matchPath('/precios/item/:id', path);
+  if (item?.id) return <PriceHistory key={item.id} kind="item" id={item.id} />;
+  const store = matchPath('/tiendas/:id', path);
+  if (store?.id) return <StoreSettings key={store.id} id={store.id} />;
   return <History />;
 }

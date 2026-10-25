@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { deletePurchase, getPurchase } from '../api';
+import { useState, type FormEvent } from 'react';
+import { deletePurchase, getPurchase, setLineQuantity, type PurchaseLine } from '../api';
 import styles from '../App.module.css';
 import { formatCents, formatDateTime, formatQuantity, formatRate } from '../format';
 import { Link, navigate } from '../router';
@@ -39,22 +40,39 @@ export function PurchaseDetail({ id }: { id: string }) {
       <Link href="/" className={styles.back}>
         ← Compras
       </Link>
-      <h2 className={styles.subtitle}>{p.storeName}</h2>
+      <div className={styles.titleRow}>
+        <h2 className={styles.subtitle}>{p.storeName}</h2>
+        <Link href={`/tiendas/${p.storeId}`} className={styles.link}>
+          Editar tienda
+        </Link>
+      </div>
       <p className={styles.muted}>
         {formatDateTime(p.issuedAt)}
         {p.source === 'manual' && ' · Manual'}
       </p>
+      {p.storeQuantities === 'always_one' && (
+        <p className={styles.notice}>
+          Esta tienda reporta cantidad 1 en todo. Para comparar precios, toca la cantidad para confirmarla o usa − / + si
+          llevaste más; en lo que va por peso, anota los kg. Es opcional.
+        </p>
+      )}
 
       <ul className={styles.lines}>
         {p.lines.map((line) => (
           <li key={line.id} className={styles.line}>
             <span>
-              {line.description}
+              <Link href={`/precios/item/${line.storeItemId}`} className={styles.plain}>
+                {line.description}
+              </Link>
               {line.discountCents > 0 && (
                 <span className={styles.discount}> −{formatCents(line.discountCents)}</span>
               )}
             </span>
-            <span className={styles.muted}>× {formatQuantity(line.quantity)}</span>
+            {p.storeQuantities === 'always_one' || line.quantitySource !== 'invoice' ? (
+              <QuantityControl purchaseId={p.id} line={line} />
+            ) : (
+              <span className={styles.muted}>× {formatQuantity(line.quantity)}</span>
+            )}
             <span className={styles.amount}>{formatCents(line.lineTotalCents)}</span>
           </li>
         ))}
@@ -105,5 +123,82 @@ function Row({ label, cents }: { label: string; cents: number }) {
       <dt>{label}</dt>
       <dd>{formatCents(cents)}</dd>
     </>
+  );
+}
+
+/** CA5.5 y CA5.6: unidades con − / +, peso para pesables; marca las inferidas. */
+function QuantityControl({ purchaseId, line }: { purchaseId: string; line: PurchaseLine }) {
+  const queryClient = useQueryClient();
+  const [weight, setWeight] = useState<string | null>(null);
+  const update = useMutation({
+    mutationFn: (quantity: number) => setLineQuantity(line.id, quantity),
+    onSuccess: async () => {
+      setWeight(null);
+      await queryClient.invalidateQueries({ queryKey: ['purchase', purchaseId] });
+      await queryClient.invalidateQueries({ queryKey: ['price-history'] });
+    },
+  });
+  const confirmed = line.quantitySource !== 'invoice';
+
+  if (line.isWeighed) {
+    if (weight !== null) {
+      const submit = (event: FormEvent) => {
+        event.preventDefault();
+        const kg = Number(weight.replace(',', '.'));
+        if (kg > 0) update.mutate(kg);
+      };
+      return (
+        <form className={styles.weight} onSubmit={submit}>
+          <input
+            className={styles.input}
+            value={weight}
+            onChange={(event) => setWeight(event.target.value)}
+            inputMode="decimal"
+            aria-label={`Peso en kg de ${line.description}`}
+            placeholder="kg"
+            autoFocus
+          />
+          <button className={styles.button} type="submit" disabled={update.isPending}>
+            OK
+          </button>
+        </form>
+      );
+    }
+    return (
+      <button className={styles.link} onClick={() => setWeight(confirmed ? String(line.quantity) : '')}>
+        {confirmed ? `${formatQuantity(line.quantity)} kg` : 'Peso'}
+      </button>
+    );
+  }
+
+  return (
+    <span className={styles.stepper}>
+      <button
+        className={styles.stepButton}
+        aria-label={`Una unidad menos de ${line.description}`}
+        disabled={update.isPending || line.quantity <= 1}
+        onClick={() => update.mutate(line.quantity - 1)}
+      >
+        −
+      </button>
+      <button
+        className={confirmed ? styles.stepValue : `${styles.stepValue} ${styles.unconfirmed}`}
+        title={confirmed ? undefined : 'Confirmar que fue esta cantidad'}
+        aria-label={confirmed ? undefined : `Confirmar ${formatQuantity(line.quantity)} de ${line.description}`}
+        disabled={update.isPending || line.quantitySource === 'user'}
+        onClick={() => update.mutate(line.quantity)}
+      >
+        {formatQuantity(line.quantity)}
+        {line.quantitySource === 'inferred' && <small className={styles.muted}> inf.</small>}
+      </button>
+      <button
+        className={styles.stepButton}
+        aria-label={`Una unidad más de ${line.description}`}
+        disabled={update.isPending}
+        onClick={() => update.mutate(line.quantity + 1)}
+      >
+        +
+      </button>
+    </span>
   );
 }
