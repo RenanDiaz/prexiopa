@@ -115,7 +115,8 @@ export const deletePurchase = (id: string) =>
     if (!res.ok) throw new ApiError(res.status, 'No se pudo eliminar la compra');
   });
 export const previewCafe = (input: string) => api<CafePreview>('/purchases/cafe/preview', postJson({ input }));
-export const saveCafe = (input: string) => api<{ id: string; created: boolean }>('/purchases/cafe', postJson({ input }));
+export const saveCafe = (input: string, scanMs?: number) =>
+  api<{ id: string; created: boolean }>('/purchases/cafe', postJson({ input, scanMs }));
 
 // F3 y F5 — Catálogo.
 

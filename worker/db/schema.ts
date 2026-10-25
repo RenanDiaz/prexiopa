@@ -185,6 +185,8 @@ export const purchases = sqliteTable(
     paidCents: integer('paid_cents'),
     sourceUrl: text('source_url'),
     rawJson: text('raw_json'),
+    // CA1.8: ms entre detectar el QR y tocar "Guardar", medidos en el cliente.
+    scanMs: integer('scan_ms'),
     createdAt: createdAt(),
   },
   (t) => [

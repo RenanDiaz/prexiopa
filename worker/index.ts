@@ -14,12 +14,20 @@ export type AppOptions = AuthOptions & {
   dgi?: FetchCafeOptions;
 };
 
-/** Body de los endpoints CAFE: `{ input }` con el CUFE o la URL del QR. */
-async function cufeFromBody(req: Request): Promise<string> {
-  const body = (await req.json().catch(() => ({}))) as { input?: unknown };
+/** Tope de `scan_ms` (CA1.8): una hora. Más que eso es una pestaña olvidada, no un escaneo. */
+const MAX_SCAN_MS = 3_600_000;
+
+/** `scanMs` es una métrica: un valor inválido se descarta y no impide guardar la compra. */
+function scanMsFrom(value: unknown): number | null {
+  return typeof value === 'number' && Number.isInteger(value) && value >= 0 && value <= MAX_SCAN_MS ? value : null;
+}
+
+/** Body de los endpoints CAFE: `{ input, scanMs? }` con el CUFE o la URL del QR. */
+async function cafeBody(req: Request): Promise<{ cufe: string; scanMs: number | null }> {
+  const body = (await req.json().catch(() => ({}))) as { input?: unknown; scanMs?: unknown };
   const cufe = typeof body.input === 'string' ? extractCufe(body.input) : null;
   if (!cufe) throw new HTTPException(400, { message: 'No es un CUFE ni una URL de factura válida' });
-  return cufe;
+  return { cufe, scanMs: scanMsFrom(body.scanMs) };
 }
 
 async function jsonBody(req: Request): Promise<Record<string, unknown>> {
@@ -231,7 +239,7 @@ export function createApp(options: AppOptions = {}) {
   });
 
   app.post('/purchases/cafe/preview', async (c) => {
-    const cufe = await cufeFromBody(c.req.raw);
+    const { cufe } = await cafeBody(c.req.raw);
     const existingId = await scoped(c.env.DB, c.var.user.id).purchases.findIdByCufe(cufe);
     try {
       const invoice = await fetchCafe(cufe, options.dgi);
@@ -244,7 +252,7 @@ export function createApp(options: AppOptions = {}) {
   });
 
   app.post('/purchases/cafe', async (c) => {
-    const cufe = await cufeFromBody(c.req.raw);
+    const { cufe, scanMs } = await cafeBody(c.req.raw);
     const purchases = scoped(c.env.DB, c.var.user.id).purchases;
     // Idempotente (CA1.5): si ya existe no se vuelve a consultar la DGI.
     const existingId = await purchases.findIdByCufe(cufe);
@@ -252,7 +260,7 @@ export function createApp(options: AppOptions = {}) {
 
     try {
       const invoice = await fetchCafe(cufe, options.dgi);
-      const { id, created } = await purchases.importCafe(invoice, invoiceUrl(cufe));
+      const { id, created } = await purchases.importCafe(invoice, invoiceUrl(cufe), scanMs);
       return c.json({ id, created }, created ? 201 : 200);
     } catch (error) {
       const failure = dgiError(error, cufe);

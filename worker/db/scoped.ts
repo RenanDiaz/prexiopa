@@ -182,7 +182,11 @@ export function scoped(d1: D1Database, userId: string) {
        * Guarda una factura CAFE con sus líneas en un solo batch atómico (§6.3).
        * Idempotente por (user_id, cufe): si ya existe, devuelve la existente.
        */
-      async importCafe(invoice: CafeInvoice, sourceUrl: string): Promise<{ id: string; created: boolean }> {
+      async importCafe(
+        invoice: CafeInvoice,
+        sourceUrl: string,
+        scanMs: number | null = null,
+      ): Promise<{ id: string; created: boolean }> {
         const existing = await findIdByCufe(invoice.cufe);
         if (existing) return { id: existing, created: false };
 
@@ -220,6 +224,7 @@ export function scoped(d1: D1Database, userId: string) {
             paidCents: totals.paidCents,
             sourceUrl,
             rawJson: JSON.stringify(invoice),
+            scanMs,
           }),
         );
         invoice.lines.forEach((line, i) => {
