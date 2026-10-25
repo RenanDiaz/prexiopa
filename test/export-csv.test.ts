@@ -8,6 +8,7 @@ import {
   textCell,
   toCsv,
   type LineExportRow,
+  type PurchaseExportRow,
 } from '../worker/export/csv';
 
 const BOM = String.fromCharCode(0xfeff);
@@ -68,6 +69,7 @@ describe('toCsv (CA8.4)', () => {
 describe('linesCsv', () => {
   const base: LineExportRow = {
     purchaseId: 'p1',
+    source: 'cafe',
     lineNo: 1,
     issuedAt: '2026-10-25T14:38:00.000Z',
     storeName: 'Grupo Rey',
@@ -100,26 +102,40 @@ describe('linesCsv', () => {
   it('formatea la tasa de ITBMS en porcentaje', () => {
     expect(body({ ...base, taxRateBp: 700, taxCents: 24 })).toMatch(/,7,0\.24$/);
   });
+
+  it('deja vacíos la tasa y el ITBMS de una línea manual, no 0 (CA8.3)', () => {
+    expect(body({ ...base, source: 'manual' })).toMatch(/,6\.79,,$/);
+  });
 });
 
 describe('purchasesCsv', () => {
+  const purchase: PurchaseExportRow = {
+    id: 'p1',
+    issuedAt: '2026-10-20T17:00:00.000Z',
+    storeName: 'Chino de la esquina',
+    ruc: null,
+    branchAddress: null,
+    source: 'manual',
+    subtotalCents: 630,
+    taxCents: 0,
+    discountCents: 0,
+    totalCents: 630,
+    paidCents: 630,
+    cufe: null,
+  };
+  const body = (row: PurchaseExportRow) => purchasesCsv([row]).split('\r\n')[1]!;
+
+  it('deja vacíos el subtotal y el ITBMS de una compra manual, no 0 (CA8.2)', () => {
+    expect(body(purchase)).toBe('p1,2026-10-20,2026-10-20T17:00:00.000Z,Chino de la esquina,,,manual,,,0.00,6.30,6.30,');
+  });
+
+  it('exporta el subtotal y el ITBMS de una factura electrónica', () => {
+    expect(body({ ...purchase, source: 'cafe', subtotalCents: 1843, taxCents: 35, totalCents: 1878 })).toContain(
+      ',cafe,18.43,0.35,0.00,18.78,',
+    );
+  });
+
   it('deja vacíos el RUC, la sucursal, lo pagado y el CUFE cuando son nulos', () => {
-    const csv = purchasesCsv([
-      {
-        id: 'p1',
-        issuedAt: '2026-10-20T17:00:00.000Z',
-        storeName: 'Chino de la esquina',
-        ruc: null,
-        branchAddress: null,
-        source: 'manual',
-        subtotalCents: 630,
-        taxCents: 0,
-        discountCents: 0,
-        totalCents: 630,
-        paidCents: null,
-        cufe: null,
-      },
-    ]);
-    expect(csv.split('\r\n')[1]).toBe('p1,2026-10-20,2026-10-20T17:00:00.000Z,Chino de la esquina,,,manual,6.30,0.00,0.00,6.30,,');
+    expect(body({ ...purchase, paidCents: null })).toMatch(/Chino de la esquina,,,manual,,,0\.00,6\.30,,$/);
   });
 });

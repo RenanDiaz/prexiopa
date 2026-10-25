@@ -120,11 +120,13 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
   - `tienda` es el nombre visible (§5.2, `display_name` o, si no hay, `legal_name`); `ruc` y `sucursal` van vacíos en compras manuales.
   - `origen` es `cafe` o `manual`.
   - Los montos salen del **encabezado** de la factura, no de la suma de las líneas (§10.3).
+  - En una compra manual `subtotal` e `itbms` van **vacíos**, no en `0.00`: una compra manual no captura ITBMS (§3) y el subtotal es `total − ITBMS`. Vacío significa "no se sabe"; `0.00` significaría "exenta".
 - **CA8.3** `lineas.csv` tiene una fila por línea, ordenada por fecha de la compra y luego `linea`, con estas columnas:
   `id_compra, linea, fecha, tienda, codigo, descripcion, producto, cantidad, cantidad_origen, cantidad_confiable, es_pesable, precio_lista, descuento, total_linea, tasa_itbms, itbms`
   - `producto` es el nombre del producto vinculado (F5) o vacío.
   - `cantidad_origen` es `invoice`, `inferred` o `user` (§10.6). `cantidad_confiable` (`si`/`no`) aplica la regla de §5.3, la misma que usa F3, con una sola implementación compartida. Así Cowork no calcula precios unitarios falsos con las cantidades de Inmobiliaria Don Antonio.
   - `total_linea` incluye ITBMS y es lo realmente pagado (§5.3). `tasa_itbms` va en porcentaje (`7`).
+  - En las líneas de una compra manual `tasa_itbms` e `itbms` van vacíos, por la misma razón.
   - `id_compra` une ambos archivos. Los totales de la compra **no** se repiten en las líneas, para que sumar `total_linea` no duplique nada.
 - **CA8.4** Formato: UTF-8 con BOM, separador coma, saltos `CRLF` y comillas según RFC 4180. Montos en dólares con 2 decimales y punto decimal, sin separador de miles, formateados desde los centavos con aritmética entera (nunca con floats). `cantidad` lleva hasta 3 decimales, sin ceros sobrantes.
 - **CA8.5** Los textos que vienen de la DGI (`descripcion`, `tienda`, `sucursal`, `producto`) que empiezan con `=`, `+`, `-`, `@`, tabulador o retorno de carro se prefijan con `'`, para que una hoja de cálculo no los interprete como fórmula. Los montos negativos no se tocan.
