@@ -8,6 +8,7 @@ import { CafeNotFoundError, CafeParseError } from './cafe/parse';
 import type { StoreQuantities } from './catalog/rules';
 import { ManualPurchaseError, type ManualLineInput, type ManualPurchaseInput } from './db/manual';
 import { scoped } from './db/scoped';
+import { linesCsv, purchasesCsv } from './export/csv';
 
 export type AppOptions = AuthOptions & {
   /** Para tests: reemplaza la consulta a la DGI. */
@@ -285,6 +286,22 @@ export function createApp(options: AppOptions = {}) {
       throw error;
     }
   });
+
+  // F8 — Exportar a CSV (CA8.1): snapshot completo, con nombre fijo.
+  const csv = (body: string, filename: string) =>
+    new Response(body, {
+      headers: {
+        'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': `attachment; filename="${filename}"`,
+        'Cache-Control': 'no-store',
+      },
+    });
+  app.get('/export/compras.csv', async (c) =>
+    csv(purchasesCsv(await scoped(c.env.DB, c.var.user.id).export.purchases()), 'prexiopa-compras.csv'),
+  );
+  app.get('/export/lineas.csv', async (c) =>
+    csv(linesCsv(await scoped(c.env.DB, c.var.user.id).export.lines()), 'prexiopa-lineas.csv'),
+  );
 
   // F6 — Resumen mensual.
   app.get('/summary', async (c) => c.json(await scoped(c.env.DB, c.var.user.id).summary.monthly()));

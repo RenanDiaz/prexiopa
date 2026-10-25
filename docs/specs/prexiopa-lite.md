@@ -321,6 +321,8 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 **Excepción aprobada (2026-10-25): F8, exportar a CSV.** Es de solo lectura, no cambia el esquema ni el flujo de importación, y por eso no puede alterar las métricas del día 60. Cualquier otra función sigue sujeta a la regla.
 
+**Estado de F8 (2026-10-25):** endpoints, pantalla `/exportar` y tests implementados. Sin verificar: la descarga dentro de la PWA instalada en iOS y el guardado en iCloud Drive desde el teléfono.
+
 **Calendario:** día 0 = **2026-10-25**. Revisión el **2026-12-24** (día 60). Si no se cumplen las métricas de §2, se archiva el proyecto sin culpa.
 
 **Trabajo previo (antes de contar los 60 días en serio):**

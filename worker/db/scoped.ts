@@ -4,6 +4,7 @@ import { detectCodeFormat } from '../cafe/codes';
 import type { CafeInvoice } from '../cafe/parse';
 import { newId } from '../lib/id';
 import { catalogRepo, refreshStoreQuantities } from './catalog';
+import { exportRepo } from './export';
 import { getDb, type Db } from './client';
 import { manualRepo, type ManualPurchaseInput } from './manual';
 import { summaryRepo } from './summary';
@@ -98,6 +99,7 @@ export function scoped(d1: D1Database, userId: string) {
   return {
     catalog,
     summary: summaryRepo(db, userId),
+    export: exportRepo(db, userId),
     stores: { list: manual.listStores },
     purchases: {
       async list(options: { cursor?: string; limit?: number } = {}): Promise<PurchasePage> {

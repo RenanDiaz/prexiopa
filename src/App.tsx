@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, ApiError, signInWithGoogle, signOut, type Me } from './api';
 import styles from './App.module.css';
 import { BulkImport } from './pages/BulkImport';
+import { Export } from './pages/Export';
 import { History } from './pages/History';
 import { ImportInvoice } from './pages/ImportInvoice';
 import { ManualPurchase } from './pages/ManualPurchase';
@@ -71,6 +72,7 @@ function Routes() {
   if (path === '/importar/varios') return <BulkImport />;
   if (path === '/manual') return <ManualPurchase />;
   if (path === '/resumen') return <Summary />;
+  if (path === '/exportar') return <Export />;
   if (path === '/precios') return <PriceSearch />;
   const detail = matchPath('/compras/:id', path);
   if (detail?.id) return <PurchaseDetail key={detail.id} id={detail.id} />;

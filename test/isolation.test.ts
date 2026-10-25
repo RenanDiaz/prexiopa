@@ -135,4 +135,17 @@ describe('aislamiento entre usuarios', () => {
     });
     expect(res.status).toBe(400);
   });
+
+  it('GET /export/*.csv solo exporta los datos propios (CA8.6)', async () => {
+    const { purchase } = await seedPurchase('ana@example.com');
+
+    for (const path of ['compras', 'lineas']) {
+      const own = await (await as('ana@example.com')(`/export/${path}.csv`)).text();
+      expect(own).toContain(purchase.id);
+
+      const other = await (await as('beto@example.com')(`/export/${path}.csv`)).text();
+      expect(other).not.toContain(purchase.id);
+      expect(other.trimEnd().split('\r\n')).toHaveLength(1); // solo los encabezados
+    }
+  });
 });
