@@ -274,13 +274,14 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 ### Fase 4 — Manual, migración de datos y apagado de Supabase (F4, F6, F7) — 🟡 implementada; falta migrar y apagar la v0
 
-**Estado (2026-10-24):** compra manual (tienda nueva solo con nombre o autocompletado, líneas con producto existente, código escaneado o texto libre, cantidad y total; se vincula por GTIN si se escaneó), resumen mensual de 12 meses y por tienda del mes en hora de Panamá, importar varios, y manifest PWA con íconos. Probado en local. Pendiente del dueño: exportar los CUFEs de Supabase e importarlos, pausar Supabase y desconectar Vercel.
+**Estado (2026-10-24):** compra manual (tienda nueva solo con nombre o autocompletado, líneas con producto existente, código escaneado o texto libre, cantidad y total; se vincula por GTIN si se escaneó), resumen mensual de 12 meses y por tienda del mes en hora de Panamá, importar varios, y manifest PWA con íconos. Probado en local. Pendiente del dueño: borrar el proyecto de Supabase y desconectar Vercel.
 
 - Migración de datos: exportar los **CUFEs** de `imported_invoices` y **reimportarlos con el pipeline nuevo**, sin transformar datos viejos.
+  - ✅ **Resultado (2026-10-24): no hay nada que migrar.** Se reactivó el proyecto de Supabase y `imported_invoices` está vacía (0 CUFEs). La importación por CUFE llegó a la v0 en diciembre de 2025, cerca de cuando se dejó de usar. Las compras manuales de la v0 no se migran (D3). El backup descargado queda archivado fuera del repo.
   - Export en el SQL Editor de Supabase: `select cufe from imported_invoices order by issue_date;`
   - **Importar varios** (pantalla de importar): se pega una lista de CUFEs o URLs del QR, uno por línea. Se importan de a uno, con el estado de cada uno a la vista: guardada, ya importada o error con "Reintentar". Usa el mismo `POST /api/purchases/cafe`, así que las facturas ya importadas no se duplican (CA1.5).
 - Las sesiones manuales de v0 se descartan, salvo que se decida lo contrario (ver §8).
-- Pausar el proyecto de Supabase. Se borra a los 30 días sin incidentes.
+- Pausar el proyecto de Supabase. Se borra a los 30 días sin incidentes. Como no había datos que migrar, se puede borrar sin esperar.
 - Desconectar del repo el proyecto de Vercel de la v0, que falla en cada PR desde la Fase 1.
 
 ## 8. Decisiones abiertas
@@ -289,7 +290,7 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 |---|---|---|
 | D1 | Auth: Cloudflare Access o Better Auth | ✅ **Better Auth** con Google: el login redirige directo al dominio de la app (§6.2) |
 | D2 | ¿Usuarios en v1: solo yo, o yo + familia? | Lista cerrada en `ALLOWED_EMAILS` (§6.2). El modelo ya es multiusuario |
-| D3 | ¿Migrar las compras manuales de v0? | **No.** Solo se reimportan CUFEs |
+| D3 | ¿Migrar las compras manuales de v0? | ✅ **No.** Solo se reimportan CUFEs (la v0 no tenía ninguno, §7 Fase 4) |
 | D4 | Dominio propio o `workers.dev` | ✅ **Dominio propio** `prexiopa.com` (lo pide el login con Better Auth); `workers.dev` desactivado |
 | D5 | Estilos: CSS Modules o mantener styled-components | ✅ **CSS Modules** (decidido en la Fase 1) |
 | D6 | ¿Los productos (`products`) se comparten entre usuarios? | **No** en v1. Compartirlos vuelve a traer la moderación |
