@@ -108,13 +108,13 @@ describe('GET /api/export/*.csv', () => {
       origen: 'manual',
       fecha: '2026-10-20',
       emitida_utc: '2026-10-20T17:00:00.000Z',
+      subtotal: '',
+      itbms: '',
       total: '6.30',
       pagado: '6.30',
       cufe: '',
     });
-    for (const row of rows) {
-      for (const column of ['subtotal', 'itbms', 'descuento', 'total']) expect(row[column]).toMatch(/^-?\d+\.\d{2}$/);
-    }
+    for (const column of ['subtotal', 'itbms', 'descuento', 'total']) expect(cafe![column]).toMatch(/^-?\d+\.\d{2}$/);
   });
 
   it('lineas.csv: una fila por línea, con confiabilidad de la cantidad (CA8.3)', async () => {
@@ -145,9 +145,11 @@ describe('GET /api/export/*.csv', () => {
       ['1', 'user', 'si', '2.50'],
       ['2', 'user', 'si', '3.80'],
     ]);
-    for (const row of rows) {
+    for (const row of cafeLines) {
       for (const column of ['precio_lista', 'descuento', 'total_linea', 'itbms']) expect(row[column]).toMatch(/^-?\d+\.\d{2}$/);
     }
+    // Una compra manual no captura ITBMS: vacío, no 0 (CA8.3).
+    for (const row of manual) expect([row.tasa_itbms, row.itbms]).toEqual(['', '']);
   });
 
   it('escapa fórmulas y comillas de los textos (CA8.4, CA8.5)', async () => {

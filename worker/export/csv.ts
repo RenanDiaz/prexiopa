@@ -98,6 +98,7 @@ export type PurchaseExportRow = {
 
 export type LineExportRow = {
   purchaseId: string;
+  source: 'cafe' | 'manual';
   lineNo: number;
   issuedAt: string;
   storeName: string;
@@ -115,6 +116,9 @@ export type LineExportRow = {
   taxCents: number;
 };
 
+/** Una compra manual no captura ITBMS (spec §3): se exporta vacío, no como 0.00 (CA8.2, CA8.3). */
+const taxCell = (source: 'cafe' | 'manual', render: () => string) => (source === 'manual' ? '' : render());
+
 export function purchasesCsv(rows: PurchaseExportRow[]): string {
   return toCsv(
     PURCHASE_COLUMNS,
@@ -126,8 +130,9 @@ export function purchasesCsv(rows: PurchaseExportRow[]): string {
       textCell(row.ruc),
       textCell(row.branchAddress),
       row.source,
-      centsToDecimal(row.subtotalCents),
-      centsToDecimal(row.taxCents),
+      // subtotal = total − ITBMS: sin ITBMS tampoco se conoce.
+      taxCell(row.source, () => centsToDecimal(row.subtotalCents)),
+      taxCell(row.source, () => centsToDecimal(row.taxCents)),
       centsToDecimal(row.discountCents),
       centsToDecimal(row.totalCents),
       row.paidCents === null ? '' : centsToDecimal(row.paidCents),
@@ -155,8 +160,8 @@ export function linesCsv(rows: LineExportRow[]): string {
       centsToDecimal(row.listPriceCents),
       centsToDecimal(row.discountCents),
       centsToDecimal(row.lineTotalCents),
-      formatRate(row.taxRateBp),
-      centsToDecimal(row.taxCents),
+      taxCell(row.source, () => formatRate(row.taxRateBp)),
+      taxCell(row.source, () => centsToDecimal(row.taxCents)),
     ]),
   );
 }

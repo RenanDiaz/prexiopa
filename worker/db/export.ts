@@ -38,6 +38,7 @@ export function exportRepo(db: Db, userId: string) {
       return db
         .select({
           purchaseId: purchaseLines.purchaseId,
+          source: purchases.source,
           lineNo: purchaseLines.lineNo,
           issuedAt: purchases.issuedAt,
           storeName: STORE_NAME,
