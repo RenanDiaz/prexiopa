@@ -208,6 +208,9 @@ export const unlinkItem = (itemId: string) =>
 export const setLineQuantity = (lineId: string, quantity: number) =>
   apiNoContent(`/purchase-lines/${encodeURIComponent(lineId)}`, sendJson('PATCH', { quantity }));
 
+export const setManualPurchaseDate = (id: string, date: string) =>
+  apiNoContent(`/purchases/${encodeURIComponent(id)}`, sendJson('PATCH', { date }));
+
 export const getStore = (id: string) => api<StoreSettings>(`/stores/${encodeURIComponent(id)}`);
 
 export const updateStore = (

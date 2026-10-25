@@ -51,6 +51,14 @@ const STORE_QUANTITIES: StoreQuantities[] = ['reliable', 'always_one'];
 const bad = (message: string) => new HTTPException(400, { message });
 
 /** Valida el body de POST /purchases/manual (CA4.1, CA4.2). */
+/** "AAAA-MM-DD" del selector de fecha → mediodía de Panamá (17:00 UTC). */
+function parseManualDate(value: unknown): string {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) throw bad('Fecha inválida');
+  const date = new Date(`${value}T17:00:00.000Z`);
+  if (Number.isNaN(date.getTime()) || date.getTime() > Date.now() + 86_400_000) throw bad('Fecha inválida');
+  return date.toISOString();
+}
+
 function parseManualPurchase(body: Record<string, unknown>): ManualPurchaseInput {
   const store = body.store as Record<string, unknown> | undefined;
   let parsedStore: ManualPurchaseInput['store'];
@@ -58,14 +66,7 @@ function parseManualPurchase(body: Record<string, unknown>): ManualPurchaseInput
   else if (store && typeof store.name === 'string') parsedStore = { name: cleanName(store.name) };
   else throw bad('Falta la tienda');
 
-  let issuedAt: string | undefined;
-  if (body.date !== undefined) {
-    // "AAAA-MM-DD" del selector de fecha → mediodía de Panamá (17:00 UTC).
-    if (typeof body.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(body.date)) throw bad('Fecha inválida');
-    const date = new Date(`${body.date}T17:00:00.000Z`);
-    if (Number.isNaN(date.getTime()) || date.getTime() > Date.now() + 86_400_000) throw bad('Fecha inválida');
-    issuedAt = date.toISOString();
-  }
+  const issuedAt = body.date === undefined ? undefined : parseManualDate(body.date);
 
   if (!Array.isArray(body.lines) || body.lines.length === 0 || body.lines.length > 200) {
     throw bad('La compra debe tener entre 1 y 200 líneas');
@@ -310,6 +311,18 @@ export function createApp(options: AppOptions = {}) {
     const purchase = await scoped(c.env.DB, c.var.user.id).purchases.get(c.req.param('id'));
     if (!purchase) return c.json({ error: 'No encontrada' }, 404);
     return c.json(purchase);
+  });
+
+  // F4 (CA4.5): solo la fecha de una compra manual; las importadas conservan la de la DGI.
+  app.patch('/purchases/:id', async (c) => {
+    const body = await jsonBody(c.req.raw);
+    const result = await scoped(c.env.DB, c.var.user.id).purchases.setManualDate(
+      c.req.param('id'),
+      parseManualDate(body.date),
+    );
+    if (result === 'not_found') return c.json({ error: 'No encontrada' }, 404);
+    if (result === 'not_manual') return c.json({ error: 'Solo se puede cambiar la fecha de una compra manual' }, 409);
+    return c.body(null, 204);
   });
 
   app.delete('/purchases/:id', async (c) => {

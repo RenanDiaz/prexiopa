@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState, type FormEvent } from 'react';
-import { deletePurchase, getPurchase, setLineQuantity, type PurchaseLine } from '../api';
+import { deletePurchase, getPurchase, setLineQuantity, setManualPurchaseDate, type PurchaseLine } from '../api';
 import styles from '../App.module.css';
-import { formatCents, formatDateTime, formatQuantity, formatRate } from '../format';
+import { formatCents, formatDateTime, formatQuantity, formatRate, toPanamaDate, todayInPanama } from '../format';
 import { Link, navigate } from '../router';
 
 // F2 — Detalle (CA2.2, CA2.3): líneas y desglose tal como viene en la factura.
@@ -46,10 +46,11 @@ export function PurchaseDetail({ id }: { id: string }) {
           Editar tienda
         </Link>
       </div>
-      <p className={styles.muted}>
-        {formatDateTime(p.issuedAt)}
-        {p.source === 'manual' && ' · Manual'}
-      </p>
+      {p.source === 'manual' ? (
+        <ManualDate purchaseId={p.id} issuedAt={p.issuedAt} />
+      ) : (
+        <p className={styles.muted}>{formatDateTime(p.issuedAt)}</p>
+      )}
       {p.storeQuantities === 'always_one' && (
         <p className={styles.notice}>
           Esta tienda reporta cantidad 1 en todo. Para comparar precios, toca la cantidad para confirmarla o usa − / + si
@@ -119,6 +120,56 @@ export function PurchaseDetail({ id }: { id: string }) {
       </button>
       {remove.isError && <p className={styles.error}>{remove.error.message}</p>}
     </>
+  );
+}
+
+/** CA4.5: la fecha de una compra manual se puede corregir; la de una factura importada no. */
+function ManualDate({ purchaseId, issuedAt }: { purchaseId: string; issuedAt: string }) {
+  const queryClient = useQueryClient();
+  const [date, setDate] = useState<string | null>(null);
+  const update = useMutation({
+    mutationFn: (value: string) => setManualPurchaseDate(purchaseId, value),
+    onSuccess: async () => {
+      setDate(null);
+      // La fecha mueve la compra en el historial, el resumen mensual y los precios.
+      await queryClient.invalidateQueries();
+    },
+  });
+
+  if (date === null) {
+    return (
+      <p className={styles.muted}>
+        {formatDateTime(issuedAt)} · Manual{' · '}
+        <button className={styles.link} onClick={() => setDate(toPanamaDate(issuedAt))}>
+          Cambiar fecha
+        </button>
+      </p>
+    );
+  }
+
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    if (date) update.mutate(date);
+  };
+  return (
+    <form className={styles.inlineField} onSubmit={submit}>
+      <input
+        type="date"
+        className={styles.input}
+        value={date}
+        max={todayInPanama()}
+        onChange={(event) => setDate(event.target.value)}
+        aria-label="Fecha de la compra"
+        autoFocus
+      />
+      <button className={styles.button} type="submit" disabled={!date || update.isPending}>
+        Guardar
+      </button>
+      <button className={styles.link} type="button" onClick={() => setDate(null)} disabled={update.isPending}>
+        Cancelar
+      </button>
+      {update.isError && <span className={styles.error}>{update.error.message}</span>}
+    </form>
   );
 }
 

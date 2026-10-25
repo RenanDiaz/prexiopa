@@ -93,6 +93,7 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 - **CA4.2** Cada línea pide solo **producto, cantidad y total de línea pagado**. El producto se escanea, se busca o se escribe como texto libre. No hay campos de ITBMS ni de promoción.
 - **CA4.3** Agregar una línea toma ≤ 3 interacciones después de elegir el producto.
 - **CA4.4** Una compra manual queda en el mismo historial que las importadas, marcada como "Manual".
+- **CA4.5** Desde el detalle se puede cambiar la fecha de una compra manual (el formulario usa hoy por defecto y es fácil olvidarlo). Cambia el historial, el resumen mensual y la ventana de precios de F3; no admite fechas futuras. Las facturas importadas **no** se pueden editar: su fecha es la de la DGI, y el intento responde 409.
 
 ### F5 — Nombrar y vincular productos (Should)
 
@@ -318,6 +319,8 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 ### Fase 5 — Uso y decisión (sin funciones nuevas) — ⏳ pendiente
 
 **Regla:** durante esta fase solo se corrigen bugs y fricciones que aparezcan al usar la app. No se agregan funciones, y todo lo de "Fuera de alcance" sigue fuera.
+
+**Fricciones permitidas:** CA4.5 (editar la fecha de una compra manual) nace de un caso real de uso y entra por esta regla, sin excepción.
 
 **Excepción aprobada (2026-10-25): F8, exportar a CSV.** Es de solo lectura, no cambia el esquema ni el flujo de importación, y por eso no puede alterar las métricas del día 60. Cualquier otra función sigue sujeta a la regla.
 
