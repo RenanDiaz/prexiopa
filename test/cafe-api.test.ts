@@ -119,6 +119,42 @@ describe('POST /api/purchases/cafe', () => {
     expect(await preview.json()).toMatchObject({ existingPurchaseId: first.id });
   });
 
+  describe('scan_ms (CA1.8)', () => {
+    const scanMsOf = async (id: string) =>
+      (await env.DB.prepare('SELECT scan_ms FROM purchases WHERE id = ?').bind(id).first<{ scan_ms: number | null }>())
+        ?.scan_ms;
+
+    it('guarda los ms medidos en el cliente', async () => {
+      const user = as('scan-ms@example.com', fakeDgi(oneLine).options);
+      const res = await user('/purchases/cafe', post({ input: ONE_LINE_CUFE, scanMs: 14250 }));
+      expect(await scanMsOf((await res.json<{ id: string }>()).id)).toBe(14250);
+    });
+
+    it('queda en NULL si el cliente no lo manda', async () => {
+      const user = as('scan-ms-null@example.com', fakeDgi(oneLine).options);
+      const res = await user('/purchases/cafe', post({ input: ONE_LINE_CUFE }));
+      expect(await scanMsOf((await res.json<{ id: string }>()).id)).toBeNull();
+    });
+
+    it('descarta valores inválidos sin impedir el guardado', async () => {
+      for (const [i, scanMs] of [-1, 1.5, 3_600_001, '500', null].entries()) {
+        const user = as(`scan-ms-bad${i}@example.com`, fakeDgi(oneLine).options);
+        const res = await user('/purchases/cafe', post({ input: ONE_LINE_CUFE, scanMs }));
+        expect(res.status).toBe(201);
+        expect(await scanMsOf((await res.json<{ id: string }>()).id)).toBeNull();
+      }
+    });
+
+    it('no pisa el valor de una compra ya importada (CA1.5)', async () => {
+      const user = as('scan-ms-dup@example.com', fakeDgi(oneLine).options);
+      const first = await user('/purchases/cafe', post({ input: ONE_LINE_CUFE, scanMs: 9000 }));
+      const { id } = await first.json<{ id: string }>();
+      const again = await user('/purchases/cafe', post({ input: ONE_LINE_CUFE, scanMs: 99 }));
+      expect(await again.json()).toEqual({ id, created: false });
+      expect(await scanMsOf(id)).toBe(9000);
+    });
+  });
+
   it('reutiliza los store_items de la tienda entre compras', async () => {
     const dgi = fakeDgi(withDiscounts);
     const user = as('items@example.com', dgi.options);

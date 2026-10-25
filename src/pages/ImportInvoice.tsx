@@ -58,6 +58,8 @@ export function ImportInvoice() {
 
 function Preview({ input, onReset }: { input: string; onReset: () => void }) {
   const queryClient = useQueryClient();
+  // CA1.8: el Preview se monta cuando se detecta el QR o se envía el CUFE pegado.
+  const [startedAt] = useState(() => performance.now());
   const preview = useQuery({
     queryKey: ['cafe-preview', input],
     queryFn: () => previewCafe(input),
@@ -65,7 +67,7 @@ function Preview({ input, onReset }: { input: string; onReset: () => void }) {
     staleTime: Infinity,
   });
   const save = useMutation({
-    mutationFn: () => saveCafe(input),
+    mutationFn: () => saveCafe(input, Math.round(performance.now() - startedAt)),
     onSuccess: async ({ id }) => {
       await queryClient.invalidateQueries({ queryKey: ['purchases'] });
       navigate(`/compras/${id}`, { replace: true });
