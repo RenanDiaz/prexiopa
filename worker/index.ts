@@ -1,4 +1,4 @@
-import { Hono } from 'hono';
+import { Hono, type Context } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import { createAuth, sessionAuth, type AppEnv, type AuthOptions } from './auth';
 import { extractCufe, invoiceUrl } from './cafe/cufe';
@@ -6,6 +6,7 @@ import { DgiUnavailableError, fetchCafe, type FetchCafeOptions } from './cafe/fe
 import type { CodeFormat } from './cafe/codes';
 import { CafeNotFoundError, CafeParseError } from './cafe/parse';
 import type { StoreQuantities } from './catalog/rules';
+import type { HistoryTarget } from './db/catalog';
 import { ManualPurchaseError, type ManualLineInput, type ManualPurchaseInput } from './db/manual';
 import { scoped } from './db/scoped';
 import { linesCsv, purchasesCsv } from './export/csv';
@@ -175,6 +176,29 @@ export function createApp(options: AppOptions = {}) {
     if (!updated) return c.json({ error: 'No encontrado' }, 404);
     return c.body(null, 204);
   });
+
+  // CA5.7 — Agregar el código de barras a un producto o ítem ya creados.
+  const setBarcode = async (c: Context<AppEnv>, target: HistoryTarget) => {
+    const { code } = await jsonBody(c.req.raw);
+    if (typeof code !== 'string') throw new HTTPException(400, { message: 'Falta el código' });
+    const result = await scoped(c.env.DB, c.var.user.id).catalog.setBarcode(target, code);
+    if (result.ok) return c.json({ productId: result.productId });
+    switch (result.error) {
+      case 'not_found':
+        return c.json({ error: 'No encontrado' }, 404);
+      case 'invalid_code':
+        return c.json({ error: 'Código de barras inválido. Revisa los dígitos.', code: 'invalid_code' }, 400);
+      case 'has_code':
+        return c.json({ error: 'Este producto ya tiene un código de barras.', code: 'has_code' }, 409);
+      case 'in_use':
+        return c.json(
+          { error: `Ese código ya es de «${result.name}».`, code: 'in_use', productId: result.productId, name: result.name },
+          409,
+        );
+    }
+  };
+  app.put('/catalog/products/:id/barcode', (c) => setBarcode(c, { productId: c.req.param('id') }));
+  app.put('/catalog/items/:id/barcode', (c) => setBarcode(c, { itemId: c.req.param('id') }));
 
   app.put('/catalog/items/:id/product', async (c) => {
     const { productId } = await jsonBody(c.req.raw);
