@@ -172,4 +172,38 @@ describe('aislamiento entre usuarios', () => {
     const row = await env.DB.prepare('SELECT issued_at FROM purchases WHERE id = ?').bind(id).first<{ issued_at: string }>();
     expect(row?.issued_at).toBe('2026-10-10T17:00:00.000Z');
   });
+
+  it('PUT /catalog/*/barcode no toca ítems ni productos ajenos (CA5.7)', async () => {
+    const ana = as('ana@example.com');
+    const purchase = await ana('/purchases/manual', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        store: { name: 'Chino de la esquina' },
+        lines: [{ description: 'Pan de molde', quantity: 1, lineTotalCents: 250 }],
+      }),
+    });
+    const { id } = await purchase.json<{ id: string }>();
+    const { lines } = await (await ana(`/purchases/${id}`)).json<{ lines: { storeItemId: string }[] }>();
+    const itemId = lines[0]!.storeItemId;
+    const { productId } = await (
+      await ana(`/catalog/items/${itemId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: 'Pan de molde' }),
+      })
+    ).json<{ productId: string }>();
+
+    const put = (kind: string, target: string) =>
+      as('beto@example.com')(`/catalog/${kind}/${target}/barcode`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: '7501055300013' }),
+      });
+    expect((await put('items', itemId)).status).toBe(404);
+    expect((await put('products', productId)).status).toBe(404);
+
+    const row = await env.DB.prepare('SELECT gtin FROM products WHERE id = ?').bind(productId).first<{ gtin: string | null }>();
+    expect(row?.gtin).toBeNull();
+  });
 });

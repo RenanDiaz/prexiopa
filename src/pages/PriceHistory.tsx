@@ -1,10 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState, type FormEvent } from 'react';
+import { lazy, Suspense, useEffect, useState, type FormEvent } from 'react';
 import {
+  ApiError,
   getPriceHistory,
   linkItem,
   renameCatalogEntry,
   searchCatalog,
+  setBarcode,
   setItemWeighed,
   unlinkItem,
   type PriceEntry,
@@ -14,6 +16,8 @@ import {
 import styles from '../App.module.css';
 import { formatDate, formatEntryPrice, formatQuantity } from '../format';
 import { Link, navigate } from '../router';
+
+const Scanner = lazy(() => import('../scanner/Scanner'));
 
 // F3 — Historial de precios (CA3.1, CA3.2) y F5 — nombrar y vincular (CA5.1, CA5.2).
 export function PriceHistory({ kind, id }: { kind: 'product' | 'item'; id: string }) {
@@ -39,6 +43,7 @@ function HistoryView({ data }: { data: History }) {
         ← Buscar
       </Link>
       <ProductName data={data} />
+      <Barcode data={data} />
 
       <dl className={styles.summary}>
         <dt>Último precio</dt>
@@ -75,6 +80,79 @@ function HistoryView({ data }: { data: History }) {
 
       <Items data={data} />
     </>
+  );
+}
+
+/** CA5.7: agregar el código de barras a algo ya creado (escaneándolo o tecleándolo). */
+function Barcode({ data }: { data: History }) {
+  const queryClient = useQueryClient();
+  const [adding, setAdding] = useState(false);
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const [typed, setTyped] = useState('');
+  // Un escaneo fallido (código inválido o en uso) vuelve a abrir la cámara para reintentar.
+  const [scanAttempt, setScanAttempt] = useState(0);
+  const save = useMutation({
+    mutationFn: (code: string) => setBarcode(data.kind, data.id, code),
+    onSuccess: async ({ productId }) => {
+      setAdding(false);
+      setTyped('');
+      await queryClient.invalidateQueries();
+      if (data.kind === 'item') navigate(`/precios/producto/${productId}`, { replace: true });
+    },
+    onError: () => setScanAttempt((attempt) => attempt + 1),
+  });
+
+  if (data.gtin) return <p className={styles.muted}>Código de barras {data.gtin}</p>;
+  if (!adding) {
+    return (
+      <button className={styles.linkInline} onClick={() => setAdding(true)}>
+        Agregar código de barras
+      </button>
+    );
+  }
+
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    if (typed.trim()) save.mutate(typed.trim());
+  };
+  // Un código que ya es de otro producto no se fusiona solo: se lleva al usuario a ese producto (F5).
+  const inUse = save.error instanceof ApiError && save.error.code === 'in_use' ? save.error : null;
+  return (
+    <div className={styles.form}>
+      {cameraError ? (
+        <p className={styles.error}>{cameraError} Teclea el código abajo.</p>
+      ) : (
+        <Suspense fallback={<p className={styles.muted}>Abriendo la cámara…</p>}>
+          <Scanner key={scanAttempt} mode="barcode" onResult={(code) => save.mutate(code)} onError={setCameraError} />
+        </Suspense>
+      )}
+      <form className={styles.form} onSubmit={submit}>
+        <input
+          className={styles.input}
+          value={typed}
+          onChange={(event) => setTyped(event.target.value)}
+          inputMode="numeric"
+          placeholder="O teclea el código"
+          aria-label="Código de barras"
+          autoComplete="off"
+        />
+        <div className={styles.actions}>
+          <button className={styles.primary} type="submit" disabled={save.isPending || !typed.trim()}>
+            Guardar código
+          </button>
+          <button className={styles.button} type="button" onClick={() => setAdding(false)} disabled={save.isPending}>
+            Cancelar
+          </button>
+        </div>
+      </form>
+      {save.isError && <p className={styles.error}>{save.error.message}</p>}
+      {inUse && (
+        <p>
+          <Link href={`/precios/producto/${String(inUse.body.productId)}`}>Ver «{String(inUse.body.name)}»</Link> y
+          vincula este ítem desde ahí.
+        </p>
+      )}
+    </div>
   );
 }
 

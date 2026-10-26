@@ -2,11 +2,14 @@ export class ApiError extends Error {
   readonly status: number;
   /** Código de error de la API, p. ej. `dgi_unavailable`. */
   readonly code: string | undefined;
+  /** Cuerpo completo del error, para respuestas con datos extra (p. ej. `productId` en `in_use`). */
+  readonly body: Record<string, unknown>;
 
-  constructor(status: number, message: string, code?: string) {
+  constructor(status: number, message: string, code?: string, body: Record<string, unknown> = {}) {
     super(message);
     this.status = status;
     this.code = code;
+    this.body = body;
   }
 }
 
@@ -14,7 +17,7 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`/api${path}`, init);
   if (!res.ok) {
     const body = (await res.json().catch(() => ({}))) as { error?: string; code?: string };
-    throw new ApiError(res.status, body.error ?? res.statusText, body.code);
+    throw new ApiError(res.status, body.error ?? res.statusText, body.code, body);
   }
   return (await res.json()) as T;
 }
@@ -197,6 +200,12 @@ export const renameCatalogEntry = (kind: 'product' | 'item', id: string, name: s
   api<{ productId: string }>(
     `/catalog/${kind === 'product' ? 'products' : 'items'}/${encodeURIComponent(id)}`,
     sendJson('PATCH', { name }),
+  );
+
+export const setBarcode = (kind: 'product' | 'item', id: string, code: string) =>
+  api<{ productId: string }>(
+    `/catalog/${kind === 'product' ? 'products' : 'items'}/${encodeURIComponent(id)}/barcode`,
+    sendJson('PUT', { code }),
   );
 
 export const linkItem = (itemId: string, productId: string) =>

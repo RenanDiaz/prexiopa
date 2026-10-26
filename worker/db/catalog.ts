@@ -53,6 +53,11 @@ export type SearchResult = {
 
 export type HistoryTarget = { productId: string } | { itemId: string };
 
+export type SetBarcodeResult =
+  | { ok: true; productId: string }
+  | { ok: false; error: 'not_found' | 'invalid_code' | 'has_code' }
+  | { ok: false; error: 'in_use'; productId: string; name: string };
+
 /** `is_weighed` ya incluye la detección por descripción y la corrección del usuario. */
 function unitOf(description: string, isWeighed: boolean): PriceUnit {
   if (!isWeighed) return 'u';
@@ -415,6 +420,44 @@ export function catalogRepo(db: Db, userId: string) {
         db.update(storeItems).set({ productId, linkSource: 'user' }).where(eq(storeItems.id, item.id)),
       ]);
       return { productId };
+    },
+
+    /**
+     * CA5.7: agrega el código de barras a un producto, o a un ítem sin producto, ya creados.
+     * No toca `store_items.code`: ese es el código que imprime la tienda (§10.2).
+     */
+    async setBarcode(target: HistoryTarget, rawCode: string): Promise<SetBarcodeResult> {
+      const gtin = normalizeGtin(rawCode.trim(), 'gtin');
+      if (!gtin) return { ok: false, error: 'invalid_code' };
+
+      const item = 'itemId' in target ? await ownItem(target.itemId) : null;
+      if ('itemId' in target && !item) return { ok: false, error: 'not_found' };
+      const productId = 'productId' in target ? target.productId : item!.productId;
+      const product = productId ? await ownProduct(productId) : null;
+      if ('productId' in target && !product) return { ok: false, error: 'not_found' };
+
+      const holder = await db.query.products.findFirst({
+        where: and(eq(products.userId, userId), eq(products.gtin, gtin)),
+        columns: { id: true, name: true },
+      });
+
+      if (product) {
+        if (product.gtin === gtin) return { ok: true, productId: product.id };
+        if (product.gtin) return { ok: false, error: 'has_code' };
+        // Dos productos no se fusionan solos: el usuario los vincula (F5).
+        if (holder) return { ok: false, error: 'in_use', productId: holder.id, name: holder.name };
+        await db.update(products).set({ gtin }).where(eq(products.id, product.id));
+        return { ok: true, productId: product.id };
+      }
+
+      // Ítem sin producto: se vincula al que ya tiene ese código, o se crea uno con su descripción.
+      const linkedTo = holder?.id ?? newId();
+      const statements: BatchItem<'sqlite'>[] = [];
+      if (!holder) statements.push(db.insert(products).values({ id: linkedTo, userId, name: item!.description, gtin }));
+      statements.push(db.update(storeItems).set({ productId: linkedTo, linkSource: 'user' }).where(eq(storeItems.id, item!.id)));
+      await runBatch(db, statements);
+      await inferQuantities();
+      return { ok: true, productId: linkedTo };
     },
 
     /**

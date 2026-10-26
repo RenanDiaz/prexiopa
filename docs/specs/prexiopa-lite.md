@@ -103,6 +103,11 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 - **CA5.4** Se puede editar el nombre visible de una tienda. La DGI entrega la razón social (por ejemplo, "Inmobiliaria Don Antonio, S.A."), no el nombre comercial.
 - **CA5.5** En el detalle de una compra de una tienda con cantidades no confiables (§10.6), cada línea permite corregir la cantidad con "+ / −" (1 tap por unidad) o, si es pesable, anotar el peso. Es opcional: la compra queda guardada aunque no se corrija nada.
 - **CA5.6** Las cantidades inferidas (§10.6) se muestran marcadas como "inferida" y se pueden corregir igual que en CA5.5.
+- **CA5.7** Se puede agregar el código de barras a un producto, o a un ítem que aún no tiene producto, ya creados (escaneándolo o tecleándolo) desde su pantalla de precios. Es una fricción de uso: entra por la regla de la Fase 5 sin excepción. El código se valida como GTIN (dígito verificador; los de peso variable se rechazan, §10.2) y se normaliza a GTIN-13.
+  - Un ítem sin producto crea uno con su descripción y ese GTIN, y se vincula con `link_source = 'user'`. Si ya existe un producto del usuario con ese GTIN, el ítem se vincula a él.
+  - Un producto sin GTIN lo recibe. Si ya tiene uno, responde 409.
+  - Si el código ya es de **otro** producto, responde 409 con ese producto y **no** se fusionan solos; el usuario vincula desde F5.
+  - No se modifica `store_items.code`: es el código que imprime la tienda y lo usa el emparejamiento con sus facturas.
 
 ### F6 — Resumen mensual (Could)
 
