@@ -69,6 +69,7 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 - **CA1.6** Si la DGI no responde o devuelve un formato desconocido, se muestra un error con el CUFE visible y la opción "Reintentar". No se guarda nada parcial.
 - **CA1.7** Las interacciones entre abrir la cámara y ver la compra guardada son, como máximo, **2 taps**: "Escanear" y "Guardar".
 - **CA1.8** Cada compra importada guarda `scan_ms`: los milisegundos entre que el cliente detecta el QR (o se envía el CUFE pegado) y que el usuario toca "Guardar". Se mide en el cliente con `performance.now()` (reloj monotónico, así el desfase del reloj del teléfono no afecta) y viaja en el body de `POST /api/purchases/cafe`. Incluye la espera de la DGI y el tiempo que el usuario mira el preview, porque eso es lo que vive en la caja. No se sobrescribe si la compra ya existía (CA1.5). Si falta, queda en `NULL` y no cuenta para la métrica.
+- **CA1.9** En cualquier estado posterior al escaneo (consultando la DGI, error, "Ya importaste esta factura" y preview) hay un "Cancelar" que vuelve al inicio sin guardar nada. Mientras se está guardando no se muestra.
 
 ### F2 — Historial de compras
 
