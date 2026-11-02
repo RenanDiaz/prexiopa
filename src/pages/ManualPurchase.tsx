@@ -9,7 +9,7 @@ import {
   type SearchResult,
 } from '../api';
 import styles from '../App.module.css';
-import { formatCents, formatQuantity, parseMoneyToCents, todayInPanama } from '../format';
+import { formatCents, formatQuantity, nowInPanama, parseMoneyToCents } from '../format';
 import { Link, navigate } from '../router';
 
 const Scanner = lazy(() => import('../scanner/Scanner'));
@@ -21,7 +21,8 @@ type ProductChoice = Pick<ManualLine, 'productId' | 'code' | 'description'>;
 export function ManualPurchase() {
   const queryClient = useQueryClient();
   const [store, setStore] = useState<StoreChoice | null>(null);
-  const [date, setDate] = useState(todayInPanama);
+  // CA4.5: fecha y hora en Panamá; por defecto, ahora.
+  const [date, setDate] = useState(nowInPanama);
   const [lines, setLines] = useState<ManualLine[]>([]);
   const save = useMutation({
     mutationFn: () => createManualPurchase({ store: store!, date, lines }),
@@ -45,10 +46,10 @@ export function ManualPurchase() {
       <label className={styles.inlineField}>
         <span className={styles.muted}>Fecha</span>
         <input
-          type="date"
+          type="datetime-local"
           className={styles.input}
           value={date}
-          max={todayInPanama()}
+          max={nowInPanama()}
           onChange={(event) => setDate(event.target.value)}
         />
       </label>
