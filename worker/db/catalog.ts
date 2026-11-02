@@ -9,6 +9,7 @@ import {
   inferUnits,
   isWeighedItem,
   normalizeGtin,
+  scaleLabelItemCodes,
   type QuantitySource,
   type StoreQuantities,
 } from '../catalog/rules';
@@ -55,7 +56,7 @@ export type HistoryTarget = { productId: string } | { itemId: string };
 
 export type SetBarcodeResult =
   | { ok: true; productId: string }
-  | { ok: false; error: 'not_found' | 'invalid_code' | 'has_code' }
+  | { ok: false; error: 'not_found' | 'invalid_code' | 'has_code' | 'scale_label' }
   | { ok: false; error: 'in_use'; productId: string; name: string };
 
 export type SetItemCodeResult =
@@ -350,6 +351,9 @@ export function catalogRepo(db: Db, userId: string) {
       const gtin = normalizeGtin(code, 'gtin');
       const matches = [eq(storeItems.code, code)];
       if (gtin) matches.push(eq(products.gtin, gtin));
+      // CA3.6: una etiqueta de balanza encuentra el ítem por su número de producto en la tienda.
+      const labelItems = scaleLabelItemCodes(code);
+      if (labelItems) matches.push(inArray(sql`ltrim(${storeItems.code}, '0')`, labelItems));
       return groupResults(
         await db
           .select(resultColumns())
@@ -452,6 +456,8 @@ export function catalogRepo(db: Db, userId: string) {
      * No toca `store_items.code`: ese es el código que imprime la tienda (§10.2).
      */
     async setBarcode(target: HistoryTarget, rawCode: string): Promise<SetBarcodeResult> {
+      // CA3.6: una etiqueta de balanza no es un código universal; se encuentra al escanearla.
+      if (scaleLabelItemCodes(rawCode.trim())) return { ok: false, error: 'scale_label' };
       const gtin = normalizeGtin(rawCode.trim(), 'gtin');
       if (!gtin) return { ok: false, error: 'invalid_code' };
 

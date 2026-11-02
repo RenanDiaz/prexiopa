@@ -21,6 +21,26 @@ function isVariableMeasureCode(code: string): boolean {
   return /^\d{11,14}$/.test(code) && code.replace(/^0+/, '').startsWith('2');
 }
 
+/**
+ * CA3.6: códigos de `store_items.code` (sin ceros a la izquierda) a los que puede
+ * corresponder una etiqueta de balanza, o null si no es una. No valida el dígito
+ * verificador: el usuario puede teclearla con el peso o el precio en ceros.
+ *  - EAN-13 `2 PPPPPP VVVVV C` (PriceSmart): producto de 6 dígitos.
+ *  - UPC-A `2 PPPPP VVVVV C`, o como EAN-13 con un 0 delante (Don Antonio): producto
+ *    de 5 dígitos; la factura trae la etiqueta sin verificador y con V en ceros.
+ */
+export function scaleLabelItemCodes(code: string): string[] | null {
+  const trimmed = (s: string) => s.replace(/^0+/, '');
+  let product: string;
+  if (/^2\d{12}$/.test(code)) product = code.slice(1, 7);
+  else if (/^0?2\d{11}$/.test(code)) product = code.slice(-11, -6);
+  else return null;
+  const item = trimmed(product);
+  if (!item) return null;
+  // Forma de factura de Don Antonio: prefijo + producto + valor en ceros, sin verificador.
+  return [...new Set([item, trimmed(`2${product}00000`)])];
+}
+
 export function isWeighedItem(code: string | null, description: string): boolean {
   return (!!code && isVariableMeasureCode(code)) || WEIGHED_DESCRIPTION_RE.test(description);
 }

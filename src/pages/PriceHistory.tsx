@@ -100,15 +100,22 @@ function Barcode({ data }: { data: History }) {
       await queryClient.invalidateQueries();
       if (data.kind === 'item') navigate(`/precios/producto/${productId}`, { replace: true });
     },
-    onError: () => setScanAttempt((attempt) => attempt + 1),
+    onError: (error) => {
+      // CA3.6: una etiqueta de balanza no se va a aceptar; reabrir la cámara no sirve.
+      if (error instanceof ApiError && error.code === 'scale_label') setAdding(false);
+      else setScanAttempt((attempt) => attempt + 1);
+    },
   });
 
   if (data.gtin) return <p className={styles.muted}>Código de barras {data.gtin}</p>;
   if (!adding) {
     return (
-      <button className={styles.linkInline} onClick={() => setAdding(true)}>
-        Agregar código de barras
-      </button>
+      <>
+        <button className={styles.linkInline} onClick={() => setAdding(true)}>
+          Agregar código de barras
+        </button>
+        {save.isError && <p className={styles.muted}>{save.error.message}</p>}
+      </>
     );
   }
 

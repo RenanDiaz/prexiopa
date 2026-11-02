@@ -200,6 +200,16 @@ export function createApp(options: AppOptions = {}) {
         return c.json({ error: 'Código de barras inválido. Revisa los dígitos.', code: 'invalid_code' }, 400);
       case 'has_code':
         return c.json({ error: 'Este producto ya tiene un código de barras.', code: 'has_code' }, 409);
+      case 'scale_label':
+        return c.json(
+          {
+            error:
+              'Es una etiqueta de balanza de la tienda, no un código de barras universal. No hace falta guardarla: ' +
+              'al escanearla en «¿Cuánto cuesta?» se encuentra el producto por su código de la tienda.',
+            code: 'scale_label',
+          },
+          400,
+        );
       case 'in_use':
         return c.json(
           { error: `Ese código ya es de «${result.name}».`, code: 'in_use', productId: result.productId, name: result.name },
