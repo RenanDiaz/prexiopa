@@ -1,6 +1,7 @@
 import { env } from 'cloudflare:workers';
 import { describe, expect, it } from 'vitest';
 import { as, fakeDgi } from './helpers';
+import { CATALOG_VERSION } from '../worker/catalog/rules';
 import cityMall from './fixtures/city-mall.html?raw';
 import oneLine from './fixtures/don-antonio-1-linea.html?raw';
 import withDiscounts from './fixtures/don-antonio-descuentos.html?raw';
@@ -216,7 +217,7 @@ describe('reglas nuevas sobre datos ya importados', () => {
     const after = await (await u.call(`/purchases/${(await (await u.call('/purchases')).json<{ items: { id: string }[] }>()).items[0]!.id}`)).json<Detail>();
     expect(after.lines.find((line) => line.description === 'SUAVITEL PRI 800ML')!.productId).not.toBeNull();
     const version = await env.DB.prepare('SELECT catalog_version AS v FROM users WHERE id = ?').bind(userId).first<{ v: number }>();
-    expect(version?.v).toBe(1);
+    expect(version?.v).toBe(CATALOG_VERSION);
     expect(detail.storeId).toBeTruthy();
   });
 });

@@ -3,7 +3,7 @@ import { gtinCheckDigit, hasValidCheckDigit, type CodeFormat } from '../cafe/cod
 // Reglas puras del catálogo: GTIN (§10.2), pesables y cantidades no confiables (§10.6).
 
 /** Sube cuando cambian estas reglas: los datos de cada usuario se recalculan una vez. */
-export const CATALOG_VERSION = 1;
+export const CATALOG_VERSION = 2;
 
 export type StoreQuantities = 'reliable' | 'always_one';
 export type QuantitySource = 'invoice' | 'inferred' | 'user';
