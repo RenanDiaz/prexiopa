@@ -61,6 +61,28 @@ describe('PATCH /api/purchases/:id (CA4.5)', () => {
     expect(await issuedAt(user, id)).toBe('2026-10-10T17:00:00.000Z');
   });
 
+  it('guarda la hora de Panamá cuando viene con hora (CA4.5)', async () => {
+    const user = as('fecha-hora@example.com');
+    const id = await createManual(user, '2026-10-10T19:45');
+    // 19:45 en Panamá (UTC-5) = 00:45 UTC del día siguiente.
+    expect(await issuedAt(user, id)).toBe('2026-10-11T00:45:00.000Z');
+
+    const res = await user(`/purchases/${id}`, send('PATCH', { date: '2026-10-12T07:05' }));
+    expect(res.status).toBe(204);
+    expect(await issuedAt(user, id)).toBe('2026-10-12T12:05:00.000Z');
+  });
+
+  it('rechaza horas inválidas o futuras', async () => {
+    const user = as('fecha-hora-invalida@example.com');
+    const id = await createManual(user, '2026-10-10T08:00');
+    const inAnHour = new Date(Date.now() + 3_600_000 - 5 * 3_600_000).toISOString().slice(0, 16);
+    for (const date of ['2026-10-10T24:00', '2026-10-10T10:60', '2026-02-31T10:00', '2026-10-10T8:00', inAnHour]) {
+      const res = await user(`/purchases/${id}`, send('PATCH', { date }));
+      expect(res.status).toBe(400);
+    }
+    expect(await issuedAt(user, id)).toBe('2026-10-10T13:00:00.000Z');
+  });
+
   it('devuelve 404 si la compra no existe', async () => {
     const res = await as('fecha-404@example.com')('/purchases/no-existe', send('PATCH', { date: '2026-10-10' }));
     expect(res.status).toBe(404);

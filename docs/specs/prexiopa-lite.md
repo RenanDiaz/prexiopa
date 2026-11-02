@@ -94,7 +94,7 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 - **CA4.2** Cada línea pide solo **producto, cantidad y total de línea pagado**. El producto se escanea, se busca o se escribe como texto libre. No hay campos de ITBMS ni de promoción.
 - **CA4.3** Agregar una línea toma ≤ 3 interacciones después de elegir el producto.
 - **CA4.4** Una compra manual queda en el mismo historial que las importadas, marcada como "Manual".
-- **CA4.5** Desde el detalle se puede cambiar la fecha de una compra manual (el formulario usa hoy por defecto y es fácil olvidarlo). Cambia el historial, el resumen mensual y la ventana de precios de F3; no admite fechas futuras. Las facturas importadas **no** se pueden editar: su fecha es la de la DGI, y el intento responde 409.
+- **CA4.5** La compra manual registra **fecha y hora** (hora de Panamá); el formulario usa la hora actual por defecto. Desde el detalle se pueden cambiar las dos (es fácil olvidarlo al crearla). Un cliente que manda solo la fecha la guarda a mediodía. Cambia el historial, el resumen mensual y la ventana de precios de F3; no admite fechas ni horas futuras (con unos minutos de tolerancia por el reloj del teléfono). Las facturas importadas **no** se pueden editar: su fecha es la de la DGI, y el intento responde 409.
 - **CA4.6** Al agregar una línea con un producto ya existente (elegido por búsqueda), se le puede agregar el código (escaneándolo o tecleándolo) antes de agregar la línea, no solo cuando el producto entra escaneado. El código queda en el ítem de esa tienda (`store_items.code`) con las reglas de CA5.8. Es una fricción de uso: entra por la regla de la Fase 5.
 
 ### F5 — Nombrar y vincular productos (Should)
@@ -334,7 +334,7 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 **Regla:** durante esta fase solo se corrigen bugs y fricciones que aparezcan al usar la app. No se agregan funciones, y todo lo de "Fuera de alcance" sigue fuera.
 
-**Fricciones permitidas:** CA4.5 (editar la fecha de una compra manual), CA4.6 (agregar el código a una línea manual de un producto existente) y CA5.8 (ver y editar el código interno de ítems manuales) nacen de casos reales de uso y entran por esta regla, sin excepción.
+**Fricciones permitidas:** CA4.5 (editar la fecha y hora de una compra manual), CA4.6 (agregar el código a una línea manual de un producto existente) y CA5.8 (ver y editar el código interno de ítems manuales) nacen de casos reales de uso y entran por esta regla, sin excepción.
 
 **Excepción aprobada (2026-10-25): F8, exportar a CSV.** Es de solo lectura, no cambia el esquema ni el flujo de importación, y por eso no puede alterar las métricas del día 60. Cualquier otra función sigue sujeta a la regla.
 

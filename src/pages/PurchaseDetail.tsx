@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState, type FormEvent } from 'react';
 import { deletePurchase, getPurchase, setLineQuantity, setManualPurchaseDate, type PurchaseLine } from '../api';
 import styles from '../App.module.css';
-import { formatCents, formatDateTime, formatQuantity, formatRate, toPanamaDate, todayInPanama } from '../format';
+import { formatCents, formatDateTime, formatQuantity, formatRate, nowInPanama, toPanamaDateTime } from '../format';
 import { Link, navigate } from '../router';
 
 // F2 — Detalle (CA2.2, CA2.3): líneas y desglose tal como viene en la factura.
@@ -123,7 +123,7 @@ export function PurchaseDetail({ id }: { id: string }) {
   );
 }
 
-/** CA4.5: la fecha de una compra manual se puede corregir; la de una factura importada no. */
+/** CA4.5: la fecha y hora de una compra manual se pueden corregir; las de una factura importada no. */
 function ManualDate({ purchaseId, issuedAt }: { purchaseId: string; issuedAt: string }) {
   const queryClient = useQueryClient();
   const [date, setDate] = useState<string | null>(null);
@@ -140,8 +140,8 @@ function ManualDate({ purchaseId, issuedAt }: { purchaseId: string; issuedAt: st
     return (
       <p className={styles.muted}>
         {formatDateTime(issuedAt)} · Manual{' · '}
-        <button className={styles.link} onClick={() => setDate(toPanamaDate(issuedAt))}>
-          Cambiar fecha
+        <button className={styles.link} onClick={() => setDate(toPanamaDateTime(issuedAt))}>
+          Cambiar fecha y hora
         </button>
       </p>
     );
@@ -154,12 +154,12 @@ function ManualDate({ purchaseId, issuedAt }: { purchaseId: string; issuedAt: st
   return (
     <form className={styles.inlineField} onSubmit={submit}>
       <input
-        type="date"
+        type="datetime-local"
         className={styles.input}
         value={date}
-        max={todayInPanama()}
+        max={nowInPanama()}
         onChange={(event) => setDate(event.target.value)}
-        aria-label="Fecha de la compra"
+        aria-label="Fecha y hora de la compra"
         autoFocus
       />
       <button className={styles.button} type="submit" disabled={!date || update.isPending}>

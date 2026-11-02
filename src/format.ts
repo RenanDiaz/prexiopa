@@ -33,9 +33,9 @@ const monthName = new Intl.DateTimeFormat('es-PA', { month: 'short', year: 'nume
 /** "2026-10" → "oct 2026". */
 export const formatMonth = (month: string) => monthName.format(new Date(`${month}-01T00:00:00Z`));
 
-/** Fecha de hoy en Panamá como "AAAA-MM-DD" (para <input type="date">). */
-export const toPanamaDate = (iso: string) => new Date(Date.parse(iso) - 5 * 3_600_000).toISOString().slice(0, 10);
-export const todayInPanama = () => toPanamaDate(new Date().toISOString());
+/** Fecha y hora en Panamá como "AAAA-MM-DDTHH:MM" (para <input type="datetime-local">). */
+export const toPanamaDateTime = (iso: string) => new Date(Date.parse(iso) - 5 * 3_600_000).toISOString().slice(0, 16);
+export const nowInPanama = () => toPanamaDateTime(new Date().toISOString());
 
 /**
  * "2.5" → 250, "1,99" → 199. Sin floats para dinero (igual que el parser CAFE).

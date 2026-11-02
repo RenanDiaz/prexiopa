@@ -51,15 +51,25 @@ const STORE_QUANTITIES: StoreQuantities[] = ['reliable', 'always_one'];
 
 const bad = (message: string) => new HTTPException(400, { message });
 
-/** Valida el body de POST /purchases/manual (CA4.1, CA4.2). */
-/** "AAAA-MM-DD" del selector de fecha → mediodía de Panamá (17:00 UTC). */
+/**
+ * CA4.5: hora local de Panamá (UTC-5, sin horario de verano) → ISO UTC.
+ * "AAAA-MM-DDTHH:MM" del selector de fecha y hora; "AAAA-MM-DD" (clientes viejos) → mediodía.
+ */
 function parseManualDate(value: unknown): string {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) throw bad('Fecha inválida');
-  const date = new Date(`${value}T17:00:00.000Z`);
-  if (Number.isNaN(date.getTime()) || date.getTime() > Date.now() + 86_400_000) throw bad('Fecha inválida');
+  const match = typeof value === 'string' ? /^(\d{4}-\d{2}-\d{2})(?:T(\d{2}):(\d{2}))?$/.exec(value) : null;
+  if (!match) throw bad('Fecha inválida');
+  const [, day, hour = '12', minute = '00'] = match;
+  if (Number(hour) > 23 || Number(minute) > 59) throw bad('Fecha inválida');
+  const date = new Date(`${day}T${hour}:${minute}:00.000-05:00`);
+  // Sin hora se tolera el mediodía de hoy; con hora, solo unos minutos de desfase del reloj del teléfono.
+  const tolerance = match[2] === undefined ? 86_400_000 : 10 * 60_000;
+  if (Number.isNaN(date.getTime()) || date.getTime() > Date.now() + tolerance) throw bad('Fecha inválida');
+  // new Date acepta días como 31 de febrero (los corre al mes siguiente): se rechazan.
+  if (new Date(date.getTime() - 5 * 3_600_000).toISOString().slice(0, 10) !== day) throw bad('Fecha inválida');
   return date.toISOString();
 }
 
+/** Valida el body de POST /purchases/manual (CA4.1, CA4.2). */
 function parseManualPurchase(body: Record<string, unknown>): ManualPurchaseInput {
   const store = body.store as Record<string, unknown> | undefined;
   let parsedStore: ManualPurchaseInput['store'];
@@ -366,7 +376,7 @@ export function createApp(options: AppOptions = {}) {
     return c.json(purchase);
   });
 
-  // F4 (CA4.5): solo la fecha de una compra manual; las importadas conservan la de la DGI.
+  // F4 (CA4.5): solo la fecha y hora de una compra manual; las importadas conservan la de la DGI.
   app.patch('/purchases/:id', async (c) => {
     const body = await jsonBody(c.req.raw);
     const result = await scoped(c.env.DB, c.var.user.id).purchases.setManualDate(
