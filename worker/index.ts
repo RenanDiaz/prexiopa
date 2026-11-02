@@ -6,7 +6,7 @@ import { DgiUnavailableError, fetchCafe, type FetchCafeOptions } from './cafe/fe
 import type { CodeFormat } from './cafe/codes';
 import { CafeNotFoundError, CafeParseError } from './cafe/parse';
 import type { StoreQuantities } from './catalog/rules';
-import type { HistoryTarget } from './db/catalog';
+import { STORE_CODE_RE, type HistoryTarget } from './db/catalog';
 import { ManualPurchaseError, type ManualLineInput, type ManualPurchaseInput } from './db/manual';
 import { scoped } from './db/scoped';
 import { linesCsv, purchasesCsv } from './export/csv';
@@ -79,7 +79,7 @@ function parseManualPurchase(body: Record<string, unknown>): ManualPurchaseInput
     if (typeof lineTotalCents !== 'number' || !Number.isInteger(lineTotalCents) || lineTotalCents < 0 || lineTotalCents > 10_000_000) {
       throw bad(`Total inválido en la línea ${i + 1}`);
     }
-    const code = typeof line.code === 'string' && /^\d{6,14}$/.test(line.code) ? line.code : undefined;
+    const code = typeof line.code === 'string' && STORE_CODE_RE.test(line.code.trim()) ? line.code.trim() : undefined;
     return {
       productId: typeof line.productId === 'string' ? line.productId : undefined,
       code,
@@ -199,6 +199,35 @@ export function createApp(options: AppOptions = {}) {
   };
   app.put('/catalog/products/:id/barcode', (c) => setBarcode(c, { productId: c.req.param('id') }));
   app.put('/catalog/items/:id/barcode', (c) => setBarcode(c, { itemId: c.req.param('id') }));
+
+  // CA5.8 — Código interno de tienda de un ítem que solo viene de compras manuales.
+  app.put('/catalog/items/:id/code', async (c) => {
+    const { code } = await jsonBody(c.req.raw);
+    if (code !== null && typeof code !== 'string') throw new HTTPException(400, { message: 'Falta el código' });
+    const result = await scoped(c.env.DB, c.var.user.id).catalog.setItemCode(c.req.param('id'), code);
+    if (result.ok) return c.body(null, 204);
+    switch (result.error) {
+      case 'not_found':
+        return c.json({ error: 'No encontrado' }, 404);
+      case 'invalid_code':
+        return c.json({ error: 'El código debe tener de 4 a 14 dígitos.', code: 'invalid_code' }, 400);
+      case 'from_invoice':
+        return c.json(
+          { error: 'Este código viene de una factura y no se puede cambiar.', code: 'from_invoice' },
+          409,
+        );
+      case 'in_use':
+        return c.json(
+          {
+            error: `Ese código ya es de «${result.description}» en esta tienda.`,
+            code: 'in_use',
+            itemId: result.itemId,
+            name: result.description,
+          },
+          409,
+        );
+    }
+  });
 
   app.put('/catalog/items/:id/product', async (c) => {
     const { productId } = await jsonBody(c.req.raw);

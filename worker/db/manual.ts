@@ -1,6 +1,7 @@
 import { and, desc, eq, isNull, max, sql } from 'drizzle-orm';
 import type { BatchItem } from 'drizzle-orm/batch';
 import { newId } from '../lib/id';
+import { fromInvoiceSql } from './catalog';
 import type { Db } from './client';
 import { products, purchaseLines, purchases, storeItems, stores } from './schema';
 
@@ -9,7 +10,10 @@ import { products, purchaseLines, purchases, storeItems, stores } from './schema
 export type ManualLineInput = {
   /** Producto existente del usuario (búsqueda o escaneo con resultado). */
   productId?: string;
-  /** Código de barras escaneado sin resultado: queda en el ítem y se vincula por GTIN. */
+  /**
+   * Código de la tienda: escaneado sin resultado (queda en el ítem y se vincula por GTIN) o,
+   * con `productId`, agregado al producto existente (CA4.6).
+   */
   code?: string;
   /** Texto libre, o el nombre del producto si viene `productId`. */
   description: string;
@@ -75,14 +79,45 @@ export function manualRepo(db: Db, userId: string) {
         columns: { id: true, name: true },
       });
       if (!product) throw new ManualPurchaseError('Producto no encontrado');
-      const existing = await mine(eq(storeItems.productId, product.id));
-      if (existing) return existing.id;
+
+      // CA4.6: el código agregado a un producto existente queda en su ítem de esta tienda.
+      if (line.code) {
+        const holder = await db.query.storeItems.findFirst({
+          where: and(eq(storeItems.userId, userId), eq(storeItems.storeId, storeId), eq(storeItems.code, line.code)),
+          columns: { id: true, productId: true, description: true },
+        });
+        if (holder) {
+          if (holder.productId === product.id) return holder.id;
+          throw new ManualPurchaseError(`El código ${line.code} ya es de «${holder.description}» en esta tienda`);
+        }
+      }
+
+      const [existing] = await db
+        .select({ id: storeItems.id, code: storeItems.code, fromInvoice: fromInvoiceSql })
+        .from(storeItems)
+        .where(and(eq(storeItems.userId, userId), eq(storeItems.storeId, storeId), eq(storeItems.productId, product.id)))
+        .limit(1);
+      if (existing) {
+        if (line.code && existing.code !== line.code) {
+          // CA5.8: solo se escribe el código de un ítem sin código que no viene de una factura.
+          if (existing.code || existing.fromInvoice) {
+            throw new ManualPurchaseError(
+              existing.code
+                ? `«${product.name}» ya tiene el código ${existing.code} en esta tienda`
+                : `El código de «${product.name}» en esta tienda viene de una factura y no se puede cambiar`,
+            );
+          }
+          statements.push(db.update(storeItems).set({ code: line.code }).where(eq(storeItems.id, existing.id)));
+        }
+        return existing.id;
+      }
       const id = newId();
       statements.push(
         db.insert(storeItems).values({
           id,
           userId,
           storeId,
+          code: line.code ?? null,
           description: product.name,
           productId: product.id,
           linkSource: 'user',
@@ -119,6 +154,16 @@ export function manualRepo(db: Db, userId: string) {
     /** Guarda la compra manual en un batch atómico; las cantidades las da el usuario (CA4.2). */
     async create(input: ManualPurchaseInput): Promise<{ id: string; storeId: string }> {
       if (input.lines.length === 0) throw new ManualPurchaseError('La compra no tiene líneas');
+      // Un mismo código en dos líneas tiene que ser el mismo producto (store_items es único por código).
+      const owners = new Map<string, string>();
+      for (const line of input.lines) {
+        if (!line.code) continue;
+        const owner = line.productId ?? `texto:${line.description.toLowerCase()}`;
+        if ((owners.get(line.code) ?? owner) !== owner) {
+          throw new ManualPurchaseError(`El código ${line.code} está en dos productos distintos`);
+        }
+        owners.set(line.code, owner);
+      }
       const storeId = await resolveStore(input.store);
 
       const statements: BatchItem<'sqlite'>[] = [];

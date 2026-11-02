@@ -7,6 +7,7 @@ import {
   renameCatalogEntry,
   searchCatalog,
   setBarcode,
+  setItemCode,
   setItemWeighed,
   unlinkItem,
   type PriceEntry,
@@ -263,9 +264,10 @@ function Items({ data }: { data: History }) {
               <span>{item.description}</span>
               <span className={styles.muted}>
                 {item.storeName}
-                {item.code && ` · ${item.code}`}
+                {item.code && ` · código de la tienda ${item.code}`}
                 {item.linkSource === 'auto' && ' · vinculado por código'}
               </span>
+              {item.codeEditable && <StoreCode itemId={item.id} code={item.code} />}
               <button
                 className={styles.linkInline}
                 disabled={weighed.isPending}
@@ -316,5 +318,61 @@ function Items({ data }: { data: History }) {
         </div>
       )}
     </section>
+  );
+}
+
+/** CA5.8: código interno de la tienda, editable solo en ítems de compras manuales. */
+function StoreCode({ itemId, code }: { itemId: string; code: string | null }) {
+  const queryClient = useQueryClient();
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(code ?? '');
+  const save = useMutation({
+    mutationFn: () => setItemCode(itemId, value.trim() || null),
+    onSuccess: async () => {
+      setEditing(false);
+      await queryClient.invalidateQueries();
+    },
+  });
+
+  if (!editing) {
+    return (
+      <button
+        className={styles.linkInline}
+        onClick={() => {
+          setValue(code ?? '');
+          setEditing(true);
+        }}
+      >
+        {code ? 'Cambiar código de la tienda' : 'Agregar código de la tienda'}
+      </button>
+    );
+  }
+
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    save.mutate();
+  };
+  return (
+    <form className={styles.form} onSubmit={submit}>
+      <input
+        className={styles.input}
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+        inputMode="numeric"
+        placeholder="Código de la tienda (vacío para quitarlo)"
+        aria-label="Código de la tienda"
+        autoComplete="off"
+        autoFocus
+      />
+      <div className={styles.actions}>
+        <button className={styles.primary} type="submit" disabled={save.isPending}>
+          Guardar
+        </button>
+        <button className={styles.button} type="button" onClick={() => setEditing(false)} disabled={save.isPending}>
+          Cancelar
+        </button>
+      </div>
+      {save.isError && <p className={styles.error}>{save.error.message}</p>}
+    </form>
   );
 }

@@ -95,6 +95,7 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 - **CA4.3** Agregar una línea toma ≤ 3 interacciones después de elegir el producto.
 - **CA4.4** Una compra manual queda en el mismo historial que las importadas, marcada como "Manual".
 - **CA4.5** Desde el detalle se puede cambiar la fecha de una compra manual (el formulario usa hoy por defecto y es fácil olvidarlo). Cambia el historial, el resumen mensual y la ventana de precios de F3; no admite fechas futuras. Las facturas importadas **no** se pueden editar: su fecha es la de la DGI, y el intento responde 409.
+- **CA4.6** Al agregar una línea con un producto ya existente (elegido por búsqueda), se le puede agregar el código (escaneándolo o tecleándolo) antes de agregar la línea, no solo cuando el producto entra escaneado. El código queda en el ítem de esa tienda (`store_items.code`) con las reglas de CA5.8. Es una fricción de uso: entra por la regla de la Fase 5.
 
 ### F5 — Nombrar y vincular productos (Should)
 
@@ -109,6 +110,11 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
   - Un producto sin GTIN lo recibe. Si ya tiene uno, responde 409.
   - Si el código ya es de **otro** producto, responde 409 con ese producto y **no** se fusionan solos; el usuario vincula desde F5.
   - No se modifica `store_items.code`: es el código que imprime la tienda y lo usa el emparejamiento con sus facturas.
+- **CA5.8** Un producto puede tener código de barras (`products.gtin`, CA5.7) **y** un código interno por tienda (`store_items.code`). En la pantalla de precios, cada ítem muestra su código de tienda. Es una fricción de uso: entra por la regla de la Fase 5.
+  - Solo es editable en ítems que no vienen de ninguna factura importada (todas sus líneas son de compras manuales). Los de factura responden 409: su código lo pone la DGI y lo usa el emparejamiento.
+  - El código son 4 a 14 dígitos; vacío lo quita.
+  - Si otro ítem de la misma tienda ya tiene ese código, responde 409 con ese ítem y no se fusionan solos.
+  - Después del cambio se aplican los vínculos automáticos por GTIN (CA5.3) igual que al importar.
 
 ### F6 — Resumen mensual (Could)
 
@@ -328,7 +334,7 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 **Regla:** durante esta fase solo se corrigen bugs y fricciones que aparezcan al usar la app. No se agregan funciones, y todo lo de "Fuera de alcance" sigue fuera.
 
-**Fricciones permitidas:** CA4.5 (editar la fecha de una compra manual) nace de un caso real de uso y entra por esta regla, sin excepción.
+**Fricciones permitidas:** CA4.5 (editar la fecha de una compra manual), CA4.6 (agregar el código a una línea manual de un producto existente) y CA5.8 (ver y editar el código interno de ítems manuales) nacen de casos reales de uso y entran por esta regla, sin excepción.
 
 **Excepción aprobada (2026-10-25): F8, exportar a CSV.** Es de solo lectura, no cambia el esquema ni el flujo de importación, y por eso no puede alterar las métricas del día 60. Cualquier otra función sigue sujeta a la regla.
 

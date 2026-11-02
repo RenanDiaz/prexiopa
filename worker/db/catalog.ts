@@ -58,6 +58,21 @@ export type SetBarcodeResult =
   | { ok: false; error: 'not_found' | 'invalid_code' | 'has_code' }
   | { ok: false; error: 'in_use'; productId: string; name: string };
 
+export type SetItemCodeResult =
+  | { ok: true }
+  | { ok: false; error: 'not_found' | 'invalid_code' | 'from_invoice' }
+  | { ok: false; error: 'in_use'; itemId: string; description: string };
+
+/** CA5.8: código interno de tienda que el usuario puede escribir (PLU de 4 dígitos hasta GTIN-14). */
+export const STORE_CODE_RE = /^\d{4,14}$/;
+
+/** Si el ítem tiene líneas de alguna factura importada: su código lo puso la DGI (CA5.8). */
+export const fromInvoiceSql = sql<number>`exists(
+  select 1 from purchase_lines fi_l
+  inner join purchases fi_p on fi_p.id = fi_l.purchase_id
+  where fi_l.store_item_id = "store_items"."id" and fi_p.source = 'cafe'
+)`;
+
 /** `is_weighed` ya incluye la detección por descripción y la corrección del usuario. */
 function unitOf(description: string, isWeighed: boolean): PriceUnit {
   if (!isWeighed) return 'u';
@@ -392,12 +407,19 @@ export function catalogRepo(db: Db, userId: string) {
           isWeighed: storeItems.isWeighed,
           weighedByUser: storeItems.weighedByUser,
           linkSource: storeItems.linkSource,
+          fromInvoice: fromInvoiceSql,
         })
         .from(storeItems)
         .innerJoin(stores, eq(stores.id, storeItems.storeId))
         .where(and(eq(storeItems.userId, userId), itemFilter));
 
-      return { ...title, items, last: entries[0] ?? null, lowest90: lowest, entries };
+      return {
+        ...title,
+        items: items.map(({ fromInvoice, ...item }) => ({ ...item, codeEditable: !fromInvoice })),
+        last: entries[0] ?? null,
+        lowest90: lowest,
+        entries,
+      };
     },
 
     /** CA5.1: nombre legible. Si el ítem no tiene producto, se crea uno con ese nombre. */
@@ -458,6 +480,34 @@ export function catalogRepo(db: Db, userId: string) {
       await runBatch(db, statements);
       await inferQuantities();
       return { ok: true, productId: linkedTo };
+    },
+
+    /**
+     * CA5.8: cambia (o quita, con null) el código interno de un ítem que solo viene de compras
+     * manuales. Los de factura no se tocan: el emparejamiento con la DGI depende de ese código.
+     */
+    async setItemCode(itemId: string, rawCode: string | null): Promise<SetItemCodeResult> {
+      const code = rawCode?.trim() || null;
+      if (code !== null && !STORE_CODE_RE.test(code)) return { ok: false, error: 'invalid_code' };
+      const [item] = await db
+        .select({ id: storeItems.id, storeId: storeItems.storeId, code: storeItems.code, fromInvoice: fromInvoiceSql })
+        .from(storeItems)
+        .where(and(eq(storeItems.id, itemId), eq(storeItems.userId, userId)));
+      if (!item) return { ok: false, error: 'not_found' };
+      if (item.fromInvoice) return { ok: false, error: 'from_invoice' };
+      if (item.code === code) return { ok: true };
+
+      if (code !== null) {
+        const holder = await db.query.storeItems.findFirst({
+          where: and(eq(storeItems.userId, userId), eq(storeItems.storeId, item.storeId), eq(storeItems.code, code)),
+          columns: { id: true, description: true },
+        });
+        if (holder) return { ok: false, error: 'in_use', itemId: holder.id, description: holder.description };
+      }
+      await db.update(storeItems).set({ code }).where(eq(storeItems.id, item.id));
+      // CA5.3: un código que es GTIN vincula el ítem igual que al importar.
+      await reindexItems(item.storeId);
+      return { ok: true };
     },
 
     /**
