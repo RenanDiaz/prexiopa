@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { detectCodeFormat, hasValidCheckDigit } from '../worker/cafe/codes';
-import { extractCufe } from '../worker/cafe/cufe';
+import { cafeNotFoundMessage, cufeIssueDate, extractCufe } from '../worker/cafe/cufe';
 import { multiplyToCents, toCents } from '../worker/cafe/money';
 import { CafeParseError, parseInvoiceHtml } from '../worker/cafe/parse';
 import cityMall from './fixtures/city-mall.html?raw';
@@ -165,5 +165,29 @@ describe('parseInvoiceHtml', () => {
     ['una línea con monto inválido', oneLine.replace('>4.62</td>', '>N/A</td>')],
   ])('lanza CafeParseError con %s', (_, html) => {
     expect(() => parseInvoiceHtml(html)).toThrow(CafeParseError);
+  });
+});
+
+describe('cafeNotFoundMessage', () => {
+  // CUFE real (escaneado el 1/11/2026): el "2022" es parte del RUC, la fecha es 20261101.
+  const cufe = 'FE0120000155722856-2-2022-0600042026110100000343600010318416893992';
+
+  it('lee la fecha de emisión del CUFE', () => {
+    expect(cufeIssueDate(cufe)).toBe('2026-11-01');
+  });
+
+  it('sugiere esperar si la factura es de hoy en Panamá', () => {
+    // 1/11 23:00 en Panamá = 2/11 04:00 UTC.
+    expect(cafeNotFoundMessage(cufe, new Date('2026-11-02T04:00:00Z'))).toMatch(/espera unos minutos/);
+  });
+
+  it('sugiere esperar si es de ayer (compra cerca de medianoche)', () => {
+    expect(cafeNotFoundMessage(cufe, new Date('2026-11-02T06:00:00Z'))).toMatch(/espera unos minutos/);
+  });
+
+  it('no sugiere esperar si la factura es más vieja', () => {
+    const message = cafeNotFoundMessage(cufe, new Date('2026-11-03T06:00:00Z'));
+    expect(message).not.toMatch(/espera/);
+    expect(message).toContain('emitida el 01/11/2026');
   });
 });
