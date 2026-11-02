@@ -30,3 +30,28 @@ export function extractCufe(input: string): string | null {
 export function invoiceUrl(cufe: string): string {
   return DGI_INVOICE_URL + cufe;
 }
+
+/** Fecha de emisión que trae el CUFE (caracteres 33–40, AAAAMMDD) como "AAAA-MM-DD". */
+export function cufeIssueDate(cufe: string): string {
+  const ymd = cufe.slice(32, 40);
+  return `${ymd.slice(0, 4)}-${ymd.slice(4, 6)}-${ymd.slice(6, 8)}`;
+}
+
+const PANAMA_OFFSET_MS = 5 * 60 * 60 * 1000;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Mensaje cuando la DGI no tiene la factura. Solo sugiere esperar si el CUFE es
+ * de hoy o de ayer en hora de Panamá (ayer cubre las compras cerca de medianoche):
+ * a una factura vieja no le va a servir esperar.
+ */
+export function cafeNotFoundMessage(cufe: string, now: Date = new Date()): string {
+  const issued = cufeIssueDate(cufe);
+  const panamaNow = now.getTime() - PANAMA_OFFSET_MS;
+  const yesterday = new Date(panamaNow - DAY_MS).toISOString().slice(0, 10);
+  if (issued >= yesterday) {
+    return 'La DGI no tiene una factura con este CUFE. Si es de hoy, espera unos minutos y reintenta.';
+  }
+  const [y, m, d] = issued.split('-');
+  return `La DGI no tiene una factura con este CUFE (emitida el ${d}/${m}/${y}). Revisa que el QR sea de una factura electrónica.`;
+}

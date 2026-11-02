@@ -1,7 +1,7 @@
 import { Hono, type Context } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import { createAuth, sessionAuth, type AppEnv, type AuthOptions } from './auth';
-import { extractCufe, invoiceUrl } from './cafe/cufe';
+import { cafeNotFoundMessage, extractCufe, invoiceUrl } from './cafe/cufe';
 import { DgiUnavailableError, fetchCafe, type FetchCafeOptions } from './cafe/fetch';
 import type { CodeFormat } from './cafe/codes';
 import { CafeNotFoundError, CafeParseError } from './cafe/parse';
@@ -97,7 +97,7 @@ function dgiError(error: unknown, cufe: string) {
     return {
       status: 404 as const,
       body: {
-        error: 'La DGI no tiene una factura con este CUFE. Si es de hoy, espera unos minutos y reintenta.',
+        error: cafeNotFoundMessage(cufe),
         code: 'not_found',
         cufe,
       },

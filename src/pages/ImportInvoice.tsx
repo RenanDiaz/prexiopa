@@ -79,6 +79,7 @@ function Preview({ input, onReset }: { input: string; onReset: () => void }) {
       <>
         <p>Consultando la DGI…</p>
         <p className={styles.muted}>Algunas tiendas tardan hasta 15 segundos en responder.</p>
+        <CancelLink />
       </>
     );
   }
@@ -100,6 +101,7 @@ function Preview({ input, onReset }: { input: string; onReset: () => void }) {
             Escanear otra
           </button>
         </div>
+        <CancelLink />
       </>
     );
   }
@@ -117,6 +119,7 @@ function Preview({ input, onReset }: { input: string; onReset: () => void }) {
             Escanear otra
           </button>
         </div>
+        <CancelLink />
       </>
     );
   }
@@ -138,8 +141,18 @@ function Preview({ input, onReset }: { input: string; onReset: () => void }) {
           Escanear otra
         </button>
       </div>
+      {!save.isPending && <CancelLink />}
       <InvoiceLines invoice={invoice} />
     </>
+  );
+}
+
+// CA1.9: salir del import desde cualquier estado sin pasar por "Escanear otra".
+function CancelLink() {
+  return (
+    <div className={styles.secondaryLinks}>
+      <Link href="/">Cancelar</Link>
+    </div>
   );
 }
 
