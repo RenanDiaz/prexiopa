@@ -63,8 +63,8 @@ export type SetItemCodeResult =
   | { ok: false; error: 'not_found' | 'invalid_code' | 'from_invoice' }
   | { ok: false; error: 'in_use'; itemId: string; description: string };
 
-/** CA5.8: código interno de tienda que el usuario puede escribir (PLU de 4 dígitos hasta GTIN-14). */
-export const STORE_CODE_RE = /^\d{4,14}$/;
+/** CA5.8: código interno de tienda que el usuario puede escribir (de 1 dígito hasta GTIN-14). */
+export const STORE_CODE_RE = /^\d{1,14}$/;
 
 /** Si el ítem tiene líneas de alguna factura importada: su código lo puso la DGI (CA5.8). */
 export const fromInvoiceSql = sql<number>`exists(
@@ -157,6 +157,7 @@ export function catalogRepo(db: Db, userId: string) {
         isWeighed: storeItems.isWeighed,
         weighedByUser: storeItems.weighedByUser,
         codeFormat: stores.codeFormat,
+        fromInvoice: fromInvoiceSql,
       })
       .from(storeItems)
       .innerJoin(stores, eq(stores.id, storeItems.storeId))
@@ -165,7 +166,9 @@ export function catalogRepo(db: Db, userId: string) {
     const wanted = new Map<string, { gtin: string | null; isWeighed: boolean }>();
     const gtins = new Set<string>();
     for (const item of items) {
-      const isWeighed = item.weighedByUser ?? isWeighedItem(item.code, item.description);
+      // El código solo dice "pesable" si lo puso la factura (PLU, §10.2). En un ítem manual es
+      // el que escribió el usuario, y puede ser corto (p. ej. "480") sin ser de balanza.
+      const isWeighed = item.weighedByUser ?? isWeighedItem(item.fromInvoice ? item.code : null, item.description);
       const gtin = isWeighed ? null : normalizeGtin(item.code, item.codeFormat as CodeFormat);
       wanted.set(item.id, { gtin, isWeighed });
       if (gtin && item.linkSource !== 'user') gtins.add(gtin);

@@ -66,14 +66,27 @@ describe('PUT /api/catalog/items/:id/code (CA5.8)', () => {
 
     expect((await putCode(user, itemId, '123456')).status).toBe(204);
     expect((await itemRow(itemId))?.code).toBe('123456');
+    // Códigos cortos de la tienda (p. ej. de 3 dígitos) también valen.
+    expect((await putCode(user, itemId, '123')).status).toBe(204);
+    expect((await itemRow(itemId))?.code).toBe('123');
     expect((await putCode(user, itemId, null)).status).toBe(204);
     expect((await itemRow(itemId))?.code).toBeNull();
   });
 
-  it('rechaza códigos que no son de 4 a 14 dígitos', async () => {
+  it('un código corto en un ítem manual no lo marca como pesable', async () => {
+    const user = as('codigo-corto@example.com');
+    const { itemId } = await freeTextItem(user, 'Empanada');
+    expect((await putCode(user, itemId, '480')).status).toBe(204);
+    const row = await env.DB.prepare('SELECT code, is_weighed FROM store_items WHERE id = ?')
+      .bind(itemId)
+      .first<{ code: string; is_weighed: number }>();
+    expect(row).toEqual({ code: '480', is_weighed: 0 });
+  });
+
+  it('rechaza códigos que no son de 1 a 14 dígitos', async () => {
     const user = as('codigo-invalido@example.com');
     const { itemId } = await freeTextItem(user, 'Galletas');
-    for (const code of ['123', 'ABC123', '123456789012345']) {
+    for (const code of ['ABC123', '12-3', '123456789012345']) {
       const res = await putCode(user, itemId, code);
       expect(res.status).toBe(400);
       expect(await res.json()).toMatchObject({ code: 'invalid_code' });

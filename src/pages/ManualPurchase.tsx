@@ -205,7 +205,7 @@ function LineCode({ code, onChange }: { code?: string; onChange: (code: string |
   const [adding, setAdding] = useState(false);
   const [typed, setTyped] = useState('');
   const [cameraError, setCameraError] = useState<string | null>(null);
-  const valid = /^\d{4,14}$/.test(typed.trim());
+  const valid = /^\d{1,14}$/.test(typed.trim());
 
   if (code) {
     return (

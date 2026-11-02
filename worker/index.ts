@@ -220,7 +220,7 @@ export function createApp(options: AppOptions = {}) {
       case 'not_found':
         return c.json({ error: 'No encontrado' }, 404);
       case 'invalid_code':
-        return c.json({ error: 'El código debe tener de 4 a 14 dígitos.', code: 'invalid_code' }, 400);
+        return c.json({ error: 'El código debe tener de 1 a 14 dígitos.', code: 'invalid_code' }, 400);
       case 'from_invoice':
         return c.json(
           { error: 'Este código viene de una factura y no se puede cambiar.', code: 'from_invoice' },
