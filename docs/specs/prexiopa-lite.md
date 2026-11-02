@@ -86,6 +86,11 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 - **CA3.2** Arriba se destaca el último precio pagado y el precio más bajo de los últimos 90 días, cada uno con su tienda.
 - **CA3.3** La búsqueda por texto encuentra coincidencias parciales en el nombre del producto y en la descripción de la línea de factura (por ejemplo, "leche estrella" encuentra "LECHE ESTRELLA AZUL 1L").
 - **CA3.4** Si no hay resultados, se muestra "Aún no has comprado esto". No se ofrece crear el producto.
+- **CA3.6** Al escanear (o teclear) una **etiqueta de balanza** (prefijo `2` de circulación restringida, §10.2) en F3 o en la compra manual, se busca el ítem por el número de producto que trae la etiqueta, comparándolo sin ceros a la izquierda contra `store_items.code`. La etiqueta no se guarda como código de barras: CA5.7 la rechaza con un mensaje que explica esto. Es una fricción de uso: entra por la regla de la Fase 5. Formatos (§10.7):
+  - EAN-13 `2 PPPPPP VVVVV C` (PriceSmart: `2 086621 01506 5`, V = peso): producto = 6 dígitos. La factura trae el número de ítem (`86621`).
+  - UPC-A `2 PPPPP VVVVV C`, que el escáner puede devolver como EAN-13 con un `0` delante (Don Antonio: `0 202899 006792`, V = precio): producto = 5 dígitos. La factura trae la etiqueta sin dígito verificador y con V en ceros (`20289900000`).
+  - No se valida el dígito verificador: lo que identifica el ítem es el número de producto, y así funciona aunque el usuario teclee la etiqueta con el peso en ceros.
+  - El número de producto es de la tienda, no universal: puede coincidir con un código de otra cadena. Los resultados muestran la tienda.
 - **CA3.5** El historial se ve como lista. Un sparkline en SVG inline es opcional. **No se usa Recharts.**
 
 ### F4 — Compra manual (Should)
@@ -334,7 +339,7 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 **Regla:** durante esta fase solo se corrigen bugs y fricciones que aparezcan al usar la app. No se agregan funciones, y todo lo de "Fuera de alcance" sigue fuera.
 
-**Fricciones permitidas:** CA4.5 (editar la fecha y hora de una compra manual), CA4.6 (agregar el código a una línea manual de un producto existente) y CA5.8 (ver y editar el código interno de ítems manuales) nacen de casos reales de uso y entran por esta regla, sin excepción.
+**Fricciones permitidas:** CA4.5 (editar la fecha y hora de una compra manual), CA4.6 (agregar el código a una línea manual de un producto existente) CA5.8 (ver y editar el código interno de ítems manuales) y CA3.6 (encontrar un pesable escaneando su etiqueta de balanza) nacen de casos reales de uso y entran por esta regla, sin excepción.
 
 **Excepción aprobada (2026-10-25): F8, exportar a CSV.** Es de solo lectura, no cambia el esquema ni el flujo de importación, y por eso no puede alterar las métricas del día 60. Cualquier otra función sigue sujeta a la regla.
 
@@ -486,6 +491,7 @@ _Se llena durante la fase: respuestas de la tienda, fricciones, y las respuestas
 - El ticket impreso es un "Comprobante Auxiliar de Factura Electrónica". Imprime `cantidad × precio unitario` **solo en las líneas con cantidad distinta de 1**: `18 × 0,68` (IRBESARTAN 300MG, con 30 % de descuento) y `0,700 × 9,70` (JAMÓN). Las líneas con una unidad no llevan esa fila.
 - La factura de la DGI de esas mismas líneas dice cantidad `1.000`, y "Precio Unitario" es el total de las 18 pastillas (`12.24`) o el total del jamón (`6.79`). La columna "Información de interés" viene vacía, así que no hay otro campo donde esté el dato.
 - Conclusión: el punto de venta tiene la cantidad y se pierde al convertir a factura electrónica. Eso confirma que no hay nada que leer en la DGI. La pregunta para la tienda queda en pie.
+- **Etiquetas de PriceSmart (2026-11-02):** `2 497289 01462 6` = ítem `497289` + **peso** 1.462 kg + verificador (la etiqueta impresa dice "ITEM 497289" y "PESO kg 1.462"). A diferencia de Don Antonio, codifica el peso, no el precio, y la factura trae el número de ítem sin ceros a la izquierda (`086621` → `86621`). Leer el peso de la etiqueta no se construye todavía.
 - **Corrección sobre los pesables:** la etiqueta de la balanza (`0 202899 006792`) codifica el PLU (`2899`) y el **precio** (`0679` → $6.79), no el peso. El punto de venta lo transmite con el precio en ceros (`20289900000`). El peso solo se obtiene como `precio / precio por kg`, y el precio por kg ($9.70) aparece únicamente en la etiqueta y en el ticket.
 - **Hipótesis a validar (no se construye todavía):** si el usuario confirma el peso de un pesable una vez (0.700 kg a $6.79 → $9.70/kg), las compras siguientes del mismo ítem al mismo precio por kg permiten inferir el peso como `total / precio por kg`. Con resolución de balanza de 5 g, el resultado es único cuando el precio por kg es ≥ $2 (5 g valen al menos 1 centavo); la resolución real de las balanzas está sin confirmar. Falla cuando cambia el precio por kg (promociones), y en ese caso no se infiere nada. Hoy la regla 3 excluye los pesables; extenderla se evalúa con más compras reales.
 - **Fricción de UI:** CA5.5 solo permite corregir unidades con −/+ (una mutación por toque). Corregir las 18 pastillas del IRBESARTAN son 17 toques. Es un caso raro (medicinas por unidad), pero si se repite conviene permitir teclear la cantidad como ya se hace con el peso.

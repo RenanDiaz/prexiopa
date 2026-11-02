@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  scaleLabelItemCodes,
   detectStoreQuantities,
   effectiveUnitPriceCents,
   inferUnits,
@@ -90,5 +91,29 @@ describe('effectiveUnitPriceCents (§5.3)', () => {
   it('usa la cantidad inferida o corregida', () => {
     expect(effectiveUnitPriceCents({ lineTotalCents: 240, quantity: 3, quantitySource: 'inferred', storeQuantities: 'always_one' })).toBe(80);
     expect(effectiveUnitPriceCents({ lineTotalCents: 94, quantity: 0.4, quantitySource: 'user', storeQuantities: 'always_one' })).toBe(235);
+  });
+});
+
+describe('scaleLabelItemCodes (CA3.6)', () => {
+  it('PriceSmart: EAN-13 con 6 dígitos de producto y el peso', () => {
+    expect(scaleLabelItemCodes('2086621015065')).toContain('86621');
+    expect(scaleLabelItemCodes('2497289014626')).toContain('497289');
+  });
+
+  it('acepta la etiqueta tecleada con el peso en ceros (sin validar el verificador)', () => {
+    expect(scaleLabelItemCodes('2086621000005')).toContain('86621');
+    expect(scaleLabelItemCodes('2497289000006')).toContain('497289');
+  });
+
+  it('Don Antonio: UPC-A (o EAN-13 con 0 delante) → forma de la factura con el precio en ceros', () => {
+    expect(scaleLabelItemCodes('0202899006792')).toContain('20289900000');
+    expect(scaleLabelItemCodes('202899006792')).toContain('20289900000');
+    expect(scaleLabelItemCodes('207865012345')).toContain('20786500000');
+  });
+
+  it('no trata como etiqueta un GTIN normal ni códigos cortos', () => {
+    expect(scaleLabelItemCodes('7501055300013')).toBeNull();
+    expect(scaleLabelItemCodes('86621')).toBeNull();
+    expect(scaleLabelItemCodes('2000000000000')).toBeNull();
   });
 });
