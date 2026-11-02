@@ -206,4 +206,28 @@ describe('aislamiento entre usuarios', () => {
     const row = await env.DB.prepare('SELECT gtin FROM products WHERE id = ?').bind(productId).first<{ gtin: string | null }>();
     expect(row?.gtin).toBeNull();
   });
+
+  it('PUT /catalog/items/:id/code no toca ítems ajenos (CA5.8)', async () => {
+    const ana = as('ana@example.com');
+    const purchase = await ana('/purchases/manual', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        store: { name: 'Chino de la otra esquina' },
+        lines: [{ description: 'Galletas', quantity: 1, lineTotalCents: 150 }],
+      }),
+    });
+    const { id } = await purchase.json<{ id: string }>();
+    const { lines } = await (await ana(`/purchases/${id}`)).json<{ lines: { storeItemId: string }[] }>();
+    const itemId = lines[0]!.storeItemId;
+
+    const res = await as('beto@example.com')(`/catalog/items/${itemId}/code`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: '4011' }),
+    });
+    expect(res.status).toBe(404);
+    const row = await env.DB.prepare('SELECT code FROM store_items WHERE id = ?').bind(itemId).first<{ code: string | null }>();
+    expect(row?.code).toBeNull();
+  });
 });

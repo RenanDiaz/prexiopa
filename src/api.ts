@@ -154,7 +154,10 @@ export type PriceHistory = {
     id: string;
     storeName: string;
     description: string;
+    /** Código interno de la tienda (`store_items.code`). */
     code: string | null;
+    /** CA5.8: solo ítems que no vienen de una factura importada. */
+    codeEditable: boolean;
     linkSource: string | null;
     isWeighed: boolean;
   }[];
@@ -207,6 +210,10 @@ export const setBarcode = (kind: 'product' | 'item', id: string, code: string) =
     `/catalog/${kind === 'product' ? 'products' : 'items'}/${encodeURIComponent(id)}/barcode`,
     sendJson('PUT', { code }),
   );
+
+/** CA5.8: cambia (o quita, con null) el código interno de un ítem manual. */
+export const setItemCode = (itemId: string, code: string | null) =>
+  apiNoContent(`/catalog/items/${encodeURIComponent(itemId)}/code`, sendJson('PUT', { code }));
 
 export const linkItem = (itemId: string, productId: string) =>
   apiNoContent(`/catalog/items/${encodeURIComponent(itemId)}/product`, sendJson('PUT', { productId }));

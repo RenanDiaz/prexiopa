@@ -159,6 +159,7 @@ function LineEditor({ onAdd }: { onAdd: (line: ManualLine) => void }) {
   return (
     <form className={styles.form} onSubmit={add}>
       <strong>{product.description}</strong>
+      <LineCode code={product.code} onChange={(code) => setProduct({ ...product, code })} />
       <div className={styles.lineEditor}>
         <span className={styles.stepper}>
           <button
@@ -192,6 +193,75 @@ function LineEditor({ onAdd }: { onAdd: (line: ManualLine) => void }) {
         Otro producto
       </button>
     </form>
+  );
+}
+
+/**
+ * CA4.6: el código de un producto elegido por búsqueda (o tecleado) se puede agregar aquí,
+ * no solo escaneándolo antes de elegir. Queda en el ítem de esta tienda (CA5.8).
+ */
+function LineCode({ code, onChange }: { code?: string; onChange: (code: string | undefined) => void }) {
+  const [adding, setAdding] = useState(false);
+  const [typed, setTyped] = useState('');
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const valid = /^\d{4,14}$/.test(typed.trim());
+
+  if (code) {
+    return (
+      <p className={styles.muted}>
+        Código {code}{' '}
+        <button type="button" className={styles.linkInline} onClick={() => onChange(undefined)}>
+          Quitar
+        </button>
+      </p>
+    );
+  }
+  if (!adding) {
+    return (
+      <button type="button" className={`${styles.linkInline} ${styles.start}`} onClick={() => setAdding(true)}>
+        Agregar código
+      </button>
+    );
+  }
+
+  const done = (value: string) => {
+    onChange(value);
+    setAdding(false);
+    setTyped('');
+  };
+  return (
+    <div className={styles.form}>
+      {cameraError ? (
+        <p className={styles.error}>{cameraError} Teclea el código abajo.</p>
+      ) : (
+        <Suspense fallback={<p className={styles.muted}>Abriendo la cámara…</p>}>
+          <Scanner mode="barcode" onResult={done} onError={setCameraError} />
+        </Suspense>
+      )}
+      <div className={styles.lineEditor}>
+        <input
+          className={styles.input}
+          value={typed}
+          onChange={(event) => setTyped(event.target.value)}
+          onKeyDown={(event) => {
+            // Enter no agrega la línea: confirma el código.
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
+            if (valid) done(typed.trim());
+          }}
+          inputMode="numeric"
+          placeholder="O teclea el código"
+          aria-label="Código del producto"
+          autoComplete="off"
+        />
+        <button type="button" className={styles.button} disabled={!valid} onClick={() => done(typed.trim())}>
+          Usar
+        </button>
+        <button type="button" className={styles.link} onClick={() => setAdding(false)}>
+          Cancelar
+        </button>
+      </div>
+    </div>
   );
 }
 
