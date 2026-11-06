@@ -14,3 +14,25 @@
 .wide {
   aspect-ratio: 16 / 9;
 }
+
+/* CA1.9: alterna entre las cámaras traseras y recuerda la elegida. */
+.switch {
+  display: block;
+  margin: 0.5rem auto 0;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.label {
+  color: var(--text-muted);
+}
