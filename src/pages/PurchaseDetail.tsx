@@ -54,7 +54,7 @@ export function PurchaseDetail({ id }: { id: string }) {
       {p.storeQuantities === 'always_one' && (
         <p className={styles.notice}>
           Esta tienda reporta cantidad 1 en todo. Para comparar precios, toca la cantidad para confirmarla o usa − / + si
-          llevaste más; en lo que va por peso, anota los kg. Es opcional.
+          llevaste más (tócala otra vez para escribirla); en lo que va por peso, anota los kg. Es opcional.
         </p>
       )}
 
@@ -182,51 +182,64 @@ function Row({ label, cents }: { label: string; cents: number }) {
   );
 }
 
-/** CA5.5 y CA5.6: unidades con − / +, peso para pesables; marca las inferidas. */
+/**
+ * CA5.5 y CA5.6: unidades con − / +, peso para pesables; marca las inferidas.
+ * CA5.9: tocar una cantidad ya confirmada por el usuario permite teclearla.
+ */
 function QuantityControl({ purchaseId, line }: { purchaseId: string; line: PurchaseLine }) {
   const queryClient = useQueryClient();
-  const [weight, setWeight] = useState<string | null>(null);
+  const [draft, setDraft] = useState<string | null>(null);
   const update = useMutation({
     mutationFn: (quantity: number) => setLineQuantity(line.id, quantity),
     onSuccess: async () => {
-      setWeight(null);
+      setDraft(null);
       await queryClient.invalidateQueries({ queryKey: ['purchase', purchaseId] });
       await queryClient.invalidateQueries({ queryKey: ['price-history'] });
     },
   });
   const confirmed = line.quantitySource !== 'invoice';
 
-  if (line.isWeighed) {
-    if (weight !== null) {
-      const submit = (event: FormEvent) => {
-        event.preventDefault();
-        const kg = Number(weight.replace(',', '.'));
-        if (kg > 0) update.mutate(kg);
-      };
-      return (
-        <form className={styles.weight} onSubmit={submit}>
-          <input
-            className={styles.input}
-            value={weight}
-            onChange={(event) => setWeight(event.target.value)}
-            inputMode="decimal"
-            aria-label={`Peso en kg de ${line.description}`}
-            placeholder="kg"
-            autoFocus
-          />
-          <button className={styles.button} type="submit" disabled={update.isPending}>
-            OK
-          </button>
-        </form>
-      );
-    }
+  if (draft !== null) {
+    const value = Number(draft.replace(',', '.'));
+    const valid = line.isWeighed ? value > 0 : Number.isInteger(value) && value >= 1;
+    const submit = (event: FormEvent) => {
+      event.preventDefault();
+      if (valid && value <= 10_000) update.mutate(value);
+    };
     return (
-      <button className={styles.link} onClick={() => setWeight(confirmed ? String(line.quantity) : '')}>
+      <form className={styles.weight} onSubmit={submit}>
+        <input
+          className={styles.input}
+          value={draft}
+          onChange={(event) => setDraft(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') setDraft(null);
+          }}
+          inputMode={line.isWeighed ? 'decimal' : 'numeric'}
+          aria-label={line.isWeighed ? `Peso en kg de ${line.description}` : `Unidades de ${line.description}`}
+          placeholder={line.isWeighed ? 'kg' : 'unidades'}
+          autoFocus
+          onFocus={(event) => event.target.select()}
+        />
+        <button className={styles.button} type="submit" disabled={update.isPending || !valid}>
+          OK
+        </button>
+        <button className={styles.link} type="button" aria-label="Cancelar" title="Cancelar" onClick={() => setDraft(null)}>
+          ✕
+        </button>
+      </form>
+    );
+  }
+
+  if (line.isWeighed) {
+    return (
+      <button className={styles.link} onClick={() => setDraft(confirmed ? String(line.quantity) : '')}>
         {confirmed ? `${formatQuantity(line.quantity)} kg` : 'Peso'}
       </button>
     );
   }
 
+  const byUser = line.quantitySource === 'user';
   return (
     <span className={styles.stepper}>
       <button
@@ -239,10 +252,14 @@ function QuantityControl({ purchaseId, line }: { purchaseId: string; line: Purch
       </button>
       <button
         className={confirmed ? styles.stepValue : `${styles.stepValue} ${styles.unconfirmed}`}
-        title={confirmed ? undefined : 'Confirmar que fue esta cantidad'}
-        aria-label={confirmed ? undefined : `Confirmar ${formatQuantity(line.quantity)} de ${line.description}`}
-        disabled={update.isPending || line.quantitySource === 'user'}
-        onClick={() => update.mutate(line.quantity)}
+        title={byUser ? 'Escribir la cantidad' : 'Confirmar que fue esta cantidad'}
+        aria-label={
+          byUser
+            ? `Escribir las unidades de ${line.description}`
+            : `Confirmar ${formatQuantity(line.quantity)} de ${line.description}`
+        }
+        disabled={update.isPending}
+        onClick={() => (byUser ? setDraft(String(line.quantity)) : update.mutate(line.quantity))}
       >
         {formatQuantity(line.quantity)}
         {line.quantitySource === 'inferred' && <small className={styles.muted}> inf.</small>}

@@ -111,6 +111,7 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 - **CA5.4** Se puede editar el nombre visible de una tienda. La DGI entrega la razón social (por ejemplo, "Inmobiliaria Don Antonio, S.A."), no el nombre comercial.
 - **CA5.5** En el detalle de una compra de una tienda con cantidades no confiables (§10.6), cada línea permite corregir la cantidad con "+ / −" (1 tap por unidad) o, si es pesable, anotar el peso. Es opcional: la compra queda guardada aunque no se corrija nada.
 - **CA5.6** Las cantidades inferidas (§10.6) se muestran marcadas como "inferida" y se pueden corregir igual que en CA5.5.
+- **CA5.9** Una cantidad en unidades que el usuario ya confirmó o corrigió (`quantity_source = 'user'`) se puede **teclear**: tocarla abre un campo numérico con el valor actual, que acepta enteros de 1 a 10 000, con "OK" y cancelar (✕ o Escape). El primer toque sobre una cantidad sin confirmar o inferida sigue confirmándola (1 tap, CA5.5). Así, 18 unidades son 4 interacciones (confirmar, tocar, teclear, OK) en vez de 17. El peso de los pesables ya se teclea. No cambia la API: `PATCH /api/purchase-lines/:id` ya acepta cualquier cantidad. Es una fricción de uso (§10.7, IRBESARTAN): entra por la regla de la Fase 5.
 - **CA5.7** Se puede agregar el código de barras a un producto, o a un ítem que aún no tiene producto, ya creados (escaneándolo o tecleándolo) desde su pantalla de precios. Es una fricción de uso: entra por la regla de la Fase 5 sin excepción. El código se valida como GTIN (dígito verificador; los de peso variable se rechazan, §10.2) y se normaliza a GTIN-13.
   - Un ítem sin producto crea uno con su descripción y ese GTIN, y se vincula con `link_source = 'user'`. Si ya existe un producto del usuario con ese GTIN, el ítem se vincula a él.
   - Un producto sin GTIN lo recibe. Si ya tiene uno, responde 409.
@@ -356,7 +357,7 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 **Salida:** se cumplen CA3.x y CA5.x, y lo uso en tienda.
 
-**Estado (2026-10-24):** migración `0002`, catálogo (`worker/catalog/rules.ts`, `worker/db/catalog.ts`), búsqueda por texto y código, historial de precios con último y más bajo de 90 días, renombrar, vincular y desvincular, nombre y formatos de la tienda, corrección de cantidad/peso y pesable por ítem. Con las 7 facturas reales: Don Antonio se detecta como `always_one`, CITY MALL y TAMEK como `reliable`, 6 productos quedan vinculados por GTIN entre Don Antonio y CITY MALL, y confirmar una cantidad en Don Antonio la vuelve comparable. Sin verificar: escanear códigos de barras con la cámara del teléfono, y el sparkline opcional (CA3.5) no se hizo.
+**Estado (2026-10-24):** migración `0002`, catálogo (`worker/catalog/rules.ts`, `worker/db/catalog.ts`), búsqueda por texto y código, historial de precios con último y más bajo de 90 días, renombrar, vincular y desvincular, nombre y formatos de la tienda, corrección de cantidad/peso y pesable por ítem. Con las 7 facturas reales: Don Antonio se detecta como `always_one`, CITY MALL y TAMEK como `reliable`, 6 productos quedan vinculados por GTIN entre Don Antonio y CITY MALL, y confirmar una cantidad en Don Antonio la vuelve comparable. El escaneo de códigos de barras con la cámara del teléfono se verificó el 2026-11-06. El sparkline opcional (CA3.5) no se hizo.
 
 - Al subir `CATALOG_VERSION`, los datos de cada usuario se recalculan una vez al abrir la app (`GET /api/me`). Así se aplican las reglas a las compras importadas antes de la Fase 3.
 - Los PLU se marcan como pesables, pero algunos se venden por unidad (un mazo de culantro). Por eso cada ítem tiene "Se vende por peso / por unidad" (`weighed_by_user`).
@@ -377,18 +378,18 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 **Regla:** durante esta fase solo se corrigen bugs y fricciones que aparezcan al usar la app. No se agregan funciones, y todo lo de "Fuera de alcance" sigue fuera.
 
-**Fricciones permitidas:** CA4.5 (editar la fecha y hora de una compra manual), CA4.6 (agregar el código a una línea manual de un producto existente) CA5.8 (ver y editar el código interno de ítems manuales) y CA3.6 (encontrar un pesable escaneando su etiqueta de balanza) nacen de casos reales de uso y entran por esta regla, sin excepción.
+**Fricciones permitidas:** CA4.5 (editar la fecha y hora de una compra manual), CA4.6 (agregar el código a una línea manual de un producto existente), CA5.8 (ver y editar el código interno de ítems manuales), CA3.6 (encontrar un pesable escaneando su etiqueta de balanza) y CA5.9 (teclear la cantidad en unidades) nacen de casos reales de uso y entran por esta regla, sin excepción.
 
 **Excepción aprobada (2026-10-25): F8, exportar a CSV.** Es de solo lectura, no cambia el esquema ni el flujo de importación, y por eso no puede alterar las métricas del día 60. Cualquier otra función sigue sujeta a la regla.
 
-**Estado de F8 (2026-10-25):** endpoints, pantalla `/exportar` y tests implementados. Sin verificar: la descarga dentro de la PWA instalada en iOS y el guardado en iCloud Drive desde el teléfono.
+**Estado de F8 (2026-10-25):** endpoints, pantalla `/exportar` y tests implementados. ✅ Verificado por el dueño (2026-11-06): la descarga dentro de la PWA instalada en iOS y el guardado en iCloud Drive funcionan.
 
 **Calendario:** día 0 = **2026-10-25**. Revisión el **2026-12-24** (día 60). Si no se cumplen las métricas de §2, se archiva el proyecto sin culpa.
 
 **Trabajo previo (antes de contar los 60 días en serio):**
 
 1. ✅ Implementar CA1.8 (`scan_ms`): columna nullable en `purchases` y migración aditiva, compatible con la versión anterior del Worker. El cliente envía `scan_ms` al guardar, y la lista, el detalle y el resto de la API no cambian. Va con test del endpoint y de que una compra duplicada no pisa el valor.
-2. Verificar con la cámara del teléfono el escaneo de códigos de barras (CA3.1), único criterio de las fases 3 y 4 sin probar en un dispositivo.
+2. ✅ Verificar con la cámara del teléfono el escaneo de códigos de barras (CA3.1). Verificado por el dueño (2026-11-06).
 3. Borrar el proyecto de Supabase y desconectar Vercel (dueño).
 4. Confirmar que D1 Time Travel está disponible en el plan antes de acumular historial.
 
@@ -532,7 +533,14 @@ _Se llena durante la fase: respuestas de la tienda, fricciones, y las respuestas
 - **Etiquetas de PriceSmart (2026-11-02):** `2 497289 01462 6` = ítem `497289` + **peso** 1.462 kg + verificador (la etiqueta impresa dice "ITEM 497289" y "PESO kg 1.462"). A diferencia de Don Antonio, codifica el peso, no el precio, y la factura trae el número de ítem sin ceros a la izquierda (`086621` → `86621`). Leer el peso de la etiqueta no se construye todavía.
 - **Corrección sobre los pesables:** la etiqueta de la balanza (`0 202899 006792`) codifica el PLU (`2899`) y el **precio** (`0679` → $6.79), no el peso. El punto de venta lo transmite con el precio en ceros (`20289900000`). El peso solo se obtiene como `precio / precio por kg`, y el precio por kg ($9.70) aparece únicamente en la etiqueta y en el ticket.
 - **Hipótesis a validar (no se construye todavía):** si el usuario confirma el peso de un pesable una vez (0.700 kg a $6.79 → $9.70/kg), las compras siguientes del mismo ítem al mismo precio por kg permiten inferir el peso como `total / precio por kg`. Con resolución de balanza de 5 g, el resultado es único cuando el precio por kg es ≥ $2 (5 g valen al menos 1 centavo); la resolución real de las balanzas está sin confirmar. Falla cuando cambia el precio por kg (promociones), y en ese caso no se infiere nada. Hoy la regla 3 excluye los pesables; extenderla se evalúa con más compras reales.
-- **Fricción de UI:** CA5.5 solo permite corregir unidades con −/+ (una mutación por toque). Corregir las 18 pastillas del IRBESARTAN son 17 toques. Es un caso raro (medicinas por unidad), pero si se repite conviene permitir teclear la cantidad como ya se hace con el peso.
+- **Fricción de UI:** CA5.5 solo permite corregir unidades con −/+ (una mutación por toque). Corregir las 18 pastillas del IRBESARTAN son 17 toques. Es un caso raro (medicinas por unidad), pero si se repite conviene permitir teclear la cantidad como ya se hace con el peso. → Se resuelve con CA5.9 (2026-11-06).
+
+**2026-11-06 — Revisión del día 12:**
+
+- **Don Antonio (pregunta de §7 Fase 5):** por ahora la inferencia más la corrección con −/+ alcanzan. Con el uso cuesta menos: hay más ítems con precio unitario conocido, así que se infiere más, y "se vende por peso / por unidad" ya quedó configurado en los ítems frecuentes.
+- **Consulta de precio en tienda:** todavía no se ha usado. Antes de la app sí hizo falta, así que se espera usarla; se sigue midiendo.
+- **Pregunta a la tienda (§10.6):** sigue pendiente. Las cajeras no conocían el tema, y la supervisora entendió otra pregunta y no se la pudo volver a encontrar.
+- **Registro de compras:** se escanea la factura en cada ida al súper. Para la métrica del 80 % basta anotar las idas que **no** quedaron registradas (factura olvidada, error de la DGI, tienda sin factura electrónica y sin compra manual).
 
 ---
 
