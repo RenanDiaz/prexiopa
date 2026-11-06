@@ -253,8 +253,8 @@
 
 .weight {
   display: flex;
+  align-items: center;
   gap: 0.25rem;
-  max-width: 9rem;
 }
 
 .weight .input {
