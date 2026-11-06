@@ -41,6 +41,7 @@ Si a los 60 días no se cumplen, se archiva el proyecto sin culpa.
 | F6 | Resumen de gasto mensual | Could |
 | F7 | Instalable en el teléfono (manifest PWA, sin modo offline) | Could |
 | F8 | Exportar compras y líneas a CSV (descarga manual) | Could |
+| F9 | Contenido del producto y precio por unidad de medida (**después del día 60**) | Could |
 
 ### Fuera de alcance (explícito)
 
@@ -155,6 +156,40 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
 
 **Tests:** aislamiento entre usuarios para ambos endpoints en `test/isolation.test.ts`; fixtures con descuentos, líneas inferidas, compra manual, una descripción con `=`/`"`/coma y una tienda `always_one`.
 
+### F9 — Contenido del producto y precio por unidad de medida (Could) — ⏸ después del día 60
+
+> **Propuesta (2026-11-06).** No se implementa durante la Fase 5: es una función nueva (cambia el esquema y agrega UI) y no entra por la regla de fricciones. Se evalúa en la decisión del día 60 (§7, Fase 5) y solo se construye si el proyecto sigue.
+
+**Para qué:** comparar presentaciones distintas de un mismo producto ("Arroz X 2 kg" contra "Arroz X 5 lb", o un six-pack contra latas sueltas) por lo que cuesta cada gramo, mililitro o unidad, y no solo por el precio del empaque. Responde la segunda mitad de la pregunta de §2 ("¿dónde estaba más barato?") cuando las presentaciones no son iguales.
+
+**Flujo:** pantalla de precios de un producto (o de un ítem sin producto) → "Contenido" → paquetes × contenido + unidad → guardar. Es opcional y nunca se pide al importar (F1) ni en la compra manual (F4), para no sumar interacciones al registro (§2).
+
+- **CA9.1** El contenido es del **producto** (`products`), no de la línea ni del ítem de tienda: cada presentación es un producto distinto. Se captura como **paquetes × contenido por paquete + unidad** ("6 × 355 ml", "1 × 2 kg", "1 × 30 u"). Paquetes es 1 por defecto. Vacío lo quita.
+- **CA9.2** Unidades de entrada: `g`, `kg`, `oz`, `lb` (masa); `ml`, `L`, `fl oz` (volumen); `u` (unidades: tabletas, rollos, huevos). Se guarda normalizado a la unidad base (`g`, `ml` o `u`) como **entero**, redondeado al más cercano (16 oz → 454 g). Solo se aceptan valores > 0, hasta 1 000 000 en unidad base y hasta 999 paquetes.
+- **CA9.3** Un ítem sin producto crea uno con su descripción y ese contenido, vinculado con `link_source = 'user'`, igual que CA5.7.
+- **CA9.4** Contenido total = `pack_count × net_amount`. Con contenido y cantidad confiable (regla de §5.3, la misma implementación compartida), cada línea muestra:
+  - **Precio por unidad de medida:** por kg (masa), por L (volumen) o por unidad (`u`).
+  - **Rendimiento por dólar:** g, ml o unidades por $1.
+  - Las dos cifras salen de una sola función pura sobre `line_total_cents`, `quantity` y el contenido total, y se redondean solo al final (el precio a centavos; el rendimiento a enteros en g/ml y a 1 decimal en `u`). Nunca se guardan: se calculan al leer.
+- **CA9.5** Si la cantidad **no** es confiable (tienda `always_one` sin corregir, §10.6), la línea no muestra precio por unidad de medida y no entra en ninguna comparación por unidad. Así no aparecen precios por gramo falsos con las cantidades de Inmobiliaria Don Antonio.
+- **CA9.6** Las líneas **pesables** con peso conocido (§10.6) ya tienen precio por kg (`line_total_cents / quantity`) y lo muestran en la misma columna sin necesitar contenido. Así el queso de la balanza se compara contra el queso empacado de 400 g. En un pesable, el contenido del producto se ignora.
+- **CA9.7** En la pantalla de precios (F3), junto a CA3.2 se muestra el precio por unidad de medida del último precio y del más bajo de 90 días, si lo tienen.
+- **CA9.8** En los resultados de búsqueda de F3 (CA3.3), cada producto con contenido muestra su precio por unidad de medida más reciente comparable. Los resultados se pueden ordenar por ese precio. Al ordenar, solo se comparan resultados con la **misma dimensión** (masa, volumen o unidades). Los de otra dimensión o sin contenido van al final, sin ranking. Nunca se compara g contra ml.
+- **CA9.9** `lineas.csv` (F8) agrega al final dos columnas: `contenido` (contenido total del producto vinculado, en unidad base) y `unidad_contenido` (`g`, `ml` o `u`). Van vacías si la línea no tiene producto o el producto no tiene contenido. Se agregan al final para no romper a quien lea por posición.
+
+**Modelo:** tres columnas nullable en `products` (§5.2), en una migración aditiva compatible con la versión anterior del Worker. Las tres van juntas: o todas `NULL` o todas con valor (`CHECK`).
+
+**API:** `PUT /api/catalog/products/:id/content` y `PUT /api/catalog/items/:id/content`, con el mismo patrón que `/barcode` (CA5.7). Body `{ packCount, amount, unit }` o `null` para quitarlo. La lectura de producto, la búsqueda y el historial de precios incluyen el contenido y las cifras de CA9.4.
+
+**Fuera de alcance de F9:**
+- Prellenar el contenido desde la descripción de la factura ("LECHE ESTRELLA AZUL 1L"). Don Antonio trunca a 18 caracteres y "CREMA 400" no dice si son g o ml. Se reconsidera si escribirlo a mano resulta una carga.
+- Agrupar presentaciones en "familias" o "variantes". La comparación entre presentaciones se hace con la búsqueda por texto (CA9.8), sin una entidad nueva.
+- Conversión entre dimensiones (densidad) y unidades por categoría (precio por lavada, por pañal).
+- Mostrar el contenido en la unidad en que se tecleó: se muestra normalizado (454 g, no 16 oz).
+- Pedir el contenido durante la importación o la compra manual.
+
+**Tests:** función pura de cálculo (redondeo, packs, pesables, cantidad no confiable y dimensiones distintas); validación y normalización de unidades; endpoints de contenido en `test/isolation.test.ts`; orden de búsqueda con dimensiones mezcladas; columnas nuevas de `lineas.csv`.
+
 ## 5. Modelo de datos (D1 / SQLite)
 
 ### 5.1 Reglas
@@ -183,6 +218,9 @@ products       id, user_id, name, gtin NULL, created_at
                UNIQUE(user_id, gtin)
                -- producto "canónico" del usuario, el que F3 compara entre tiendas
                -- gtin: GTIN-13 normalizado (§10.2)
+               -- F9 (después del día 60, aún no existen): pack_count INTEGER NULL,
+               --   net_amount INTEGER NULL, net_unit ('g'|'ml'|'u') NULL;
+               --   las tres NULL o las tres con valor (CA9.1, CA9.2)
 
 store_items    id, user_id, store_id, code NULL, description, product_id NULL,
                link_source ('auto'|'user') NULL, is_weighed (0|1), weighed_by_user NULL, created_at
@@ -370,7 +408,7 @@ SQLite no tiene `MEDIAN`, por eso la consulta usa `OFFSET`. Se corre con `wrangl
 - DGI: ¿qué parte de `scan_ms` es espera de la DGI? Si la mediana pasa de 30 s por esa espera, se evalúa guardar en segundo plano.
 - ¿Se consulta el precio en tienda antes de comprar?
 
-**Decisión del día 60:** cumple las métricas → seguir y evaluar solo lo que los datos justifiquen (D2 familia, sparkline, OCR). No las cumple → archivar.
+**Decisión del día 60:** cumple las métricas → seguir y evaluar solo lo que los datos justifiquen (D2 familia, sparkline, OCR, F9 contenido y precio por unidad de medida). No las cumple → archivar.
 
 ## 8. Decisiones abiertas
 
