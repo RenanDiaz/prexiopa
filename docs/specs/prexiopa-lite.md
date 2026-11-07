@@ -410,7 +410,8 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
      | `shopping_sessions` | 5 | `store_ruc_mappings` | 0 |
      | `stores` | 5 | `tax_rates` | 4 |
 
-   - **Cuánto de eso es historial real está por verse.** Las 5 tiendas son exactamente las de `supabase/seed.sql` (Riba Smith, Super 99, El Machetazo, Xtra, Rey). El seed también crea 25 productos y ~84 precios, y `supabase/seed-historical-prices.sql` genera precios semanales aleatorios de 90 días para varios productos. Una parte de `prices` puede ser de demo. Lo que seguro es del dueño son las 5 sesiones de compra con 21 líneas. Separar demo de real solo importa si se reabre D3, después del día 60.
+   - **Todo es historial real del dueño** (único usuario de la v0). Se verificó con conteos sobre el dump: 0 de 525 productos tienen los códigos de barras inventados de `supabase/seed.sql` (`75012345678xx`), así que el seed nunca corrió en ese proyecto. Las 5 tiendas coinciden con las del seed porque son las cadenas principales de Panamá. De los 859 precios, 852 se crearon en noviembre de 2025 y 7 en diciembre de 2025 (carga concentrada), y 849 no tienen `reported_by`.
+   - Para D3 (después del día 60): son ~859 precios reales de 525 productos en 5 cadenas. Antes de decidir habría que revisar la columna `date` de `prices` (fecha del precio, no de carga) para saber qué periodo cubren.
    - Con el backup guardado en dos lugares, **se puede borrar el proyecto de Supabase**.
    - Importar ese historial a D1 sería reabrir D3 y se evalúa después del día 60, no en esta fase.
 4. ✅ Confirmar que D1 Time Travel está disponible en el plan antes de acumular historial. Confirmado por el dueño (2026-11-07).
