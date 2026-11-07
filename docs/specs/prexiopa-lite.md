@@ -398,7 +398,7 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 1. ✅ Implementar CA1.8 (`scan_ms`): columna nullable en `purchases` y migración aditiva, compatible con la versión anterior del Worker. El cliente envía `scan_ms` al guardar, y la lista, el detalle y el resto de la API no cambian. Va con test del endpoint y de que una compra duplicada no pisa el valor.
 2. ✅ Verificar con la cámara del teléfono el escaneo de códigos de barras (CA3.1). Verificado por el dueño (2026-11-06).
 3. Borrar el proyecto de Supabase y desconectar Vercel (dueño).
-4. Confirmar que D1 Time Travel está disponible en el plan antes de acumular historial.
+4. ✅ Confirmar que D1 Time Travel está disponible en el plan antes de acumular historial. Confirmado por el dueño (2026-11-07).
 
 **Cómo se miden las métricas del día 60** (consultas de solo lectura, sin pantalla ni endpoint nuevo):
 
