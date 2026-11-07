@@ -371,7 +371,7 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 ### Fase 4 — Manual, migración de datos y apagado de Supabase (F4, F6, F7) — 🟡 implementada; falta apagar la v0
 
-**Estado (2026-10-24):** compra manual (tienda nueva solo con nombre o autocompletado, líneas con producto existente, código escaneado o texto libre, cantidad y total; se vincula por GTIN si se escaneó), resumen mensual de 12 meses y por tienda del mes en hora de Panamá, importar varios, y manifest PWA con íconos. Probado en local. Vercel desconectado (2026-11-07). Pendiente del dueño: hacer el backup de la v0 y luego borrar el proyecto de Supabase (Fase 5, trabajo previo 3).
+**Estado (2026-10-24):** compra manual (tienda nueva solo con nombre o autocompletado, líneas con producto existente, código escaneado o texto libre, cantidad y total; se vincula por GTIN si se escaneó), resumen mensual de 12 meses y por tienda del mes en hora de Panamá, importar varios, y manifest PWA con íconos. Probado en local. Vercel desconectado (2026-11-07). Backup de la v0 hecho (2026-11-07). Pendiente del dueño: borrar el proyecto de Supabase (Fase 5, trabajo previo 3).
 
 - Migración de datos: exportar los **CUFEs** de `imported_invoices` y **reimportarlos con el pipeline nuevo**, sin transformar datos viejos.
   - ✅ **Resultado (2026-10-24): no hay nada que migrar.** Se reactivó el proyecto de Supabase y `imported_invoices` está vacía (0 CUFEs). La importación por CUFE llegó a la v0 en diciembre de 2025, cerca de cuando se dejó de usar. Las compras manuales de la v0 no se migran (D3). ~~El backup descargado queda archivado fuera del repo.~~ **Corrección (2026-11-07): nunca se hizo el backup.** La única copia del historial de la v0 es el proyecto de Supabase (Fase 5, trabajo previo 3).
@@ -399,12 +399,20 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 2. ✅ Verificar con la cámara del teléfono el escaneo de códigos de barras (CA3.1). Verificado por el dueño (2026-11-06).
 3. Supabase y Vercel (dueño):
    - ✅ Vercel desconectado (2026-11-07).
-   - Supabase **no se borra hasta tener un backup verificado** (2026-11-07). La v0 tiene compras manuales que no se migraron (D3), el dueño no quiere perder ese historial y **el backup nunca se hizo**: el proyecto es la única copia. Pasos:
-     1. Restaurar el proyecto si está pausado (revisar en el panel el plazo para restaurar un proyecto pausado).
-     2. `pg_dump` del esquema `public`, con la cadena de conexión del panel (nunca en el repo ni en un chat), en formato custom (`-Fc`) y también en SQL plano (`--data-only`). Se guarda fuera del repo: trae datos personales.
-     3. Verificar: conteo de filas por tabla en el proyecto contra el conteo que da restaurar el dump en un Postgres local (o `pg_restore --list`, más un `COPY` de las tablas de compras).
-     4. Solo entonces se borra el proyecto.
-   - Mientras tanto el proyecto sigue pausado y no afecta las métricas. Importar ese historial a D1 sería reabrir D3 y se evalúa después del día 60, no en esta fase.
+   - ✅ **Backup de la v0 (2026-11-07).** Nunca se había hecho; el proyecto era la única copia. Se descargó del panel de Supabase un `db_cluster-….backup.gz` (`pg_dumpall` en SQL plano con gzip) y se guarda fuera del repo, porque trae datos personales y de autenticación. Filas por tabla del esquema `public`, contadas en los bloques `COPY` del dump:
+
+     | Tabla | Filas | Tabla | Filas |
+     |---|---|---|---|
+     | `prices` | 859 | `user_roles` | 1 |
+     | `products` | 525 | `alerts`, `favorites` | 0 |
+     | `shopping_items` | 21 | `imported_invoices`, `imported_invoice_items` | 0 |
+     | `product_contributions` | 6 | `promotions`, `promotion_products`, `promotion_verifications` | 0 |
+     | `shopping_sessions` | 5 | `store_ruc_mappings` | 0 |
+     | `stores` | 5 | `tax_rates` | 4 |
+
+   - **Cuánto de eso es historial real está por verse.** Las 5 tiendas son exactamente las de `supabase/seed.sql` (Riba Smith, Super 99, El Machetazo, Xtra, Rey). El seed también crea 25 productos y ~84 precios, y `supabase/seed-historical-prices.sql` genera precios semanales aleatorios de 90 días para varios productos. Una parte de `prices` puede ser de demo. Lo que seguro es del dueño son las 5 sesiones de compra con 21 líneas. Separar demo de real solo importa si se reabre D3, después del día 60.
+   - Con el backup guardado en dos lugares, **se puede borrar el proyecto de Supabase**.
+   - Importar ese historial a D1 sería reabrir D3 y se evalúa después del día 60, no en esta fase.
 4. ✅ Confirmar que D1 Time Travel está disponible en el plan antes de acumular historial. Confirmado por el dueño (2026-11-07).
 
 **Cómo se miden las métricas del día 60** (consultas de solo lectura, sin pantalla ni endpoint nuevo):
