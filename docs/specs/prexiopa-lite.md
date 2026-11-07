@@ -76,7 +76,7 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
   - Si hay más de una cámara trasera, debajo del video hay un botón "Cambiar cámara" que las alterna y muestra el nombre de la activa.
   - La cámara elegida, automática o con el botón, se recuerda en `localStorage` del dispositivo (preferencia por visor, no dato del usuario). Si la guardada ya no existe, se borra y se vuelve a elegir. Sin almacenamiento, se elige cada vez.
   - Safari no expone enfoque ni zoom en `getUserMedia`: no hay "tocar para enfocar".
-  - Se verifica en el iPhone del dueño: el QR de una factura se lee acercando el teléfono, sin esperar a que enfoque la 1x.
+  - ✅ Verificado por el dueño en su iPhone 13 Pro (2026-11-07): el escáner funciona bien con la cámara elegida.
 - **CA1.9** En cualquier estado posterior al escaneo (consultando la DGI, error, "Ya importaste esta factura" y preview) hay un "Cancelar" que vuelve al inicio sin guardar nada. Mientras se está guardando no se muestra.
 
 ### F2 — Historial de compras
@@ -369,16 +369,16 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 - Al subir `CATALOG_VERSION`, los datos de cada usuario se recalculan una vez al abrir la app (`GET /api/me`). Así se aplican las reglas a las compras importadas antes de la Fase 3.
 - Los PLU se marcan como pesables, pero algunos se venden por unidad (un mazo de culantro). Por eso cada ítem tiene "Se vende por peso / por unidad" (`weighed_by_user`).
 
-### Fase 4 — Manual, migración de datos y apagado de Supabase (F4, F6, F7) — 🟡 implementada; falta apagar la v0
+### Fase 4 — Manual, migración de datos y apagado de Supabase (F4, F6, F7) — ✅ completada (7 nov 2026)
 
-**Estado (2026-10-24):** compra manual (tienda nueva solo con nombre o autocompletado, líneas con producto existente, código escaneado o texto libre, cantidad y total; se vincula por GTIN si se escaneó), resumen mensual de 12 meses y por tienda del mes en hora de Panamá, importar varios, y manifest PWA con íconos. Probado en local. Vercel desconectado (2026-11-07). Pendiente del dueño: hacer el backup de la v0 y luego borrar el proyecto de Supabase (Fase 5, trabajo previo 3).
+**Estado (2026-10-24):** compra manual (tienda nueva solo con nombre o autocompletado, líneas con producto existente, código escaneado o texto libre, cantidad y total; se vincula por GTIN si se escaneó), resumen mensual de 12 meses y por tienda del mes en hora de Panamá, importar varios, y manifest PWA con íconos. Probado en local. Vercel desconectado (2026-11-07). Backup de la v0 hecho y proyecto de Supabase borrado (2026-11-07). La v0 queda apagada.
 
 - Migración de datos: exportar los **CUFEs** de `imported_invoices` y **reimportarlos con el pipeline nuevo**, sin transformar datos viejos.
   - ✅ **Resultado (2026-10-24): no hay nada que migrar.** Se reactivó el proyecto de Supabase y `imported_invoices` está vacía (0 CUFEs). La importación por CUFE llegó a la v0 en diciembre de 2025, cerca de cuando se dejó de usar. Las compras manuales de la v0 no se migran (D3). ~~El backup descargado queda archivado fuera del repo.~~ **Corrección (2026-11-07): nunca se hizo el backup.** La única copia del historial de la v0 es el proyecto de Supabase (Fase 5, trabajo previo 3).
   - Export en el SQL Editor de Supabase: `select cufe from imported_invoices order by issue_date;`
   - **Importar varios** (pantalla de importar): se pega una lista de CUFEs o URLs del QR, uno por línea. Se importan de a uno, con el estado de cada uno a la vista: guardada, ya importada o error con "Reintentar". Usa el mismo `POST /api/purchases/cafe`, así que las facturas ya importadas no se duplican (CA1.5).
 - Las sesiones manuales de v0 se descartan, salvo que se decida lo contrario (ver §8).
-- Pausar el proyecto de Supabase. Se borra a los 30 días sin incidentes. Como no había datos que migrar, se puede borrar sin esperar.
+- ✅ Pausar el proyecto de Supabase y borrarlo. Borrado por el dueño (2026-11-07), después de guardar el backup (Fase 5, trabajo previo 3).
 - ✅ Desconectar del repo el proyecto de Vercel de la v0, que falla en cada PR desde la Fase 1. Hecho por el dueño (2026-11-07).
 
 ### Fase 5 — Uso y decisión (sin funciones nuevas) — ⏳ pendiente
@@ -397,15 +397,26 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 1. ✅ Implementar CA1.8 (`scan_ms`): columna nullable en `purchases` y migración aditiva, compatible con la versión anterior del Worker. El cliente envía `scan_ms` al guardar, y la lista, el detalle y el resto de la API no cambian. Va con test del endpoint y de que una compra duplicada no pisa el valor.
 2. ✅ Verificar con la cámara del teléfono el escaneo de códigos de barras (CA3.1). Verificado por el dueño (2026-11-06).
-3. Supabase y Vercel (dueño):
+3. ✅ Supabase y Vercel (dueño):
    - ✅ Vercel desconectado (2026-11-07).
-   - Supabase **no se borra hasta tener un backup verificado** (2026-11-07). La v0 tiene compras manuales que no se migraron (D3), el dueño no quiere perder ese historial y **el backup nunca se hizo**: el proyecto es la única copia. Pasos:
-     1. Restaurar el proyecto si está pausado (revisar en el panel el plazo para restaurar un proyecto pausado).
-     2. `pg_dump` del esquema `public`, con la cadena de conexión del panel (nunca en el repo ni en un chat), en formato custom (`-Fc`) y también en SQL plano (`--data-only`). Se guarda fuera del repo: trae datos personales.
-     3. Verificar: conteo de filas por tabla en el proyecto contra el conteo que da restaurar el dump en un Postgres local (o `pg_restore --list`, más un `COPY` de las tablas de compras).
-     4. Solo entonces se borra el proyecto.
-   - Mientras tanto el proyecto sigue pausado y no afecta las métricas. Importar ese historial a D1 sería reabrir D3 y se evalúa después del día 60, no en esta fase.
+   - ✅ **Backup de la v0 (2026-11-07).** Nunca se había hecho; el proyecto era la única copia. Se descargó del panel de Supabase un `db_cluster-….backup.gz` (`pg_dumpall` en SQL plano con gzip) y se guarda fuera del repo, porque trae datos personales y de autenticación. Filas por tabla del esquema `public`, contadas en los bloques `COPY` del dump:
+
+     | Tabla | Filas | Tabla | Filas |
+     |---|---|---|---|
+     | `prices` | 859 | `user_roles` | 1 |
+     | `products` | 525 | `alerts`, `favorites` | 0 |
+     | `shopping_items` | 21 | `imported_invoices`, `imported_invoice_items` | 0 |
+     | `product_contributions` | 6 | `promotions`, `promotion_products`, `promotion_verifications` | 0 |
+     | `shopping_sessions` | 5 | `store_ruc_mappings` | 0 |
+     | `stores` | 5 | `tax_rates` | 4 |
+
+   - **Todo es historial real del dueño** (único usuario de la v0). Se verificó con conteos sobre el dump: 0 de 525 productos tienen los códigos de barras inventados de `supabase/seed.sql` (`75012345678xx`), así que el seed nunca corrió en ese proyecto. Las 5 tiendas coinciden con las del seed porque son las cadenas principales de Panamá. De los 859 precios, 852 se crearon en noviembre de 2025 y 7 en diciembre de 2025 (carga concentrada), y 849 no tienen `reported_by`.
+   - Para D3 (después del día 60): son ~859 precios reales de 525 productos en 5 cadenas. Antes de decidir habría que revisar la columna `date` de `prices` (fecha del precio, no de carga) para saber qué periodo cubren.
+   - ✅ Backup guardado en dos lugares y **proyecto de Supabase borrado** por el dueño (2026-11-07). El `.backup.gz` es ahora la única copia del historial de la v0.
+   - Importar ese historial a D1 sería reabrir D3 y se evalúa después del día 60, no en esta fase.
 4. ✅ Confirmar que D1 Time Travel está disponible en el plan antes de acumular historial. Confirmado por el dueño (2026-11-07).
+
+**Trabajo previo completo (2026-11-07).** Lo que queda de la fase es usar la app, corregir bugs y fricciones, y responder las preguntas de abajo en §10.7.
 
 **Cómo se miden las métricas del día 60** (consultas de solo lectura, sin pantalla ni endpoint nuevo):
 
