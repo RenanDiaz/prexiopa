@@ -76,7 +76,7 @@ Lo siguiente **no se construye**. Si un agente lo propone, la respuesta es no:
   - Si hay más de una cámara trasera, debajo del video hay un botón "Cambiar cámara" que las alterna y muestra el nombre de la activa.
   - La cámara elegida, automática o con el botón, se recuerda en `localStorage` del dispositivo (preferencia por visor, no dato del usuario). Si la guardada ya no existe, se borra y se vuelve a elegir. Sin almacenamiento, se elige cada vez.
   - Safari no expone enfoque ni zoom en `getUserMedia`: no hay "tocar para enfocar".
-  - Se verifica en el iPhone del dueño: el QR de una factura se lee acercando el teléfono, sin esperar a que enfoque la 1x.
+  - ✅ Verificado por el dueño en su iPhone 13 Pro (2026-11-07): el escáner funciona bien con la cámara elegida.
 - **CA1.9** En cualquier estado posterior al escaneo (consultando la DGI, error, "Ya importaste esta factura" y preview) hay un "Cancelar" que vuelve al inicio sin guardar nada. Mientras se está guardando no se muestra.
 
 ### F2 — Historial de compras
