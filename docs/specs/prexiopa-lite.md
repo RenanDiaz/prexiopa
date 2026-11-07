@@ -371,7 +371,7 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 ### Fase 4 — Manual, migración de datos y apagado de Supabase (F4, F6, F7) — 🟡 implementada; falta apagar la v0
 
-**Estado (2026-10-24):** compra manual (tienda nueva solo con nombre o autocompletado, líneas con producto existente, código escaneado o texto libre, cantidad y total; se vincula por GTIN si se escaneó), resumen mensual de 12 meses y por tienda del mes en hora de Panamá, importar varios, y manifest PWA con íconos. Probado en local. Pendiente del dueño: borrar el proyecto de Supabase y desconectar Vercel.
+**Estado (2026-10-24):** compra manual (tienda nueva solo con nombre o autocompletado, líneas con producto existente, código escaneado o texto libre, cantidad y total; se vincula por GTIN si se escaneó), resumen mensual de 12 meses y por tienda del mes en hora de Panamá, importar varios, y manifest PWA con íconos. Probado en local. Vercel desconectado (2026-11-07). Pendiente del dueño: borrar el proyecto de Supabase, después de verificar el backup (Fase 5, trabajo previo 3).
 
 - Migración de datos: exportar los **CUFEs** de `imported_invoices` y **reimportarlos con el pipeline nuevo**, sin transformar datos viejos.
   - ✅ **Resultado (2026-10-24): no hay nada que migrar.** Se reactivó el proyecto de Supabase y `imported_invoices` está vacía (0 CUFEs). La importación por CUFE llegó a la v0 en diciembre de 2025, cerca de cuando se dejó de usar. Las compras manuales de la v0 no se migran (D3). El backup descargado queda archivado fuera del repo.
@@ -379,7 +379,7 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
   - **Importar varios** (pantalla de importar): se pega una lista de CUFEs o URLs del QR, uno por línea. Se importan de a uno, con el estado de cada uno a la vista: guardada, ya importada o error con "Reintentar". Usa el mismo `POST /api/purchases/cafe`, así que las facturas ya importadas no se duplican (CA1.5).
 - Las sesiones manuales de v0 se descartan, salvo que se decida lo contrario (ver §8).
 - Pausar el proyecto de Supabase. Se borra a los 30 días sin incidentes. Como no había datos que migrar, se puede borrar sin esperar.
-- Desconectar del repo el proyecto de Vercel de la v0, que falla en cada PR desde la Fase 1.
+- ✅ Desconectar del repo el proyecto de Vercel de la v0, que falla en cada PR desde la Fase 1. Hecho por el dueño (2026-11-07).
 
 ### Fase 5 — Uso y decisión (sin funciones nuevas) — ⏳ pendiente
 
@@ -397,7 +397,9 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
 
 1. ✅ Implementar CA1.8 (`scan_ms`): columna nullable en `purchases` y migración aditiva, compatible con la versión anterior del Worker. El cliente envía `scan_ms` al guardar, y la lista, el detalle y el resto de la API no cambian. Va con test del endpoint y de que una compra duplicada no pisa el valor.
 2. ✅ Verificar con la cámara del teléfono el escaneo de códigos de barras (CA3.1). Verificado por el dueño (2026-11-06).
-3. Borrar el proyecto de Supabase y desconectar Vercel (dueño).
+3. Supabase y Vercel (dueño):
+   - ✅ Vercel desconectado (2026-11-07).
+   - Supabase **no se borra hasta verificar el backup** (2026-11-07). La v0 tiene compras manuales que no se migraron (D3) y el dueño no quiere perder ese historial. Antes de borrar, se abre el backup archivado fuera del repo y se confirma que trae las tablas de compras y precios de la v0 con sus filas (conteo por tabla contra el proyecto pausado). Mientras tanto el proyecto sigue pausado y no afecta las métricas. Importar ese historial a D1 sería reabrir D3 y se evalúa después del día 60, no en esta fase.
 4. ✅ Confirmar que D1 Time Travel está disponible en el plan antes de acumular historial. Confirmado por el dueño (2026-11-07).
 
 **Cómo se miden las métricas del día 60** (consultas de solo lectura, sin pantalla ni endpoint nuevo):
