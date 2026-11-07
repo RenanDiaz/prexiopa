@@ -411,7 +411,12 @@ Sirve para saber si el producto tiene sentido antes de construir nada.
      | `stores` | 5 | `tax_rates` | 4 |
 
    - **Todo es historial real del dueño** (único usuario de la v0). Se verificó con conteos sobre el dump: 0 de 525 productos tienen los códigos de barras inventados de `supabase/seed.sql` (`75012345678xx`), así que el seed nunca corrió en ese proyecto. Las 5 tiendas coinciden con las del seed porque son las cadenas principales de Panamá. De los 859 precios, 852 se crearon en noviembre de 2025 y 7 en diciembre de 2025 (carga concentrada), y 849 no tienen `reported_by`.
-   - Para D3 (después del día 60): son ~859 precios reales de 525 productos en 5 cadenas. Antes de decidir habría que revisar la columna `date` de `prices` (fecha del precio, no de carga) para saber qué periodo cubren.
+   - Para D3 (después del día 60): son ~859 precios reales de 525 productos en 5 tiendas. **Revisión de la columna `date` (2026-11-07):**
+     - **Periodo:** 847 de 859 precios son de **feb–jun 2023** (36 días de compra distintos). Solo 12 son de nov–dic 2025. La carga de nov 2025 fue transcribir compras viejas.
+     - **Tiendas:** son sucursales con nombre y sin RUC: El Fuerte Federal Mall (510), El Rey Plaza Terronal (337), Farmacia El Terronal (6), Doit Center El Terronal (5), M/S Meygui (1). Importarlas exige asignarlas a mano a cadenas por RUC (§5); las que no tengan factura quedan solo con nombre, como en F4.
+     - **Productos:** solo 17 de 525 tienen código de barras; los nombres los escribió el dueño ("Cebolla 1 kg") y no coinciden con las descripciones de la DGI. Vincularlos a lo comprado hoy sería manual (F5). 33 productos no tienen ningún precio.
+     - **Precios:** todos con `quantity` 1, sin descuento ni promoción, y con 2 decimales exactos (pasan limpios a centavos). 60 productos tienen precio en dos tiendas a la vez.
+     - **Implicaciones si se importa:** cada (tienda, fecha) sería una compra; conviene un `source` propio (p. ej. `'v0'`) para poder excluirlas del resumen mensual (F6) y de las métricas; y F3 mostraría un precio de 2023 como "último" de productos que no se volvieron a comprar, así que habría que dejar la fecha muy visible o separar ese historial. Su valor es ver cómo subieron los precios desde 2023, no decidir dónde comprar hoy.
    - ✅ Backup guardado en dos lugares y **proyecto de Supabase borrado** por el dueño (2026-11-07). El `.backup.gz` es ahora la única copia del historial de la v0.
    - Importar ese historial a D1 sería reabrir D3 y se evalúa después del día 60, no en esta fase.
 4. ✅ Confirmar que D1 Time Travel está disponible en el plan antes de acumular historial. Confirmado por el dueño (2026-11-07).
