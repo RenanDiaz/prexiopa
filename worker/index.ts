@@ -277,6 +277,18 @@ export function createApp(options: AppOptions = {}) {
     return c.body(null, 204);
   });
 
+  // CA4.7 — Corregir el total pagado (con ITBMS) de una línea manual.
+  app.patch('/purchase-lines/:id/total', async (c) => {
+    const { lineTotalCents } = await jsonBody(c.req.raw);
+    if (typeof lineTotalCents !== 'number' || !Number.isInteger(lineTotalCents) || lineTotalCents < 0 || lineTotalCents > 10_000_000) {
+      throw new HTTPException(400, { message: 'El total debe ser un monto válido entre 0.00 y 100000.00' });
+    }
+    const result = await scoped(c.env.DB, c.var.user.id).catalog.setLineTotal(c.req.param('id'), lineTotalCents);
+    if (result === 'not_found') return c.json({ error: 'No encontrada' }, 404);
+    if (result === 'not_manual') return c.json({ error: 'Solo se puede cambiar el total de una compra manual' }, 409);
+    return c.body(null, 204);
+  });
+
   // CA5.4 — Tiendas: nombre visible y formatos (§10.2, §10.6).
   app.get('/stores/:id', async (c) => {
     const store = await scoped(c.env.DB, c.var.user.id).catalog.getStore(c.req.param('id'));

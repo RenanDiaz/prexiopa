@@ -224,6 +224,10 @@ export const unlinkItem = (itemId: string) =>
 export const setLineQuantity = (lineId: string, quantity: number) =>
   apiNoContent(`/purchase-lines/${encodeURIComponent(lineId)}`, sendJson('PATCH', { quantity }));
 
+/** CA4.7: total pagado (con ITBMS) de una línea manual, en centavos. */
+export const setLineTotal = (lineId: string, lineTotalCents: number) =>
+  apiNoContent(`/purchase-lines/${encodeURIComponent(lineId)}/total`, sendJson('PATCH', { lineTotalCents }));
+
 export const setManualPurchaseDate = (id: string, date: string) =>
   apiNoContent(`/purchases/${encodeURIComponent(id)}`, sendJson('PATCH', { date }));
 
