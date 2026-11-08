@@ -1,8 +1,23 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState, type FormEvent } from 'react';
-import { deletePurchase, getPurchase, setLineQuantity, setManualPurchaseDate, type PurchaseLine } from '../api';
+import {
+  deletePurchase,
+  getPurchase,
+  setLineQuantity,
+  setLineTotal,
+  setManualPurchaseDate,
+  type PurchaseLine,
+} from '../api';
 import styles from '../App.module.css';
-import { formatCents, formatDateTime, formatQuantity, formatRate, nowInPanama, toPanamaDateTime } from '../format';
+import {
+  formatCents,
+  formatDateTime,
+  formatQuantity,
+  formatRate,
+  nowInPanama,
+  parseMoneyToCents,
+  toPanamaDateTime,
+} from '../format';
 import { Link, navigate } from '../router';
 
 // F2 — Detalle (CA2.2, CA2.3): líneas y desglose tal como viene en la factura.
@@ -74,7 +89,11 @@ export function PurchaseDetail({ id }: { id: string }) {
             ) : (
               <span className={styles.muted}>× {formatQuantity(line.quantity)}</span>
             )}
-            <span className={styles.amount}>{formatCents(line.lineTotalCents)}</span>
+            {p.source === 'manual' ? (
+              <LineTotal line={line} />
+            ) : (
+              <span className={styles.amount}>{formatCents(line.lineTotalCents)}</span>
+            )}
           </li>
         ))}
       </ul>
@@ -167,6 +186,67 @@ function ManualDate({ purchaseId, issuedAt }: { purchaseId: string; issuedAt: st
       </button>
       <button className={styles.link} type="button" onClick={() => setDate(null)} disabled={update.isPending}>
         Cancelar
+      </button>
+      {update.isError && <span className={styles.error}>{update.error.message}</span>}
+    </form>
+  );
+}
+
+/**
+ * CA4.7: en una compra manual, el total pagado de la línea (con ITBMS) se corrige tocándolo.
+ * El monto se escribe en dólares ("2.50"); se convierte a centavos sin floats.
+ */
+function LineTotal({ line }: { line: PurchaseLine }) {
+  const queryClient = useQueryClient();
+  const [draft, setDraft] = useState<string | null>(null);
+  const update = useMutation({
+    mutationFn: (cents: number) => setLineTotal(line.id, cents),
+    onSuccess: async () => {
+      setDraft(null);
+      // El total de la línea mueve la compra, el historial, el resumen y los precios.
+      await queryClient.invalidateQueries();
+    },
+  });
+
+  if (draft === null) {
+    return (
+      <button
+        className={`${styles.link} ${styles.amount}`}
+        title="Corregir el total pagado (con ITBMS)"
+        aria-label={`Corregir el total pagado de ${line.description}`}
+        disabled={update.isPending}
+        onClick={() => setDraft((line.lineTotalCents / 100).toFixed(2))}
+      >
+        {formatCents(line.lineTotalCents)}
+      </button>
+    );
+  }
+
+  const cents = parseMoneyToCents(draft);
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    if (cents !== null) update.mutate(cents);
+  };
+  return (
+    <form className={styles.weight} onSubmit={submit}>
+      <input
+        className={styles.input}
+        value={draft}
+        onChange={(event) => setDraft(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') setDraft(null);
+        }}
+        inputMode="decimal"
+        aria-label={`Total pagado de ${line.description}, con ITBMS`}
+        placeholder="0.00"
+        autoFocus
+        onFocus={(event) => event.target.select()}
+      />
+      <button className={styles.button} type="submit" disabled={update.isPending || cents === null}>
+        OK
+      </button>
+      <button className={styles.link} type="button" aria-label="Cancelar" title="Cancelar" onClick={() => setDraft(null)}>
+        ✕
       </button>
       {update.isError && <span className={styles.error}>{update.error.message}</span>}
     </form>

@@ -97,6 +97,7 @@ describe('aislamiento entre usuarios', () => {
     expect((await fer(`/catalog/items/${line.storeItemId}/product`, { method: 'DELETE' })).status).toBe(404);
     expect((await fer(`/catalog/items/${line.storeItemId}/weighed`, json('PATCH', { isWeighed: true }))).status).toBe(404);
     expect((await fer(`/purchase-lines/${line.id}`, json('PATCH', { quantity: 5 }))).status).toBe(404);
+    expect((await fer(`/purchase-lines/${line.id}/total`, json('PATCH', { lineTotalCents: 5 }))).status).toBe(404);
     expect((await fer(`/stores/${detail.storeId}`)).status).toBe(404);
     expect((await fer(`/stores/${detail.storeId}`, json('PATCH', { displayName: 'Hackeado' }))).status).toBe(404);
 

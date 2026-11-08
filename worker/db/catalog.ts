@@ -580,6 +580,41 @@ export function catalogRepo(db: Db, userId: string) {
     },
 
     /**
+     * CA4.7: corrige el total pagado (con ITBMS) de una línea manual. Recalcula el precio
+     * unitario con la cantidad vigente y el total de la compra, en un solo batch.
+     */
+    async setLineTotal(lineId: string, lineTotalCents: number): Promise<'ok' | 'not_found' | 'not_manual'> {
+      const [line] = await db
+        .select({
+          id: purchaseLines.id,
+          purchaseId: purchaseLines.purchaseId,
+          quantity: purchaseLines.quantity,
+          source: purchases.source,
+        })
+        .from(purchaseLines)
+        .innerJoin(purchases, eq(purchases.id, purchaseLines.purchaseId))
+        .where(and(eq(purchaseLines.id, lineId), eq(purchases.userId, userId)));
+      if (!line) return 'not_found';
+      if (line.source !== 'manual') return 'not_manual';
+
+      // Compra manual: subtotal, total y pagado son la suma de sus líneas (ver createManual).
+      const purchaseTotal = sql`(SELECT coalesce(sum(${purchaseLines.lineTotalCents}), 0) FROM ${purchaseLines} WHERE ${purchaseLines.purchaseId} = ${line.purchaseId})`;
+      await db.batch([
+        db
+          .update(purchaseLines)
+          .set({ lineTotalCents, listPriceCents: Math.round(lineTotalCents / line.quantity) })
+          .where(eq(purchaseLines.id, line.id)),
+        db
+          .update(purchases)
+          .set({ subtotalCents: purchaseTotal, totalCents: purchaseTotal, paidCents: purchaseTotal })
+          .where(eq(purchases.id, line.purchaseId)),
+      ] as [BatchItem<'sqlite'>, ...BatchItem<'sqlite'>[]]);
+      // El precio unitario cambió: puede resolver la cantidad de otras compras del producto.
+      await inferQuantities();
+      return 'ok';
+    },
+
+    /**
      * CA5.4 y §10.2/§10.6: nombre visible y formatos de una tienda. Las tiendas son
      * compartidas; solo puede editarlas quien tiene compras ahí.
      */
